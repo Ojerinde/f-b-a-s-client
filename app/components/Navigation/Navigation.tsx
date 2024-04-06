@@ -1,9 +1,14 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Navigation = () => {
+  const router = useRouter();
   return (
     <nav className="navigation">
-      <figure style={{ borderRadius: "20%", overflow: "hidden" }}>
+      <figure
+        style={{ borderRadius: "20%", overflow: "hidden" }}
+        onClick={() => router.push("/")}
+      >
         <Image
           src="/images/F-B-A-S.png"
           alt="Logo"
@@ -14,7 +19,7 @@ const Navigation = () => {
       </figure>
 
       <div>
-        <p>Device Power Level: </p>
+        <h2>Device Power Level: </h2>
       </div>
     </nav>
   );
