@@ -55,12 +55,13 @@ const SignUpForm = () => {
       const { confirmPassword, password, email, name } = values;
       try {
         // Seding a request to my backend
-        await HttpRequest.post("/auth/signup", {
+        const response = await HttpRequest.post("/auth/signup", {
           name,
           email,
           confirmPassword,
           password,
         });
+        console.log("Signing up", response);
         setSuccessMessage("Check your inbox for verification link");
       } catch (error: any) {
         setShowError(() => ({
