@@ -64,6 +64,7 @@ const SignUpForm = () => {
         console.log("Signing up", response);
         setSuccessMessage("Check your inbox for verification link");
       } catch (error: any) {
+        console.log("Signing up", error);
         setShowError(() => ({
           hasError: true,
           message: `${error?.response?.data.message} Try logging in.`,
