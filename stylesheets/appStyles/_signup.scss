@@ -1,0 +1,14 @@
+.signup {
+  &-success {
+    color: $text-success-color;
+    font-size: 1.4rem;
+    text-align: center;
+    margin: -2rem 0 2rem;
+  }
+  &-error {
+    color: $text-error-color;
+    font-size: 1.4rem;
+    text-align: center;
+    margin: -2rem 0 2rem;
+  }
+}

@@ -1,0 +1,99 @@
+.update-container {
+  padding: 4rem 8rem;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  //   background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.72)),
+  //     url(../../public//images/finger.jpeg);
+  //   background-size: cover;
+  //   background-attachment: fixed;
+  //   height: 70vh;
+
+  &__left {
+    flex-basis: 45%;
+    @include flex-center;
+    flex-direction: column;
+    & h1 {
+      font-size: 5rem;
+      font-weight: bolder;
+      letter-spacing: 0.6rem;
+      font-family: "Source Serif Pro", sans-serif;
+      background: linear-gradient(
+        90deg,
+        rgba($text-color, 0.5) 3.08%,
+        $color-black-dark 93.85%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    & p {
+      margin-top: 4rem;
+      font-weight: bold;
+      color: $text-color;
+      font-size: 5rem;
+    }
+  }
+  &__right {
+    flex-basis: 50%;
+    padding: 3rem;
+    background: rgba($text-color, 0.25);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 0.2rem solid rgba($text-color, 0.25);
+    border-radius: 1rem;
+
+    & h2 {
+      font-size: 2.5rem;
+      letter-spacing: 0.3rem;
+      color: $text-color;
+      margin-bottom: 4rem;
+    }
+  }
+  &__label {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    color: $text-color;
+    letter-spacing: 0.1rem;
+  }
+  &__courses {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+
+    & .left {
+      flex-basis: 30%;
+    }
+
+    & .right {
+      flex-basis: 60%;
+    }
+
+    & .icon {
+      font-size: 2.5rem;
+      color: $text-color;
+      cursor: pointer;
+      transition: color 0.3s;
+      &:hover {
+        color: rgba($text-color, 0.7);
+      }
+    }
+  }
+
+  &__button {
+    margin-bottom: 1.5rem;
+    padding: 1.2rem 3rem;
+    border: none;
+    font-size: 2rem;
+    letter-spacing: 0.2rem;
+    color: $text-color;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+    &:hover {
+      color: rgba($text-color, 0.7);
+    }
+  }
+}
