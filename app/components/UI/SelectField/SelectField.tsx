@@ -1,26 +1,22 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable no-shadow */
+"use client";
 
-"use client"
-
-import React, { useState } from "react"
-import Select, { StylesConfig } from "react-select"
-import Image from "next/image"
+import React, { useState } from "react";
+import Select, { StylesConfig } from "react-select";
+import Image from "next/image";
 
 interface Option {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 interface SelectFieldProps {
-  label?: string
+  label?: string;
   // eslint-disable-next-line no-unused-vars
-  onChange: (selectedOption: Option | null) => void
-  value: any
-  options: Option[]
-  labels?: boolean
-  placeholder?: string
+  onChange: (selectedOption: Option | null) => void;
+  value: any;
+  options: Option[];
+  labels?: boolean;
+  placeholder?: string;
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({
@@ -30,11 +26,11 @@ const SelectField: React.FC<SelectFieldProps> = ({
   label,
   placeholder = "",
 }) => {
-  const [optionsIsShown, setOptionsIsShown] = useState<boolean>(false)
-  const [selectedOption, setSelectedOption] = useState<Option | null>(value)
+  const [optionsIsShown, setOptionsIsShown] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<Option | null>(value);
 
   const customStyles: StylesConfig<Option, boolean> = {
-    control: (provided, state) => ({
+    control: (provided: any, state: any) => ({
       ...provided,
       // boxShadow: state.isFocused ? "0 0 0 2px #7949FF" : "0 0 0 2px #9D9D9D",
       fontSize: "1.5rem",
@@ -45,7 +41,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
         borderColor: state.isFocused ? " #7949FF" : "#44607c",
       },
     }),
-    dropdownIndicator: (provided) => ({
+    dropdownIndicator: (provided: any) => ({
       ...provided,
       paddingLeft: "10px",
       paddingRight: "10px",
@@ -62,30 +58,30 @@ const SelectField: React.FC<SelectFieldProps> = ({
         color: "#1a1a1a",
       },
     }),
-    menu: (provided) => ({
+    menu: (provided: any) => ({
       ...provided,
       background: "#fff",
       boxShadow: "0px 0px 24px 0px rgba(0, 0, 0, 0.20)",
     }),
-  }
+  };
 
   const toggleOptions = () => {
-    setOptionsIsShown((prevState) => !prevState)
-  }
+    setOptionsIsShown((prevState) => !prevState);
+  };
 
   const handleInputChange = (selectedOption: any) => {
-    setSelectedOption(selectedOption)
-    setOptionsIsShown(false)
-    onChange(selectedOption)
-  }
+    setSelectedOption(selectedOption);
+    setOptionsIsShown(false);
+    onChange(selectedOption);
+  };
 
   const handleBlur = () => {
-    setOptionsIsShown(false)
-  }
+    setOptionsIsShown(false);
+  };
 
   const handleInputClick = () => {
-    setOptionsIsShown(true)
-  }
+    setOptionsIsShown(true);
+  };
 
   return (
     <div className="">
@@ -128,7 +124,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
         menuIsOpen={optionsIsShown}
       />
     </div>
-  )
-}
+  );
+};
 
-export default SelectField
+export default SelectField;
