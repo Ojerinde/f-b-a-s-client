@@ -2,9 +2,6 @@
 import React, { useEffect } from "react";
 import { FormikErrors, useFormik } from "formik";
 import * as Yup from "yup";
-import Navigation from "../components/Navigation/Navigation";
-import InformationInput from "../components/UI/Input/InformationInput";
-import Button from "../components/UI/Button/Button";
 import { IoIosRemoveCircle } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
@@ -12,6 +9,9 @@ import HttpRequest from "@/store/services/HttpRequest";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { AddAllCourses } from "@/store/courses/CoursesSlice";
+import Navigation from "@/components/Navigation/Navigation";
+import InformationInput from "@/components/UI/Input/InformationInput";
+import Button from "@/components/UI/Button/Button";
 
 interface Course {
   courseCode: string;
@@ -61,7 +61,7 @@ const UpdateLecturerInformation: React.FC = () => {
         // Reset form after successful submission
         actions.resetForm();
 
-        router.push("/dashboard");
+        router.push("/dashboard/my_courses");
       } catch (error) {
         console.error("Error creating lecturer:", error);
       } finally {

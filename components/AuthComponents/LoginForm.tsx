@@ -7,7 +7,6 @@ import * as Yup from "yup";
 import { setItemToCookie } from "@/utils/cookiesFunc";
 import { SetItemToLocalStorage } from "@/utils/localStorageFunc";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import InputField from "../UI/Input/Input";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
 import Button from "../UI/Button/Button";

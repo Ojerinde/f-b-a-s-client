@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { socket } from "../../socket";
+import { socket } from "@/app/dashboard/socket";
 
 interface Student {
   _id: string;

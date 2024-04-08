@@ -1,8 +1,8 @@
 "use client";
+import LoginForm from "@/components/AuthComponents/LoginForm";
+import SignUpForm from "@/components/AuthComponents/SignupForm";
 import Image from "next/image";
 import { useState } from "react";
-import LoginForm from "./components/AuthComponents/LoginForm";
-import SignupForm from "./components/AuthComponents/SignupForm";
 
 const LandingPage = () => {
   const [formType, setFormType] = useState<string>("login");
@@ -51,7 +51,7 @@ const LandingPage = () => {
             </div>
           </header>
           <section>
-            {formType === "login" ? <LoginForm /> : <SignupForm />}
+            {formType === "login" ? <LoginForm /> : <SignUpForm />}
           </section>
         </div>
       </div>

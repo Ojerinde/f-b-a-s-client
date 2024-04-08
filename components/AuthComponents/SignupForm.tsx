@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import InputField from "../UI/Input/Input";
 import Button from "../UI/Button/Button";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";

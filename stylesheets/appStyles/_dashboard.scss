@@ -1,0 +1,13 @@
+.dashboard {
+  display: flex;
+  &-left {
+    flex-basis: 20%;
+    border: 1px solid red;
+    background-color: rgba($text-color, .25);
+    min-height: 70vh;
+  }
+  &-right {
+    flex-grow: 1;
+    border: 1px solid green;
+  }
+}

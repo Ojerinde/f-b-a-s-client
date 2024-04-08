@@ -5,11 +5,10 @@ import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import HttpRequest from "@/store/services/HttpRequest";
-import LoadingSpinner from "../components/UI/LoadingSpinner/LoadingSpinner";
-import InlineFeedback from "../components/UI/Input/InlineFeedback";
-import Button from "../components/UI/Button/Button";
 import bg from "@/public/images/f.jpeg";
-import InformationInput from "../components/UI/Input/InformationInput";
+import InformationInput from "@/components/UI/Input/InformationInput";
+import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
+import Button from "@/components/UI/Button/Button";
 
 const ForgotPassword = () => {
   const router = useRouter();

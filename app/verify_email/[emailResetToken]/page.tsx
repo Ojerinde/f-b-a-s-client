@@ -2,13 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
-import Button from "@/app/components/UI/Button/Button";
-import LoadingSpinner from "@/app/components/UI/LoadingSpinner/LoadingSpinner";
 import { IoShieldCheckmark } from "react-icons/io5";
 import { BiSolidError } from "react-icons/bi";
 import bg from "@/public/images/f.jpeg";
 import HttpRequest from "@/store/services/HttpRequest";
+import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
+import Button from "@/components/UI/Button/Button";
 
 interface VerifyEmailProps {
   params: any;
