@@ -3,7 +3,7 @@
 import SideBar from "@/components/Dashboard/Sidebar";
 import Navigation from "@/components/Navigation/Navigation";
 
-export const sideBarLinks = [
+const sideBarLinks = [
   { name: "My Courses", link: "/dashboard/my_courses", iconUrl: "my_courses" },
   { name: "ESP 32", link: "/dashboard/esp32", iconUrl: "esp32" },
   { name: "Settings", link: "/dashboard/settings", iconUrl: "settings" },
