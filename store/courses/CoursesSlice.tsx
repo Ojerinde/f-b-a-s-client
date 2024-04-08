@@ -1,4 +1,4 @@
-import { Course } from "@/app/dashboard/page";
+import { Course } from "@/app/dashboard/my_courses/page";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface InitialStateTypes {
