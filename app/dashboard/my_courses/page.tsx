@@ -7,6 +7,7 @@ import HttpRequest from "@/store/services/HttpRequest";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { AddAllCourses } from "@/store/courses/CoursesSlice";
 import { socket } from "../socket";
+import { FaBook } from "react-icons/fa";
 
 export interface Course {
   _id: string;
@@ -146,25 +147,35 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>Courses</h1>
-      <ul>
+    <div className="courses">
+      <h2 className="courses-header">My Courses</h2>
+      <ul className="courses-list">
         {courses.map((course, index) => (
-          <li key={index}>
-            <h2>{course.courseCode}</h2>
-            <p>{course.courseName}</p>
-            <button onClick={() => handleEnrollClick(course)}>
-              Enroll Student
-            </button>
-            <button onClick={() => handleAttendanceClick(course)}>
-              Take Attendance
-            </button>
-            <Link href={`/dashboard/my_courses/${course?.courseCode}/enrolled_students`}>
+          <li key={index} className="courses-item">
+            <FaBook className="courses-item__icon"/>
+            <div className="courses-item__details">
+              <h3>{course.courseName}</h3>
+              <p>{course.courseCode}</p>
+            </div>
+            <div className="courses-item__actions">
+              <button onClick={() => handleEnrollClick(course)}>
+                Enroll Student
+              </button>
+              <button onClick={() => handleAttendanceClick(course)}>
+                Take Attendance
+              </button>
+            </div>
+
+            {/* <Link
+              href={`/dashboard/my_courses/${course?.courseCode}/enrolled_students`}
+            >
               See enrolled students for the course
             </Link>
-            <Link href={`/dashboard/my_courses${course?.courseCode}/attendance_records`}>
+            <Link
+              href={`/dashboard/my_courses${course?.courseCode}/attendance_records`}
+            >
               See attendance for the course
-            </Link>
+            </Link> */}
           </li>
         ))}
       </ul>

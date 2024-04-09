@@ -28,7 +28,6 @@ const UpdateLecturerInformation: React.FC = () => {
   const router = useRouter();
   const loggedInLecturer = GetItemFromLocalStorage("user");
   const dispatch = useAppDispatch();
-  const { courses } = useAppSelector((state) => state.courses);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
@@ -116,7 +115,8 @@ const UpdateLecturerInformation: React.FC = () => {
       <Navigation />
       <div className="update-container">
         <div className="update-container__left">
-          <h1>Welcome {loggedInLecturer?.name.split(" ")[0]}!</h1>
+          <h2>Welcome!</h2>
+          <h3>{loggedInLecturer?.name.split(" ")[0]}</h3>
           <p>One more step to go.</p>
         </div>
         <div className="update-container__right">
