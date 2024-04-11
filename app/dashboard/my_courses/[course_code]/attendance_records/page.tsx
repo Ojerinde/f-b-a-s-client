@@ -16,7 +16,7 @@ interface AttendanceRecord {
 }
 
 interface AttendancePageProps {
-  params: any;
+  params: { course_code: string };
 }
 
 const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
@@ -25,17 +25,16 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
   >([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const modifiedCourseCode = params?.course_code
+    .replace("_", " ")
+    .toUpperCase();
+
   useEffect(() => {
     const fetchAttendanceRecords = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${
-            process.env.NEXT_PUBLIC_BACKEND_URL
-          }/courses/attendance/${decodeURIComponent(params.course_code).replace(
-            "%20",
-            " "
-          )}`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses/attendance/${modifiedCourseCode}`
         );
         console.log(response);
 
@@ -55,10 +54,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
 
   return (
     <div>
-      <h2>
-        Attendance Records for Course{" "}
-        {decodeURIComponent(params.course_code).replace("%20", " ")}
-      </h2>
+      <h2>Attendance Records for Course {modifiedCourseCode}</h2>
       <ul>
         {attendanceRecords.map((record, index) => (
           <li key={index}>

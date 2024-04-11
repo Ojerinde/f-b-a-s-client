@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { socket } from "@/app/dashboard/socket";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface Student {
   _id: string;
@@ -15,16 +17,22 @@ interface EnrolledStudentsProps {
 }
 
 const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
+  const pathname = usePathname();
   const [enrolledStudents, setEnrolledStudents] = useState<Student[]>([]);
   const [studentsIsLoading, setStudentsIsLoading] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+  const modifiedCourseCode = params?.course_code
+    .split("_")
+    .join(" ")
+    .toUpperCase();
 
   useEffect(() => {
     const fetchEnrolledStudents = async () => {
       setStudentsIsLoading(true);
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses/enroll/${params.course_code}`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses/enroll/${modifiedCourseCode}`
         );
         console.log(response);
 
@@ -77,13 +85,13 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
   if (studentsIsLoading) {
     return <div>Loading...</div>;
   }
-
+  const matricNoHandler = (matricNo: string) => {
+    const modifiedMatricNo = matricNo.replace("/", "_");
+    return modifiedMatricNo;
+  };
   return (
     <div>
-      <h2>
-        Enrolled Students for Course{" "}
-        {decodeURIComponent(params.course_code).replace("%20", " ")}
-      </h2>
+      <h2>Enrolled Students for Course {modifiedCourseCode}</h2>
       <ul>
         {enrolledStudents.map((user) => (
           <li key={user._id}>
@@ -91,14 +99,14 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
             <span>Matric No: {user.matricNo}</span>
             <button
               onClick={() =>
-                handleDeleteEnrolledStudent(
-                  decodeURIComponent(params.course_code).replace("%20", " "),
-                  user.matricNo
-                )
+                handleDeleteEnrolledStudent(modifiedCourseCode, user.matricNo)
               }
             >
               {isDeleting ? "Deleting" : "Delete student"}
             </button>
+            <Link href={`${pathname}/${matricNoHandler(user.matricNo)}`}>
+              See student deatils
+            </Link>
           </li>
         ))}
       </ul>

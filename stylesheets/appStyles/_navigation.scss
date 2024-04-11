@@ -9,6 +9,8 @@
     font-size: 4rem;
     font-weight: bolder;
     letter-spacing: 0.2rem;
+    flex-basis: 60%;
+    text-align: center;
     font-family: "Source Serif Pro", sans-serif;
     background: linear-gradient(
       90deg,
@@ -22,19 +24,22 @@
   }
 
   &-logout {
-    background-color: rgba($text-color, 0.6);
+    background-color: rgba($text-color, 0.3);
+    color: $color-white-dark;
     position: relative;
     width: 6rem;
     height: 6rem;
     border-radius: 50%;
     cursor: pointer;
+    display: inline-block;
+    border: 2px solid whitesmoke;
     transition: all 0.3s;
 
     &:hover {
       background-color: rgba($text-color, 1);
     }
     &:hover > .icon {
-      fill: $color-white;
+      color: $color-white;
     }
 
     & .icon {
@@ -67,7 +72,7 @@
     padding: 1.5rem 2rem 2rem;
     color: $color-white;
     font-size: 1.4rem;
-    letter-spacing: .1rem;
+    letter-spacing: 0.1rem;
     position: absolute;
     bottom: -150%;
     left: 48%;

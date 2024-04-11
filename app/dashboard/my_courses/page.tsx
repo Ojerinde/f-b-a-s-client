@@ -1,13 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 import HttpRequest from "@/store/services/HttpRequest";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { AddAllCourses } from "@/store/courses/CoursesSlice";
-import { socket } from "../socket";
 import { FaBook } from "react-icons/fa";
+import { IoPersonAddSharp } from "react-icons/io5";
+import { BsRecordCircleFill } from "react-icons/bs";
+import { usePathname, useRouter } from "next/navigation";
+import EnrollmentModal from "@/components/Modals/EnrollmentModal";
+import AttendanceModal from "@/components/Modals/AttendanceModal";
+import OverlayModal from "@/components/Modals/OverlayModal";
 
 export interface Course {
   _id: string;
@@ -15,13 +19,12 @@ export interface Course {
   courseName: string;
 }
 
-interface FormData {
-  name: string;
-  matricNo: string;
-}
-
 const Dashboard: React.FC = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const loggedInLecturer = GetItemFromLocalStorage("user");
+
   const dispatch = useAppDispatch();
   const { courses } = useAppSelector((state) => state.courses);
 
@@ -29,17 +32,14 @@ const Dashboard: React.FC = () => {
   const [attendanceModalOpen, setAttendanceModalOpen] =
     useState<boolean>(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    matricNo: "",
-  });
+
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await HttpRequest.get(
-          `/courses/${loggedInLecturer.email}`
+          `/courses/${loggedInLecturer?.email}`
         );
         dispatch(AddAllCourses(response.data.courses));
       } catch (error) {
@@ -59,88 +59,10 @@ const Dashboard: React.FC = () => {
     setAttendanceModalOpen(true);
   };
 
-  const handleEnrollSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      // Emit the enroll event to the server
-      socket.emit("enroll", {
-        ...formData,
-        ...selectedCourse,
-        lecturerEmail: loggedInLecturer.email,
-      });
-      console.log("Enroll event emitted");
-
-      // Reset formData and close modal after successful submission (no need to wait for response)
-      setFormData({ name: "", matricNo: "" });
-      setEnrollModalOpen(false);
-    } catch (error) {
-      console.error("Error emitting enroll event:", error);
-      setLoading(false);
-    }
+  const handleRedirectionToCoursePage = (courseCode: string) => {
+    const modifiedCourseCode = courseCode.split(" ").join("_").toLowerCase();
+    router.push(`${pathname}/${modifiedCourseCode}`);
   };
-
-  const handleAttendanceSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      // Emit the attendance event to the server
-      socket.emit("attendance", { ...formData, ...selectedCourse });
-      console.log("Attendance event emitted");
-
-      // Reset formData and close modal after successful submission (no need to wait for response)
-      setFormData({ name: "", matricNo: "" });
-      setAttendanceModalOpen(false);
-    } catch (error) {
-      console.error("Error emitting attendance event:", error);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    // Listen for enrollment feedback from the server
-    socket.on("enroll_feedback", (feedback) => {
-      console.log("Enrollment feedback received:", feedback);
-      setLoading(false); // Set loading to false once feedback is received
-      if (feedback.error) {
-        console.error("Error occurred during enrollment:", feedback.error);
-        // Handle error if needed
-      } else {
-        console.log("Student enrolled successfully");
-        // Handle success if needed
-      }
-    });
-
-    // Clean up event listener when component unmounts
-    return () => {
-      socket.off("enroll_feedback");
-    };
-  }, []);
-
-  useEffect(() => {
-    // Listen for attendance feedback from the server
-    socket.on("attendance_feedback", (feedback) => {
-      console.log("Attendance feedback received:", feedback);
-      setLoading(false); // Set loading to false once feedback is received
-      if (feedback.error) {
-        console.error(
-          "Error occurred during attendance marking:",
-          feedback.error
-        );
-        // Handle error if needed
-      } else {
-        console.log("Attendance marked successfully");
-        // Handle success if needed
-      }
-    });
-
-    // Clean up event listener when component unmounts
-    return () => {
-      socket.off("attendance_feedback");
-    };
-  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -152,119 +74,48 @@ const Dashboard: React.FC = () => {
       <ul className="courses-list">
         {courses.map((course, index) => (
           <li key={index} className="courses-item">
-            <FaBook className="courses-item__icon"/>
+            <FaBook className="courses-item__icon" />
             <div className="courses-item__details">
-              <h3>{course.courseName}</h3>
+              <h3
+                onClick={() => handleRedirectionToCoursePage(course.courseCode)}
+              >
+                {course.courseName}
+              </h3>
               <p>{course.courseCode}</p>
             </div>
             <div className="courses-item__actions">
               <button onClick={() => handleEnrollClick(course)}>
-                Enroll Student
+                <IoPersonAddSharp />
+                <span>Enroll Student</span>
               </button>
               <button onClick={() => handleAttendanceClick(course)}>
-                Take Attendance
+                <BsRecordCircleFill />
+                <span>Take Attendance</span>
               </button>
             </div>
-
-            {/* <Link
-              href={`/dashboard/my_courses/${course?.courseCode}/enrolled_students`}
-            >
-              See enrolled students for the course
-            </Link>
-            <Link
-              href={`/dashboard/my_courses${course?.courseCode}/attendance_records`}
-            >
-              See attendance for the course
-            </Link> */}
           </li>
         ))}
       </ul>
 
       {/* Enroll Modal */}
       {enrollModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            {/* Modal content for enrollment */}
-            <span className="close" onClick={() => setEnrollModalOpen(false)}>
-              &times;
-            </span>
-            <h2>
-              Enroll Student for {selectedCourse && selectedCourse.courseCode}
-            </h2>
-            <form onSubmit={handleEnrollSubmit}>
-              <div>
-                <label htmlFor="name">Name:</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="matricNo">Matric No:</label>
-                <input
-                  type="text"
-                  id="matricNo"
-                  value={formData.matricNo}
-                  onChange={(e) =>
-                    setFormData({ ...formData, matricNo: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <button type="submit">Submit</button>
-            </form>
-          </div>
-        </div>
+        <OverlayModal onClose={() => setEnrollModalOpen(false)}>
+          <EnrollmentModal
+            course={selectedCourse}
+            lecturerEmail={loggedInLecturer?.email}
+            closeModal={() => setEnrollModalOpen(false)}
+          />
+        </OverlayModal>
       )}
 
       {/* Attendance Modal */}
       {attendanceModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            {/* Modal content for taking attendance */}
-            <span
-              className="close"
-              onClick={() => setAttendanceModalOpen(false)}
-            >
-              &times;
-            </span>
-            <h2>
-              Take Attendance for {selectedCourse && selectedCourse.courseCode}
-            </h2>
-            <form onSubmit={handleAttendanceSubmit}>
-              <div>
-                <label htmlFor="name">Name:</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="matricNo">Matric No:</label>
-                <input
-                  type="text"
-                  id="matricNo"
-                  value={formData.matricNo}
-                  onChange={(e) =>
-                    setFormData({ ...formData, matricNo: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <button type="submit">Submit</button>
-            </form>
-          </div>
-        </div>
+        <OverlayModal onClose={() => setAttendanceModalOpen(false)}>
+          <AttendanceModal
+            course={selectedCourse}
+            closeModal={() => setAttendanceModalOpen(false)}
+          />
+        </OverlayModal>
       )}
     </div>
   );

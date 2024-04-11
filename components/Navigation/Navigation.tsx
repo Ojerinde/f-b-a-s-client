@@ -17,11 +17,15 @@ const Navigation = () => {
   return (
     <nav className="navigation">
       <figure
-        style={{ borderRadius: "20%", overflow: "hidden" }}
-        onClick={() => router.push("/")}
+        style={{
+          overflow: "hidden",
+          cursor: "pointer",
+          boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.6)",
+        }}
+        onClick={() => router.push("/update_profile")}
       >
         <Image
-          src="/images/F-B-A-S.png"
+          src="/images/logo.png"
           alt="Logo"
           width={100}
           height={80}

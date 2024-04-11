@@ -10,11 +10,7 @@ interface OverlayProps {
 }
 
 const Overlay: React.FC<OverlayProps> = ({ children }) => {
-  return (
-    <div className="fixed z-20 top-[23%] mx-4 sm:mx-0 left-[0%] xs:left-[13%] sm:left-[20%] md:left-[28%] lg:left-[29%]">
-      {children}
-    </div>
-  );
+  return <div className="overlay">{children}</div>;
 };
 
 const Backdrop = ({ onClose }: { onClose: () => void }) => {
@@ -26,7 +22,7 @@ const Backdrop = ({ onClose }: { onClose: () => void }) => {
           onClose();
         }
       }}
-      className="fixed top-0 left-0 z-10 w-full h-full bg-[rgba(0,0,0,0.7)] backdrop-blur-[.5rem]"
+      className="backdrop"
       role="button"
       tabIndex={0}
     />

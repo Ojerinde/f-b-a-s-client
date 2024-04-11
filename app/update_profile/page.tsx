@@ -133,7 +133,7 @@ const UpdateLecturerInformation: React.FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               inputErrorMessage={formik.errors.name}
-              placeholder={formik.values.email}
+              placeholder={formik.values.name}
               readOnly
             />
 
