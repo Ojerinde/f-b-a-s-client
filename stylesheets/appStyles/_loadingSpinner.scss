@@ -5,16 +5,25 @@
   }
   &-icon {
     animation: spinner 2s linear infinite;
-    height: 3rem;
-    width: 3rem;
   }
   &-icon__blue {
-
+    height: 3rem;
+    width: 3rem;
     fill: $text-color;
   }
   &-icon__white {
-
+    height: 3rem;
+    width: 3rem;
     fill: $color-white;
+  }
+  &-box__big {
+    width: 100%;
+    height: 50vh;
+    @include flex-center;
+  }
+  &-icon__big {
+    height: 10rem;
+    width: 10rem;
   }
 }
 

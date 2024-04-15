@@ -120,7 +120,7 @@ const UpdateLecturerInformation: React.FC = () => {
           <p>One more step to go.</p>
         </div>
         <div className="update-container__right">
-          <Link href="/dashboard" className="login-link">
+          <Link href="/dashboard" className="continue">
             Continue To Dashboard
           </Link>
           <h2>Update your information.</h2>

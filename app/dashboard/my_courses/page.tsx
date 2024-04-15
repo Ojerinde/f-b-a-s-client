@@ -1,10 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
-import HttpRequest from "@/store/services/HttpRequest";
-import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { AddAllCourses } from "@/store/courses/CoursesSlice";
+import { useState } from "react";
+import { useAppSelector } from "@/hooks/reduxHook";
 import { FaBook } from "react-icons/fa";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { BsRecordCircleFill } from "react-icons/bs";
@@ -12,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import EnrollmentModal from "@/components/Modals/EnrollmentModal";
 import AttendanceModal from "@/components/Modals/AttendanceModal";
 import OverlayModal from "@/components/Modals/OverlayModal";
+import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
 export interface Course {
   _id: string;
@@ -20,34 +18,16 @@ export interface Course {
 }
 
 const Dashboard: React.FC = () => {
-  const router = useRouter();
   const pathname = usePathname();
-
+  const router = useRouter();
   const loggedInLecturer = GetItemFromLocalStorage("user");
 
-  const dispatch = useAppDispatch();
   const { courses } = useAppSelector((state) => state.courses);
 
   const [enrollModalOpen, setEnrollModalOpen] = useState<boolean>(false);
   const [attendanceModalOpen, setAttendanceModalOpen] =
     useState<boolean>(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await HttpRequest.get(
-          `/courses/${loggedInLecturer?.email}`
-        );
-        dispatch(AddAllCourses(response.data.courses));
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      }
-    };
-    fetchCourses();
-  }, []);
 
   const handleEnrollClick = (course: Course) => {
     setSelectedCourse(course);
@@ -64,13 +44,10 @@ const Dashboard: React.FC = () => {
     router.push(`${pathname}/${modifiedCourseCode}`);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="courses">
       <h2 className="courses-header">My Courses</h2>
+
       <ul className="courses-list">
         {courses.map((course, index) => (
           <li key={index} className="courses-item">

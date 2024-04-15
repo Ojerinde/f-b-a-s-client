@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { socket } from "@/app/dashboard/socket";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import HttpRequest from "@/store/services/HttpRequest";
+import { useAppSelector } from "@/hooks/reduxHook";
+import { MdPersonPin } from "react-icons/md";
+import { LuView } from "react-icons/lu";
+import Pagination from "@/components/UI/Pagination/Pagination";
 
 interface Student {
   _id: string;
@@ -18,98 +21,50 @@ interface EnrolledStudentsProps {
 
 const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
   const pathname = usePathname();
-  const [enrolledStudents, setEnrolledStudents] = useState<Student[]>([]);
-  const [studentsIsLoading, setStudentsIsLoading] = useState<boolean>(false);
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const { enrolledStudents } = useAppSelector((state) => state.students);
+  const [start, setStart] = useState(0);
 
   const modifiedCourseCode = params?.course_code
-    .split("_")
-    .join(" ")
+    .replace("_", " ")
     .toUpperCase();
 
-  useEffect(() => {
-    const fetchEnrolledStudents = async () => {
-      setStudentsIsLoading(true);
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses/enroll/${modifiedCourseCode}`
-        );
-        console.log(response);
-
-        setEnrolledStudents(response.data.students);
-      } catch (error) {
-        console.error("Error fetching enrolled Students:", error);
-      }
-      setStudentsIsLoading(false);
-    };
-
-    fetchEnrolledStudents();
-  }, [params.course_code]);
-
-  const handleDeleteEnrolledStudent = (
-    courseCode: string,
-    matricNo: string
-  ) => {
-    try {
-      setIsDeleting(true);
-      // Emit the event to the server
-      socket.emit("delete_enrolled_students", { courseCode, matricNo });
-      console.log("Delete Event emmitted");
-    } catch (error) {
-      console.error("Error emitting delete event:", error);
-      setIsDeleting(false);
-    }
-  };
-
-  useEffect(() => {
-    // Listen for attendance feedback from the server
-    socket.on("delete_enrolled_students_feedback", (feedback) => {
-      console.log("Delete Enrolled students feedback received:", feedback);
-      setIsDeleting(false); // Set loading to false once feedback is received
-      if (feedback.error) {
-        console.error(
-          "Error occurred during deletion of enrolled students",
-          feedback.error
-        );
-      } else {
-        console.log("Student deleted successfully");
-      }
-    });
-
-    // Clean up event listener when component unmounts
-    return () => {
-      socket.off("delete_enrolled_students_feedback");
-    };
-  }, []);
-
-  if (studentsIsLoading) {
-    return <div>Loading...</div>;
-  }
   const matricNoHandler = (matricNo: string) => {
     const modifiedMatricNo = matricNo.replace("/", "_");
     return modifiedMatricNo;
   };
+  const studentsPerpage = 1;
+  const end = start + studentsPerpage;
+  const handlePageChange = (num: number) => {
+    setStart(num - 1);
+  };
+
   return (
-    <div>
-      <h2>Enrolled Students for Course {modifiedCourseCode}</h2>
-      <ul>
-        {enrolledStudents.map((user) => (
-          <li key={user._id}>
-            <span>Name: {user.name}</span> |{" "}
-            <span>Matric No: {user.matricNo}</span>
-            <button
-              onClick={() =>
-                handleDeleteEnrolledStudent(modifiedCourseCode, user.matricNo)
-              }
-            >
-              {isDeleting ? "Deleting" : "Delete student"}
-            </button>
-            <Link href={`${pathname}/${matricNoHandler(user.matricNo)}`}>
-              See student deatils
+    <div className="enrollmentPage">
+      <h2 className="enrollmentPage-title">
+        Enrolled Students for {modifiedCourseCode}
+      </h2>
+      <ul className="enrollmentPage-list">
+        {enrolledStudents.slice(start, end).map((student: any) => (
+          <li key={student._id}>
+            <div className="enrollmentPage-left">
+              <MdPersonPin />
+              <div>
+                <h3>{student.name}</h3>
+                <h4> {student.matricNo}</h4>
+              </div>
+            </div>
+
+            <Link href={`${pathname}/${matricNoHandler(student.matricNo)}`}>
+              <LuView className="enrollmentPage-right" />
             </Link>
           </li>
         ))}
       </ul>
+      <Pagination
+        length={enrolledStudents.length}
+        itemsPerPage={studentsPerpage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
