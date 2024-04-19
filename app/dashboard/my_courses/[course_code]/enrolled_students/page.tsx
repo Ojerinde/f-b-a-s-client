@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import HttpRequest from "@/store/services/HttpRequest";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { MdPersonPin } from "react-icons/md";
 import { LuView } from "react-icons/lu";
@@ -32,7 +31,7 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
     const modifiedMatricNo = matricNo.replace("/", "_");
     return modifiedMatricNo;
   };
-  const studentsPerpage = 1;
+  const studentsPerpage = 4;
   const end = start + studentsPerpage;
   const handlePageChange = (num: number) => {
     setStart(num - 1);
