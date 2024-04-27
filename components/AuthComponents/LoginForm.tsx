@@ -60,6 +60,7 @@ const LoginForm = () => {
 
       router.push("/update_profile");
     } catch (error: any) {
+      console.log(error);
       const errorMessage = error?.response?.data.message || "An error occured";
       setShowError(() => ({
         hasError: true,

@@ -1,0 +1,26 @@
+.attendanceItem {
+  &-header {
+    font-size: 3rem;
+    color: $text-color;
+    letter-spacing: 0.2rem;
+    border-bottom: 0.3rem dashed rgba($text-color, 0.7);
+    width: fit-content;
+    padding-bottom: 0.2rem;
+    margin-bottom: 1.5rem;
+  }
+  &-input {
+    margin: 2rem 0;
+    border: 0.1rem solid $text-color;
+    display: flex;
+    justify-content: space-between;
+  }
+  &-list {
+    list-style: none;
+  }
+  &-item {
+    padding: 1rem 0;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}

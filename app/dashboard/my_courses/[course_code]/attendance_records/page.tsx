@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import AttendanceItem from "@/components/Attendance/AttendanceItem";
 
 interface Student {
   _id: string;
@@ -54,20 +55,29 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
 
   return (
     <div>
-      <h2>Attendance Records for Course {modifiedCourseCode}</h2>
-      <ul>
+      <h2 className="attendanceItem-header">
+        Attendance Records for Course {modifiedCourseCode}
+      </h2>
+      <div className="attendanceItem-input">
+        <div>
+          <label htmlFor="">From</label>
+          <input type="date" />
+        </div>
+        <div>
+          <label htmlFor="">To</label>
+          <input type="date" />
+        </div>
+        <div>
+          <input type="text" placeholder="Search for a student" />
+        </div>
+      </div>
+      <ul className="attendanceItem-list">
         {attendanceRecords.map((record, index) => (
-          <li key={index}>
-            <span>Date: {record.date}</span>
-            <ul>
-              {record.studentsPresent.map((student, index) => (
-                <li key={index}>
-                  <span>Name: {student.name}</span> |{" "}
-                  <span>Matric No: {student.matricNo}</span>
-                </li>
-              ))}
-            </ul>
-          </li>
+          <AttendanceItem
+            key={index}
+            date={record.date}
+            studentsPresent={record.studentsPresent}
+          />
         ))}
       </ul>
     </div>
