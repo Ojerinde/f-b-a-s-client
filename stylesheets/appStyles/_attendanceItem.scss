@@ -8,11 +8,97 @@
     padding-bottom: 0.2rem;
     margin-bottom: 1.5rem;
   }
-  &-input {
-    margin: 2rem 0;
-    border: 0.1rem solid $text-color;
+  &-filter {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+    margin-bottom: 2rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+      rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      column-gap: 3rem;
+      & span {
+        font-size: 2.5rem;
+        letter-spacing: 0.2rem;
+        padding: 0.7rem 3rem;
+        margin: 1.4rem 0;
+        border-radius: 0.3rem;
+        width: fit-content;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+          rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+      }
+
+      & svg {
+        font-size: 5rem;
+        color: rgba($text-color, 1);
+        transition: all 0.3s;
+        cursor: pointer;
+        &:hover {
+          color: rgba($text-color, 0.6);
+        }
+      }
+    }
+  }
+  &-input {
+    flex-basis: 50%;
+    margin: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+
+    & label {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-right: 2rem;
+    }
+
+    & input {
+      padding: 0.6rem 0.8rem;
+      font-size: 1.5rem;
+    }
+    & button {
+      margin-left: 2rem;
+      border: none;
+      background-color: rgba($text-color, 0.3);
+      padding: 0.8rem 1.5rem;
+      border-radius: 0.4rem;
+      color: rgba($text-color, 0.9);
+      letter-spacing: 0.15rem;
+      font-size: 1.6rem;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba($text-color, 0.6);
+        color: white;
+      }
+    }
+  }
+  &-search {
+    flex-basis: 45%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 2rem;
+
+    & input {
+      padding: 1rem 1.2rem;
+      width: 100%;
+      border: none;
+      border-bottom: 2px solid $color-black-light;
+      font-size: 1.6rem;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    & svg {
+      font-size: 5rem;
+      color: rgba($text-color, 0.8);
+      cursor: pointer;
+    }
   }
   &-list {
     list-style: none;
@@ -21,6 +107,54 @@
     padding: 1rem 0;
     &:last-child {
       border-bottom: none;
+    }
+    &__header {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      column-gap: 3rem;
+      margin-bottom: 1rem;
+
+      & button {
+        border: none;
+        background-color: rgba($text-color, 0.3);
+        padding: 0.7rem 0.8rem;
+        border-radius: 0.4rem;
+        color: rgba($text-color, 0.9);
+        letter-spacing: 0.1rem;
+        font-size: 1.6rem;
+        cursor: pointer;
+        &:hover {
+          background-color: rgba($text-color, 0.6);
+          color: white;
+        }
+      }
+    }
+    &__date {
+      font-size: 1.7rem;
+      font-weight: bold;
+    }
+  }
+  &-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid rgba(grey, 0.5);
+
+    text-align: center;
+
+    & tr {
+      &:hover {
+        background-color: rgba($text-color, 0.3);
+      }
+    }
+
+    & th,
+    td {
+      border: 1px solid rgba(grey, 0.5);
+      height: 3rem;
+      vertical-align: center;
+      font-size: 1.5rem;
+      color: rgba($text-color, 1);
     }
   }
 }

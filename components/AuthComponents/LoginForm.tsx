@@ -115,17 +115,16 @@ const LoginForm = () => {
               value={formik.values.password}
               passwordIcon={true}
               showPassword={showPassword}
-              updatePasswordVisibility={updatePasswordVisibility}
+              updatePasswordVisibility={updatePasswordVisibility} 
             />
             <Link href="/forgot_password" className="login-link">
               Forgot Password?
             </Link>
-            {formik.isSubmitting && <LoadingSpinner />}
             {showError.hasError && (
               <InlineFeedback status="error" message={showError.message} />
             )}
             <Button type="submit" onClick={() => {}}>
-              {formik.isSubmitting ? "Logging in..." : "Login"}
+              {formik.isSubmitting ? <LoadingSpinner /> : "Login"}
             </Button>
           </form>
         )}

@@ -7,6 +7,7 @@ import { useAppSelector } from "@/hooks/reduxHook";
 import { MdPersonPin } from "react-icons/md";
 import { LuView } from "react-icons/lu";
 import Pagination from "@/components/UI/Pagination/Pagination";
+import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
 
 interface Student {
   _id: string;
@@ -42,28 +43,34 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
       <h2 className="enrollmentPage-title">
         Enrolled Students for {modifiedCourseCode}
       </h2>
-      <ul className="enrollmentPage-list">
-        {enrolledStudents.slice(start, end).map((student: any) => (
-          <li key={student._id}>
-            <div className="enrollmentPage-left">
-              <MdPersonPin />
-              <div>
-                <h3>{student.name}</h3>
-                <h4> {student.matricNo}</h4>
+      {enrolledStudents.length === 0 ? (
+        <LoadingSpinner color="blue" height="big" />
+      ) : (
+        <ul className="enrollmentPage-list">
+          {enrolledStudents.slice(start, end).map((student: any) => (
+            <li key={student._id}>
+              <div className="enrollmentPage-left">
+                <MdPersonPin />
+                <div>
+                  <h3>{student.name}</h3>
+                  <h4> {student.matricNo}</h4>
+                </div>
               </div>
-            </div>
 
-            <Link href={`${pathname}/${matricNoHandler(student.matricNo)}`}>
-              <LuView className="enrollmentPage-right" />
-            </Link>
-          </li>
-        ))}
-      </ul>
-      <Pagination
-        length={enrolledStudents.length}
-        itemsPerPage={studentsPerpage}
-        onPageChange={handlePageChange}
-      />
+              <Link href={`${pathname}/${matricNoHandler(student.matricNo)}`}>
+                <LuView className="enrollmentPage-right" />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+      {enrolledStudents.length > 0 && (
+        <Pagination
+          length={enrolledStudents.length}
+          itemsPerPage={studentsPerpage}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };
