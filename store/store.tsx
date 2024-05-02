@@ -1,9 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import courseReducer from "./courses/CoursesSlice";
 import studentReducer from "./studentss/StudentsSlice";
+import Esp32Reducer from "./esp32/Esp32Slice";
 
 export const store = configureStore({
-  reducer: { courses: courseReducer, students: studentReducer },
+  reducer: {
+    courses: courseReducer,
+    students: studentReducer,
+    esp32: Esp32Reducer,
+  },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
