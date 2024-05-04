@@ -1,0 +1,63 @@
+.resetOverlay {
+  width: 40vw;
+  background-color: rgba($color-white, 0.8);
+  padding: 5rem;
+  position: relative;
+
+  &-icon {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 3rem;
+    color: $text-color;
+    transition: all 0.3s;
+
+    &:hover {
+      color: rgba($text-color, 0.5);
+      cursor: pointer;
+    }
+  }
+
+  &-text {
+    font-size: 1.8rem;
+    letter-spacing: 0.1rem;
+    line-height: 3rem;
+    color: rgba($text-error-color, 0.8);
+    font-weight: bold;
+    margin: 1rem 0 2rem;
+  }
+
+  &-text_2 {
+    font-size: 1.7rem;
+    font-weight: normal;
+    letter-spacing: 0.1rem;
+    margin: 1rem 0 2rem;
+
+    & span {
+      font-weight: bold;
+    }
+  }
+
+  &-button {
+    background-color: rgba($text-error-color, 0.8);
+    border: 0.2rem solid $text-error-color;
+    color: $color-white;
+    letter-spacing: 0.3rem;
+    font-weight: 400;
+    border-radius: 0.5rem;
+    font-size: 2rem;
+    width: 100%;
+    padding: 1.3rem 0;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
+      rgb(209, 213, 219) 0px 0px 0px 1px inset;
+    transition: all 0.3s;
+    &:disabled {
+      opacity: 0.5;
+      cursor: no-drop;
+    }
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
