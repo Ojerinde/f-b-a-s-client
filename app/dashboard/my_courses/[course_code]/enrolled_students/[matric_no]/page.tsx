@@ -120,7 +120,10 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ params }) => {
       {/* View All Courses Modal */}
       {viewCoursesModalOpen && (
         <StudentDetailsOverlay onClose={() => setViewCoursesModalOpen(false)}>
-          <AllCoursesModal onClose={() => setViewCoursesModalOpen(false)} />
+          <AllCoursesModal
+            onClose={() => setViewCoursesModalOpen(false)}
+            student={student}
+          />
         </StudentDetailsOverlay>
       )}
 

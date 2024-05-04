@@ -57,7 +57,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ params }) => {
         backgroundImage: `url(${bg.src})`,
       }}
     >
-      {isLoading && <LoadingSpinner color="white" />}
+      {isLoading && <LoadingSpinner color="white" height="big" />}
       {!isLoading && !requestFailed && (
         <div className="verify-card">
           <IoShieldCheckmark className="verify-icon__success" />

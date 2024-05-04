@@ -4,9 +4,13 @@ import { MdOutlineClose } from "react-icons/md";
 
 type AllCoursesModalProps = {
   onClose: () => void;
+  student: any;
 };
 
-const AllCoursesModal: React.FC<AllCoursesModalProps> = ({ onClose }) => {
+const AllCoursesModal: React.FC<AllCoursesModalProps> = ({
+  onClose,
+  student,
+}) => {
   const { studentAllCourses } = useAppSelector((state) => state.students);
   console.log("All Course", studentAllCourses);
 
@@ -15,16 +19,20 @@ const AllCoursesModal: React.FC<AllCoursesModalProps> = ({ onClose }) => {
       <div className="" onClick={onClose}>
         <MdOutlineClose className="attendanceOverlay-icon" />
       </div>
-      <h2>All Courses</h2>
+      <h2>{student.matricNo} is enrolled for the following courses:</h2>
 
-      <ul>
+      <ul className="allCoursesModal-list">
         {studentAllCourses.map((course, index) => (
-          <li key={index}>
-            <div>
-              <h3>{course?.courseName}</h3>
-              <p>{course?.courseCode}</p>
+          <li key={index} className="allCoursesModal-item">
+            <div className="allCoursesModal-item__number">{index + 1}</div>
+            <div className="allCoursesModal-item__details">
+              <h3>
+                {course?.courseName} <span>({course?.courseCode})</span>
+              </h3>
+              <p>
+                Lecturer name: <span>{course?.lecturer.name}</span>
+              </p>
             </div>
-            <p>Lecturer name: {course?.lecturer.name}</p>
           </li>
         ))}
       </ul>
