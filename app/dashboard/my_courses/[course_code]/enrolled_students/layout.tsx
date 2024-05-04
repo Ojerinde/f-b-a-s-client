@@ -2,7 +2,10 @@
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import HttpRequest from "@/store/services/HttpRequest";
-import { AddEnrolledStudents } from "@/store/studentss/StudentsSlice";
+import {
+  AddEnrolledStudents,
+  updateIsFetchingEnrolledStudentsState,
+} from "@/store/studentss/StudentsSlice";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -16,24 +19,24 @@ export default function Layout({
     .replace("_", " ")
     .toUpperCase();
 
-  const { enrolledStudents } = useAppSelector((state) => state.students);
-
   const dispatch = useAppDispatch();
   useEffect(() => {
     const fetchEnrolledStudents = async () => {
       try {
+        dispatch(updateIsFetchingEnrolledStudentsState(true));
         const response = await HttpRequest.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses/enroll/${modifiedCourseCode}`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses/${modifiedCourseCode}/enroll`
         );
+        console.log("enrolled students", response.data.students);
 
         dispatch(AddEnrolledStudents(response.data.students));
       } catch (error) {
         console.error("Error fetching enrolled Students:", error);
+      } finally {
+        dispatch(updateIsFetchingEnrolledStudentsState(false));
       }
     };
-    if (enrolledStudents.length === 0) {
-      fetchEnrolledStudents();
-    }
+    fetchEnrolledStudents();
   }, [params?.course_code]);
 
   return <div>{children}</div>;

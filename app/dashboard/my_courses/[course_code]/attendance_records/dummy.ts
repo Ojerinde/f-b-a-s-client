@@ -107,13 +107,15 @@ export const dummyData = [
 interface MyObject {
   _id: string;
   date: string;
-  studentsPresent: any[]; // Change this to the type of studentsPresent array
+  studentsPresent: any[];
   course: string;
-  __v: number;
 }
 
 export function sortByDate(objects: MyObject[]): MyObject[] {
-  return objects.sort((a, b) => {
+  // Create a shallow copy of the array to ensure mutability
+  const mutableObjects = objects.slice();
+
+  return mutableObjects.sort((a, b) => {
     const dateA = new Date(a.date).getTime();
     const dateB = new Date(b.date).getTime();
     return dateB - dateA;

@@ -2,7 +2,10 @@
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import HttpRequest from "@/store/services/HttpRequest";
-import { AddAttendanceRecords } from "@/store/studentss/StudentsSlice";
+import {
+  AddAttendanceRecords,
+  updateIsFetchingAttendanceRecordsState,
+} from "@/store/studentss/StudentsSlice";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -22,18 +25,20 @@ export default function Layout({
   useEffect(() => {
     const fetchAttendanceRecords = async () => {
       try {
+        dispatch(updateIsFetchingAttendanceRecordsState(true));
         const response = await HttpRequest.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses/attendance/${modifiedCourseCode}`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses/${modifiedCourseCode}/attendance`
         );
+        console.log("records", response.data.attendanceRecords);
 
         dispatch(AddAttendanceRecords(response.data.attendanceRecords));
       } catch (error) {
         console.error("Error fetching enrolled Students:", error);
+      } finally {
+        dispatch(updateIsFetchingAttendanceRecordsState(false));
       }
     };
-    if (attendanceRecords.length === 0) {
-      fetchAttendanceRecords();
-    }
+    fetchAttendanceRecords();
   }, [params?.course_code]);
 
   return <div>{children}</div>;

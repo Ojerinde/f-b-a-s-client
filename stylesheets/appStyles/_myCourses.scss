@@ -8,6 +8,44 @@
     padding-bottom: 0.2rem;
     margin-bottom: 1.5rem;
   }
+  &-nocourse {
+    margin-top: 7rem;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    & svg {
+      font-size: 10rem;
+      color: rgba($text-color, 0.5);
+    }
+    & p {
+      font-size: 3rem;
+      letter-spacing: 0.2rem;
+      color: rgba($text-color, 0.7);
+    }
+    & button {
+      margin-top: 2rem;
+      background-color: rgba($text-color, 0.8);
+      border: 0.2rem solid $text-color;
+      color: $color-white;
+      letter-spacing: 0.3rem;
+      font-weight: 400;
+      border-radius: 0.5rem;
+      font-size: 2rem;
+      width: fit-content;
+      padding: 1.7rem 5rem;
+      cursor: pointer;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
+        rgb(209, 213, 219) 0px 0px 0px 1px inset;
+      transition: all 0.3s;
+      &:disabled {
+        opacity: 0.5;
+        cursor: no-drop;
+      }
+      &:hover {
+        box-shadow: none;
+      }
+    }
+  }
   &-list {
     list-style: none;
   }

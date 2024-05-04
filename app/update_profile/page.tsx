@@ -77,6 +77,12 @@ const UpdateLecturerInformation: React.FC = () => {
   };
 
   const removeCourse = (index: number) => {
+    if (
+      !confirm(
+        "Are you sure you want to remove this course? This will delete the course related data "
+      )
+    )
+      return;
     const updatedCourses = [...formik.values.courses];
     updatedCourses.splice(index, 1);
     formik.setValues({

@@ -21,7 +21,9 @@ const LandingPage = () => {
                 objectFit: "cover",
                 position: "absolute",
               }}
+              sizes="100%"
               quality={100}
+              priority
             />
           </figure>
         </div>

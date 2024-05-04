@@ -21,9 +21,17 @@ export default function Layout({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setIsFetchingEsp32details(true);
-    socket.emit("esp32_details");
-    console.log("Fetch Esp32 Details event emitted");
+    try {
+      setIsFetchingEsp32details(true);
+      socket.emit("esp32_details");
+      console.log("Fetch Esp32 Details event emitted");
+    } catch (error) {
+      console.log("Fetch Esp32 Details failed", error);
+    } finally {
+      setTimeout(() => {
+        setIsFetchingEsp32details(false);
+      }, 7000);
+    }
   }, []);
 
   useEffect(() => {

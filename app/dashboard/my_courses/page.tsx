@@ -10,6 +10,7 @@ import EnrollmentModal from "@/components/Modals/EnrollmentModal";
 import AttendanceModal from "@/components/Modals/AttendanceModal";
 import OverlayModal from "@/components/Modals/OverlayModal";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
+import { RiCreativeCommonsZeroFill } from "react-icons/ri";
 
 export interface Course {
   _id: string;
@@ -47,7 +48,20 @@ const Dashboard: React.FC = () => {
   return (
     <div className="courses">
       <h2 className="courses-header">My Courses</h2>
-
+      {courses.length === 0 && (
+        <div className="courses-nocourse">
+          <RiCreativeCommonsZeroFill />
+          <p>
+            You haven't register any course yet, kindly update your profile.
+          </p>
+          <button
+            className="coursePage-button"
+            onClick={() => router.push("/update_profile")}
+          >
+            Update Profile
+          </button>
+        </div>
+      )}
       <ul className="courses-list">
         {courses.map((course, index) => (
           <li key={index} className="courses-item">

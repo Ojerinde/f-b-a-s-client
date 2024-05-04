@@ -53,6 +53,7 @@ const LoginForm = () => {
         data: { user },
         token,
       } = response.data;
+      console.log("response", response);
 
       // Setting item to local strorage and cookies
       setItemToCookie("token", token);
@@ -60,8 +61,9 @@ const LoginForm = () => {
 
       router.push("/update_profile");
     } catch (error: any) {
-      console.log(error);
       const errorMessage = error?.response?.data.message || "An error occured";
+      console.log("error", error);
+
       setShowError(() => ({
         hasError: true,
         message: `${errorMessage} Try again.`,
@@ -115,7 +117,7 @@ const LoginForm = () => {
               value={formik.values.password}
               passwordIcon={true}
               showPassword={showPassword}
-              updatePasswordVisibility={updatePasswordVisibility} 
+              updatePasswordVisibility={updatePasswordVisibility}
             />
             <Link href="/forgot_password" className="login-link">
               Forgot Password?

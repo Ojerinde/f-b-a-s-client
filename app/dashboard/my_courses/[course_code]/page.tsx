@@ -3,6 +3,7 @@
 import AttendanceModal from "@/components/Modals/AttendanceModal";
 import EnrollmentModal from "@/components/Modals/EnrollmentModal";
 import OverlayModal from "@/components/Modals/OverlayModal";
+import ResetModal from "@/components/Modals/ResetModal";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 import Link from "next/link";
@@ -20,6 +21,7 @@ const CourseDetailsPage: React.FC<CourseDetailsPageprops> = ({ params }) => {
   const [enrollModalOpen, setEnrollModalOpen] = useState<boolean>(false);
   const [attendanceModalOpen, setAttendanceModalOpen] =
     useState<boolean>(false);
+  const [resetModalOpen, setResetModalOpen] = useState<boolean>(false);
 
   const pathname = usePathname();
   const { course_code } = params;
@@ -58,6 +60,13 @@ const CourseDetailsPage: React.FC<CourseDetailsPageprops> = ({ params }) => {
         </Link>
       </div>
 
+      <button
+        className="coursePage-button"
+        onClick={() => setResetModalOpen(true)}
+      >
+        Reset Course
+      </button>
+
       {/* Enroll Modal */}
       {enrollModalOpen && (
         <OverlayModal onClose={() => setEnrollModalOpen(false)}>
@@ -75,6 +84,15 @@ const CourseDetailsPage: React.FC<CourseDetailsPageprops> = ({ params }) => {
           <AttendanceModal
             course={course!}
             closeModal={() => setAttendanceModalOpen(false)}
+          />
+        </OverlayModal>
+      )}
+      {/* Reset Modal */}
+      {resetModalOpen && (
+        <OverlayModal onClose={() => setResetModalOpen(false)}>
+          <ResetModal
+            course={course!}
+            closeModal={() => setResetModalOpen(false)}
           />
         </OverlayModal>
       )}

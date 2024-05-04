@@ -6,8 +6,8 @@ import ReduxProvider from "./ReduxProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Attendance UI",
-  description: "Fingerprint based attendance UI",
+  title: "Biometric Attendance System",
+  description: "Fingerprint based attendance system",
 };
 
 export default function RootLayout({

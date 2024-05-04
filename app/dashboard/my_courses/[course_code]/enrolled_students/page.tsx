@@ -2,18 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { MdPersonPin } from "react-icons/md";
 import { LuView } from "react-icons/lu";
 import Pagination from "@/components/UI/Pagination/Pagination";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
-
-interface Student {
-  _id: string;
-  name: string;
-  matricNo: string;
-}
+import { RiCreativeCommonsZeroFill } from "react-icons/ri";
 
 interface EnrolledStudentsProps {
   params: any;
@@ -21,7 +16,11 @@ interface EnrolledStudentsProps {
 
 const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
   const pathname = usePathname();
-  const { enrolledStudents } = useAppSelector((state) => state.students);
+  const router = useRouter();
+  const { enrolledStudents, isFetchingEnrolledStudents } = useAppSelector(
+    (state) => state.students
+  );
+
   const [start, setStart] = useState(0);
 
   const modifiedCourseCode = params?.course_code
@@ -32,10 +31,11 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
     const modifiedMatricNo = matricNo.replace("/", "_");
     return modifiedMatricNo;
   };
-  const studentsPerpage = 4;
+  const studentsPerpage = 7;
   const end = start + studentsPerpage;
   const handlePageChange = (num: number) => {
-    setStart(num - 1);
+    const newStartNum = num + studentsPerpage;
+    setStart(newStartNum - 1);
   };
 
   return (
@@ -43,9 +43,19 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
       <h2 className="enrollmentPage-title">
         Enrolled Students for {modifiedCourseCode}
       </h2>
-      {enrolledStudents.length === 0 ? (
+      {!isFetchingEnrolledStudents && enrolledStudents.length === 0 && (
+        <div className="courses-nocourse">
+          <RiCreativeCommonsZeroFill />
+          <p>No student has been enrolled for this course yet.</p>
+          <button className="coursePage-button" onClick={() => router.back()}>
+            Go back
+          </button>
+        </div>
+      )}
+      {isFetchingEnrolledStudents && (
         <LoadingSpinner color="blue" height="big" />
-      ) : (
+      )}
+      {!isFetchingEnrolledStudents && enrolledStudents.length > 0 && (
         <ul className="enrollmentPage-list">
           {enrolledStudents.slice(start, end).map((student: any) => (
             <li key={student._id}>
@@ -64,6 +74,7 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
           ))}
         </ul>
       )}
+
       {enrolledStudents.length > 0 && (
         <Pagination
           length={enrolledStudents.length}

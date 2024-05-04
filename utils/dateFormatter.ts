@@ -18,7 +18,10 @@ export function formatDate(dateString: string): string {
   const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-based
   const year = date.getFullYear();
 
-  return `${dayOfWeek} - ${month}/${day}/${year}`;
+  const hour = date.getHours();
+  const min = date.getMinutes().toString().padStart(2, "0");
+
+  return `${dayOfWeek} - ${month}/${day}/${year} - ${hour}:${min}`;
 }
 
 export function convertTimestampToTime(timestamp: string): string {

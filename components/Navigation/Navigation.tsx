@@ -34,7 +34,8 @@ const Navigation = () => {
       </figure>
 
       <div className="navigation-text">
-        <Typewriter
+        {`Greetings, Professor ${loggedInLecturer?.name} `}
+        {/* <Typewriter
           options={{
             strings: [`Hello! ${loggedInLecturer?.name} `],
             autoStart: true,
@@ -42,7 +43,7 @@ const Navigation = () => {
             delay: 130,
             deleteSpeed: 70,
           }}
-        />
+        /> */}
       </div>
 
       <div>

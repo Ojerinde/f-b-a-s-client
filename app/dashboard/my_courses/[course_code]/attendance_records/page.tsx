@@ -8,6 +8,8 @@ import Pagination from "@/components/UI/Pagination/Pagination";
 import { IoSearchCircleSharp } from "react-icons/io5";
 import { dummyData, sortByDate } from "./dummy";
 import { MdCancel } from "react-icons/md";
+import { RiCreativeCommonsZeroFill } from "react-icons/ri";
+import { useRouter } from "next/navigation";
 
 interface AttendancePageProps {
   params: { course_code: string };
@@ -18,7 +20,11 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
     .replace("_", " ")
     .toUpperCase();
 
-  const { attendanceRecords } = useAppSelector((state) => state.students);
+  const { attendanceRecords, isFetchingAttendanceRecords } = useAppSelector(
+    (state) => state.students
+  );
+
+  const router = useRouter();
 
   // Pagination logic
   const [start, setStart] = useState(0);
@@ -37,7 +43,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
   >([]);
 
   const handleFilterByDate = () => {
-    const filteredResults = dummyData.filter((obj) => {
+    const filteredResults = attendanceRecords.filter((obj) => {
       const objDate = new Date(obj.date).getTime();
       const fromTimestamp = new Date(fromDate).getTime();
       const toTimestamp = new Date(toDate).getTime();
@@ -47,7 +53,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
   };
 
   const handleFilterByMatricNo = () => {
-    const filteredResults = dummyData.filter((obj) => {
+    const filteredResults = attendanceRecords.filter((obj) => {
       return obj.studentsPresent.some(
         (student) => student.matricNo === matricNo
       );
@@ -60,10 +66,19 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
       <h2 className="attendanceItem-header">
         Attendance Records for {modifiedCourseCode}
       </h2>
-
-      {dummyData.length === 0 ? (
+      {!isFetchingAttendanceRecords && attendanceRecords.length === 0 && (
+        <div className="courses-nocourse">
+          <RiCreativeCommonsZeroFill />
+          <p>You have no attendance record yet.</p>
+          <button className="coursePage-button" onClick={() => router.back()}>
+            Go back
+          </button>
+        </div>
+      )}
+      {isFetchingAttendanceRecords && (
         <LoadingSpinner color="blue" height="big" />
-      ) : (
+      )}
+      {!isFetchingAttendanceRecords && attendanceRecords.length > 0 && (
         <aside>
           <div className="attendanceItem-filter">
             <div className="attendanceItem-input">
@@ -123,7 +138,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
           ) : (
             <div>
               <ul className="attendanceItem-list">
-                {sortByDate(dummyData)
+                {sortByDate(attendanceRecords)
                   .slice(start, end)
                   .map((record, index) => (
                     <AttendanceItem
@@ -134,7 +149,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
                   ))}
               </ul>
               <Pagination
-                length={sortByDate(dummyData).length}
+                length={sortByDate(attendanceRecords).length}
                 itemsPerPage={attendanceRecordsPerPage}
                 onPageChange={handlePageChange}
               />
