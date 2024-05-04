@@ -4,6 +4,9 @@ import InformationInput from "../UI/Input/InformationInput";
 import { useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import HttpRequest from "@/store/services/HttpRequest";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/reduxHook";
+import { AddEnrolledStudents } from "@/store/studentss/StudentsSlice";
 
 interface DeleteStudentModalProps {
   courseCode: string | null;
@@ -23,6 +26,9 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
   const [isDeleteStudentting, setIsDeleteStudentting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
@@ -49,15 +55,20 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
       try {
         setIsDeleteStudentting(true);
         const response = await HttpRequest.delete(
-          `/courses/${courseCode}/disenroll/${studentMatricNo}`
+          `/courses/${courseCode}/disenroll/${studentMatricNo.replace(
+            "/",
+            "_"
+          )}`
         );
-        console.log("Student has been disenrolled for this course", response);
-        setSuccessMessage(
-          `Student with ${studentMatricNo} has been disenrolled successfuly`
+        console.log(
+          "Student has been disenrolled for this course",
+          response.data
         );
-        // Reset formData and close modal after enroll_feedback
+        setSuccessMessage(response.data.message);
         formik.resetForm();
         closeModal();
+        dispatch(AddEnrolledStudents(response.data.students));
+        router.back();
       } catch (error) {
         console.error("Failed to disenrolled:", error);
         setErrorMessage("Failed to disenrolled. Try again!");
@@ -82,7 +93,7 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
       </h2>
       <h3 className="resetOverlay-text_2">
         If you wish to continue, enter <span>{studentMatricNo}</span> in the
-        field below
+        field below.
       </h3>
       <form onSubmit={formik.handleSubmit}>
         <InformationInput
@@ -93,7 +104,7 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           inputErrorMessage={formik.errors.matricNo}
-          placeholder="e.g ABC 123"
+          placeholder=""
         />
         {errorMessage && <p className="signup-error">{errorMessage}</p>}
         {successMessage && <p className="signup-success">{successMessage}</p>}

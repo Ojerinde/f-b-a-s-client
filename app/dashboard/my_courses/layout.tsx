@@ -21,22 +21,23 @@ export default function Layout({
 
   const dispatch = useAppDispatch();
   const { courses } = useAppSelector((state) => state.courses);
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const response = await HttpRequest.get(
           `/courses/${loggedInLecturer?.email}`
         );
         dispatch(AddAllCourses(response.data.courses));
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching courses:", error);
+        setLoading(false);
       }
     };
-    if (courses.length === 0) {
-      setLoading(true);
-      fetchCourses();
-      setLoading(false);
-    }
+
+    fetchCourses();
   }, []);
   const handleBackRouting = () => {
     router.back();

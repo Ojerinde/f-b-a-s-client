@@ -16,6 +16,9 @@ interface InitialStateTypes {
   attendanceRecords: AttendanceRecord[];
   isFetchingAttendanceRecords: boolean;
   isFetchingEnrolledStudents: boolean;
+  studentAllCourses: any[];
+  studentCoursesAttendances: any[];
+  studentsOverallAttendance: number | null;
 }
 
 const initialState: InitialStateTypes = {
@@ -23,6 +26,9 @@ const initialState: InitialStateTypes = {
   attendanceRecords: [],
   isFetchingAttendanceRecords: false,
   isFetchingEnrolledStudents: false,
+  studentAllCourses: [],
+  studentCoursesAttendances: [],
+  studentsOverallAttendance: null,
 };
 
 const StudentSlice = createSlice({
@@ -50,6 +56,19 @@ const StudentSlice = createSlice({
     ) {
       state.isFetchingEnrolledStudents = action.payload;
     },
+    updateStudentOtherDetails(
+      state,
+      action: PayloadAction<{
+        courses: any[];
+        courseAttendances: any[];
+        overallAttendancePercentage: number;
+      }>
+    ) {
+      state.studentAllCourses = action.payload.courses;
+      state.studentCoursesAttendances = action.payload.courseAttendances;
+      state.studentsOverallAttendance =
+        action.payload.overallAttendancePercentage;
+    },
   },
 });
 export const {
@@ -57,5 +76,6 @@ export const {
   AddAttendanceRecords,
   updateIsFetchingAttendanceRecordsState,
   updateIsFetchingEnrolledStudentsState,
+  updateStudentOtherDetails,
 } = StudentSlice.actions;
 export default StudentSlice.reducer;

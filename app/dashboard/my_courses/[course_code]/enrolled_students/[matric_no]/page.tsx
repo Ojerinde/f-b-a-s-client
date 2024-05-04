@@ -7,7 +7,9 @@ import OverallProgressModal from "@/components/Modals/OverallProgress";
 import OverlayModal from "@/components/Modals/OverlayModal";
 import StudentDetailsOverlay from "@/components/Modals/StudentDetailsOverlay";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
-import { useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import HttpRequest from "@/store/services/HttpRequest";
+import { updateStudentOtherDetails } from "@/store/studentss/StudentsSlice";
 import { useEffect, useState } from "react";
 import { FaChartPie } from "react-icons/fa";
 import { GrOverview, GrView } from "react-icons/gr";
@@ -26,6 +28,8 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ params }) => {
   const [viewOverallModalOpen, setViewOverallModalOpen] =
     useState<boolean>(false);
 
+  const dispatch = useAppDispatch();
+
   const modifiedCourseCode = params?.course_code
     .replace("_", " ")
     .toUpperCase();
@@ -36,10 +40,16 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ params }) => {
 
   useEffect(() => {
     // Fetch other details about the students here
-    const fetchStudentOtherDetails = () => {
+    const fetchStudentOtherDetails = async () => {
       try {
         setIsFetchingStudentOtherDetails(true);
+        const response = await HttpRequest.get(
+          `/courses/${modifiedCourseCode}/${matricNo.replace("/", "_")}`
+        );
+        console.log("Other details fetched successfully", response.data);
+        dispatch(updateStudentOtherDetails(response.data));
       } catch (error) {
+        console.log("Could not fetch other details", error);
         setIsFetchingStudentOtherDetails(false);
       } finally {
         setIsFetchingStudentOtherDetails(false);
@@ -110,10 +120,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ params }) => {
       {/* View All Courses Modal */}
       {viewCoursesModalOpen && (
         <StudentDetailsOverlay onClose={() => setViewCoursesModalOpen(false)}>
-          <AllCoursesModal
-            courses={[]}
-            onClose={() => setViewCoursesModalOpen(false)}
-          />
+          <AllCoursesModal onClose={() => setViewCoursesModalOpen(false)} />
         </StudentDetailsOverlay>
       )}
 
@@ -123,7 +130,6 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ params }) => {
           onClose={() => setViewAttendanceModalOpen(false)}
         >
           <AttendancePerformanceModal
-            courses={[]}
             onClose={() => setViewAttendanceModalOpen(false)}
           />
         </StudentDetailsOverlay>
@@ -133,7 +139,6 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ params }) => {
       {viewOverallModalOpen && (
         <StudentDetailsOverlay onClose={() => setViewOverallModalOpen(false)}>
           <OverallProgressModal
-            courses={[]}
             onClose={() => setViewOverallModalOpen(false)}
           />
         </StudentDetailsOverlay>
