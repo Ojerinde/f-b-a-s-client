@@ -62,7 +62,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ params }) => {
         <div className="verify-card">
           <IoShieldCheckmark className="verify-icon__success" />
           <h4 className="verify-card__success">
-            Your email has been successfully verified!
+            Your email has been successfully verified.
           </h4>
           <p className="verify-card__para">
             Redirecting in {seconds} second{seconds === 0 ? "" : "s"}
