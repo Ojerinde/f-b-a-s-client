@@ -6,7 +6,7 @@ import InputField from "../UI/Input/Input";
 import Button from "../UI/Button/Button";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
 import HttpRequest from "@/store/services/HttpRequest";
-import InlineFeedback from "../UI/Input/InlineFeedback";
+import Link from "next/link";
 
 export interface UserData {
   email: string;
@@ -28,6 +28,7 @@ const SignUpForm = () => {
   // Yup schema configurations
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
+    title: Yup.string().required("Title is required"),
     email: Yup.string().required("Email is required").email("Email is invalid"),
     password: Yup.string()
       .required("Password is required")
@@ -41,6 +42,7 @@ const SignUpForm = () => {
   // Formik validation configurations
   const formik = useFormik({
     initialValues: {
+      title: "",
       name: "",
       email: "",
       password: "",
@@ -51,11 +53,12 @@ const SignUpForm = () => {
     validateOnBlur: true,
     validateOnMount: false,
     async onSubmit(values, actions) {
-      const { confirmPassword, password, email, name } = values;
+      const { confirmPassword, password, email, name, title } = values;
       try {
         // Seding a request to my backend
         const response = await HttpRequest.post("/auth/signup", {
           name,
+          title,
           email,
           confirmPassword,
           password,
@@ -73,6 +76,7 @@ const SignUpForm = () => {
         setTimeout(() => {
           setShowError(() => ({ hasError: false, message: "" }));
           setSuccessMessage("");
+          router.push("/login");
         }, 7000);
       }
     },
@@ -86,9 +90,21 @@ const SignUpForm = () => {
     <>
       <form onSubmit={formik.handleSubmit}>
         <InputField
+          id="title"
+          label="Title"
+          type="text"
+          name="title"
+          invalid={formik.errors.title && formik.touched.title}
+          placeholder=""
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.title}
+          inputErrorMessage={formik.errors.title}
+        />
+        <InputField
           id="name"
           label="Name"
-          type="name"
+          type="text"
           name="name"
           invalid={formik.errors.name && formik.touched.name}
           placeholder=""
@@ -143,6 +159,10 @@ const SignUpForm = () => {
           showPassword={showPassword}
           updatePasswordVisibility={updatePasswordVisibility}
         />
+        <Link href="/reactivate_account" className="login-link">
+          Reactivate Account?
+        </Link>
+
         {showError.hasError && (
           <p className="signup-error">{showError.message}</p>
         )}

@@ -34,7 +34,7 @@ const Navigation = () => {
       </figure>
 
       <div className="navigation-text">
-        {`Greetings, Professor ${loggedInLecturer?.name} `}
+        {`Greetings, ${loggedInLecturer.title} ${loggedInLecturer?.name} `}
         {/* <Typewriter
           options={{
             strings: [`Hello! ${loggedInLecturer?.name} `],
