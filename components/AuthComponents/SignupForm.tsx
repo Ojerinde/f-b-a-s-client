@@ -76,7 +76,7 @@ const SignUpForm = () => {
         setTimeout(() => {
           setShowError(() => ({ hasError: false, message: "" }));
           setSuccessMessage("");
-          router.push("/login");
+          router.push("/");
         }, 7000);
       }
     },
