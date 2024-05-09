@@ -58,13 +58,13 @@ export default function Layout({
   }, []);
 
   return (
-    <div>
-      <h2 className="courses-header">Esp32 </h2>
+    <>
+      <h2 className="courses-header">Esp32 Details</h2>
       {isFetchingEsp32details === true ? (
         <LoadingSpinner color="blue" height="big" />
       ) : (
         <div> {children}</div>
       )}
-    </div>
+    </>
   );
 }

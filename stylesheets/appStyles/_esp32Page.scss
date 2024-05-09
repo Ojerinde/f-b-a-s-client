@@ -1,0 +1,45 @@
+.esp32Page {
+  flex-basis: 100%;
+  &-box {
+    margin: 3rem 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+
+    &__item {
+      height: 20rem;
+      margin-bottom: 3rem;
+      flex-basis: 30%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 2rem;
+      box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+        rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+        rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+      transition: all 0.3s;
+      &:hover {
+        box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+      }
+
+      & svg {
+        font-size: 8rem;
+        color: $text-color;
+      }
+
+      & p {
+        margin: 1rem 0;
+        font-size: 1.7rem;
+        letter-spacing: 0.1rem;
+      }
+
+      & h4 {
+        font-size: 1.7rem;
+        letter-spacing: 0.2rem;
+        font-family: Poetsen One, sans-serif;
+      }
+    }
+  }
+}
