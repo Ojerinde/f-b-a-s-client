@@ -1,7 +1,7 @@
 "use client";
 
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
-import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch } from "@/hooks/reduxHook";
 import { AddAllCourses } from "@/store/courses/CoursesSlice";
 import HttpRequest from "@/store/services/HttpRequest";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
@@ -20,7 +20,6 @@ export default function Layout({
   const router = useRouter();
 
   const dispatch = useAppDispatch();
-  const { courses } = useAppSelector((state) => state.courses);
 
   useEffect(() => {
     const fetchCourses = async () => {

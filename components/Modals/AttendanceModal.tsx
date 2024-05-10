@@ -1,21 +1,15 @@
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import { Course } from "@/app/dashboard/my_courses/page";
-import InformationInput from "../UI/Input/InformationInput";
+import { toast } from "react-toastify";
 import Button from "../UI/Button/Button";
 import { useEffect, useState } from "react";
 import { socket } from "@/app/dashboard/socket";
 import { MdOutlineClose } from "react-icons/md";
+import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
 
 interface AttendanceModalProps {
   course: Course | null;
   closeModal: () => void;
 }
-
-interface FormValuesType {
-  matricNo: string;
-}
-
 const AttendanceModal: React.FC<AttendanceModalProps> = ({
   course,
   closeModal,
@@ -25,41 +19,31 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const formik = useFormik<FormValuesType>({
-    initialValues: {
-      matricNo: "",
-    },
-    validationSchema: Yup.object().shape({
-      matricNo: Yup.string().required("Matric No is required"),
-    }),
+  const downloadHandler = async () => {
+    try {
+      setTakingAttendanceIsLoading(true);
+      // Emit the enroll event to the server
+      socket.emit("attendance", {
+        ...course,
+      });
 
-    onSubmit: async (values, actions) => {
-      try {
-        setTakingAttendanceIsLoading(true);
-        // Emit the enroll event to the server
-        socket.emit("attendance", {
-          ...values,
-          ...course,
-        });
-        console.log("Attendance event emitted");
-        // Reset formData and close modal after enroll_feedback
-      } catch (error) {
-        console.error("Error emitting enroll event:", error);
-        setTakingAttendanceIsLoading(false);
-        setErrorMessage("Failed to mark attendance. Try again!");
-      } finally {
-        setTimeout(() => {
-          setErrorMessage("");
-        }, 7000);
-      }
-    },
-  });
+      console.log("Attendance event emitted");
+      // Reset formData and close modal after enroll_feedback
+    } catch (error) {
+      console.error("Error emitting enroll event:", error);
+      setTakingAttendanceIsLoading(false);
+      setErrorMessage("Failed to mark attendance. Try again!");
+    } finally {
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 7000);
+    }
+  };
 
   useEffect(() => {
     // Listen for attendance feedback from the server
     socket.on("attendance_feedback", (feedback) => {
       console.log("Attendance feedback received:", feedback);
-      formik.resetForm();
       setTakingAttendanceIsLoading(false);
       if (feedback.error) {
         setErrorMessage(`${feedback.message}`);
@@ -77,32 +61,63 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       socket.off("attendance_feedback");
     };
   }, []);
+
+  useEffect(() => {
+    // Listen for attendance feedback from the server
+    socket.on("attendance_recorded", (feedback) => {
+      toast(feedback.message, {
+        position: "top-right",
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        style: {
+          background: "#181a40",
+          color: "white",
+          fontSize: "1.7rem",
+          fontFamily: "Poetsen One",
+          letterSpacing: "0.15rem",
+          lineHeight: "1.7",
+          padding: "1rem",
+        },
+      });
+    });
+
+    // Clean up event listener when component unmounts
+    return () => {
+      socket.off("attendance_record");
+    };
+  }, []);
+
   return (
     <div className="attendanceOverlay">
       <div className="" onClick={closeModal}>
         <MdOutlineClose className="attendanceOverlay-icon" />
       </div>
       <h2 className="attendanceOverlay-text">
-        Take Attendance for {course?.courseCode}
+        Click the button below to download {course?.courseCode} attendance sheet
+        to the device.
       </h2>
-      <form onSubmit={formik.handleSubmit}>
-        <InformationInput
-          id="matricNo"
-          type="matricNo"
-          name="matricNo"
-          value={formik.values.matricNo}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          inputErrorMessage={formik.errors.matricNo}
-          placeholder="E.g 18/30GC056"
-        />
-        {errorMessage && <p className="signup-error">{errorMessage}</p>}
-        {successMessage && <p className="signup-success">{successMessage}</p>}
+      {errorMessage && <p className="signup-error">{errorMessage}</p>}
+      {successMessage && <p className="signup-success">{successMessage}</p>}
+      {takingAttendanceIsLoading && (
+        <LoadingSpinner height="big" color="blue" />
+      )}
 
-        <Button type="submit" disabled={takingAttendanceIsLoading}>
-          {takingAttendanceIsLoading ? "Submitting..." : "Mark Attendance"}
-        </Button>
-      </form>
+      <Button
+        type="submit"
+        disabled={takingAttendanceIsLoading}
+        onClick={() => {
+          downloadHandler();
+        }}
+      >
+        {takingAttendanceIsLoading
+          ? "Downloading Attendance Sheet..."
+          : "Download Attendance Sheet"}
+      </Button>
     </div>
   );
 };
