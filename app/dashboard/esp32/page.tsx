@@ -18,32 +18,32 @@ const Esp32 = () => {
         <div className="esp32Page-box__item">
           <GrCapacity />
           <p>Battery Capacity</p>
-          <h4>{esp32.batteryCapacity}</h4>
+          <h4>{esp32?.batteryCapacity || "Nill"}</h4>
         </div>
         <div className="esp32Page-box__item">
           <AiOutlinePercentage />
           <p>Battery Percentage</p>
-          <h4>{esp32.batteryPercentage}</h4>
+          <h4>{esp32?.batteryPercentage || "Nill"}</h4>
         </div>
         <div className="esp32Page-box__item">
           <MdSignalWifiStatusbarNotConnected />
           <p>Connected to internet?</p>
-          <h4>{esp32.isConnectedToInternet ? "True" : "False"}</h4>
+          <h4>{esp32?.isConnectedToInternet ? "True" : "False"}</h4>
         </div>
         <div className="esp32Page-box__item">
           <PiFingerprintBold />
           <p>Fingerprint Sensor Active?</p>
-          <h4>{esp32.isFingerprintActive ? "True" : "False"}</h4>
+          <h4>{esp32?.isFingerprintActive ? "True" : "False"}</h4>
         </div>
         <div className="esp32Page-box__item">
           <FaChargingStation />
           <p>Device Charging?</p>
-          <h4>{esp32.isCharging ? "True" : "False"}</h4>
+          <h4>{esp32?.isCharging ? "True" : "False"}</h4>
         </div>
         <div className="esp32Page-box__item">
           <MdOtherHouses />
-          <p>Other Details</p>
-          <h4>Others</h4>
+          <p>Device Location</p>
+          <h4>{esp32?.location || "Nill"}</h4>
         </div>
       </ul>
     </div>

@@ -7,6 +7,7 @@ interface InitialStateTypes {
     isConnectedToInternet: boolean;
     isCharging: boolean;
     isFingerprintActive: boolean;
+    location: string;
   };
 }
 
@@ -17,6 +18,7 @@ const initialState: InitialStateTypes = {
     isConnectedToInternet: false,
     isCharging: false,
     isFingerprintActive: false,
+    location: "",
   },
 };
 
