@@ -18,12 +18,12 @@ const Esp32 = () => {
         <div className="esp32Page-box__item">
           <GrCapacity />
           <p>Battery Capacity</p>
-          <h4>{esp32?.batteryCapacity || "Nill"}</h4>
+          <h4>{esp32?.batteryCapacity || 0}</h4>
         </div>
         <div className="esp32Page-box__item">
           <AiOutlinePercentage />
           <p>Battery Percentage</p>
-          <h4>{esp32?.batteryPercentage || "Nill"}</h4>
+          <h4>{esp32?.batteryPercentage || 0}</h4>
         </div>
         <div className="esp32Page-box__item">
           <MdSignalWifiStatusbarNotConnected />
@@ -43,7 +43,7 @@ const Esp32 = () => {
         <div className="esp32Page-box__item">
           <MdOtherHouses />
           <p>Device Location</p>
-          <h4>{esp32?.location || "Nill"}</h4>
+          <h4>{esp32?.location || "No Data"}</h4>
         </div>
       </ul>
     </div>
