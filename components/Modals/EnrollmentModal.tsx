@@ -86,7 +86,6 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
   // }, []);
 
   // /////// Websocket ///////
-  const socket = getWebSocket();
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
@@ -100,9 +99,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
 
     onSubmit: async (values, actions) => {
       try {
+        const socket = getWebSocket();
+
         setEnrollmentIsLoading(true);
         // Emit the enroll event to the server
-        socket.send(
+        socket?.send(
           JSON.stringify({
             event: "enroll",
             data: { ...values, ...course, lecturerEmail },
@@ -122,6 +123,8 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
   });
 
   useEffect(() => {
+    const socket = getWebSocket();
+
     // Define a separate function to handle enrollment feedback
     const handleEnrollmentFeedback = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
@@ -140,11 +143,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
     };
 
     // Add event listener for enrollment feedback
-    socket.addEventListener("message", handleEnrollmentFeedback);
+    socket?.addEventListener("message", handleEnrollmentFeedback);
 
     // Clean up event listener when component unmounts
     return () => {
-      socket.removeEventListener("message", handleEnrollmentFeedback);
+      socket?.removeEventListener("message", handleEnrollmentFeedback);
     };
   }, []);
 

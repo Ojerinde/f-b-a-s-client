@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 // import { socket } from "@/app/dashboard/socket";
 import { MdOutlineClose } from "react-icons/md";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
-import { getWebSocket } from "@/app/dashboard/websocket";
+import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
 
 interface AttendanceModalProps {
   course: Course | null;
@@ -95,13 +95,19 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   // }, []);
 
   // /////// Websocket ///////
-  const socket = getWebSocket();
+
+  useEffect(() => {
+    initializeWebSocket();
+  }, []);
 
   const downloadHandler = async () => {
     try {
       setTakingAttendanceIsLoading(true);
       // Emit the attendance event to the server
-      socket.send(JSON.stringify({ event: "attendance", data: { ...course } }));
+      const socket = getWebSocket();
+      socket?.send(
+        JSON.stringify({ event: "attendance", data: { ...course } })
+      );
       console.log("Attendance event emitted");
     } catch (error) {
       console.error("Error emitting attendance event:", error);
@@ -115,6 +121,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   };
 
   useEffect(() => {
+    const socket = getWebSocket();
     // Listen for attendance feedback from the server
     const handleAttendanceFeedback = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
@@ -132,15 +139,16 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     };
 
     // Add event listener for attendance feedback
-    socket.addEventListener("message", handleAttendanceFeedback);
+    socket?.addEventListener("message", handleAttendanceFeedback);
 
     // Clean up event listener when component unmounts
     return () => {
-      socket.removeEventListener("message", handleAttendanceFeedback);
+      socket?.removeEventListener("message", handleAttendanceFeedback);
     };
   }, []);
 
   useEffect(() => {
+    const socket = getWebSocket();
     // Listen for attendance recorded event from the server
     const handleAttendanceRecorded = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
@@ -166,11 +174,11 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     };
 
     // Add event listener for attendance recorded event
-    socket.addEventListener("message", handleAttendanceRecorded);
+    socket?.addEventListener("message", handleAttendanceRecorded);
 
     // Clean up event listener when component unmounts
     return () => {
-      socket.removeEventListener("message", handleAttendanceRecorded);
+      socket?.removeEventListener("message", handleAttendanceRecorded);
     };
   }, []);
   return (

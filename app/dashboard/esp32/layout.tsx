@@ -58,12 +58,10 @@ export default function Layout({
   //   };
   // }, []);
 
-  /////// Websocket ///////
-  const socket = getWebSocket();
-
   useEffect(() => {
     const fetchEsp32Details = () => {
       try {
+        const socket = getWebSocket();
         setIsFetchingEsp32details(true);
         socket?.send(JSON.stringify({ event: "esp32_details" }));
         console.log("Fetch Esp32 Details event emitted");
@@ -96,7 +94,7 @@ export default function Layout({
         setSuccessMessage("");
       }, 7000);
     };
-
+    const socket = getWebSocket();
     // Listen for esp_details feedback from the server
     socket?.addEventListener("message", handleEsp32Feedback);
 
