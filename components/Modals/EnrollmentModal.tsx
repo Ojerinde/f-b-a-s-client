@@ -6,7 +6,7 @@ import Button from "../UI/Button/Button";
 import { useEffect, useState } from "react";
 // import { socket } from "@/app/dashboard/socket";
 import { MdOutlineClose } from "react-icons/md";
-import { getWebSocket } from "@/app/dashboard/websocket";
+import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
 
 interface EnrollmentModalProps {
   course: Course | null;
@@ -28,64 +28,9 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // /////// Socket.IO ///////
-  // const formik = useFormik<FormValuesType>({
-  //   initialValues: {
-  //     name: "",
-  //     matricNo: "",
-  //   },
-  //   validationSchema: Yup.object().shape({
-  //     name: Yup.string().required("Name is required"),
-  //     matricNo: Yup.string().required("Matric No is required"),
-  //   }),
-
-  //   onSubmit: async (values, actions) => {
-  //     try {
-  //       setEnrollmentIsLoading(true);
-  //       // Emit the enroll event to the server
-  //       socket.emit("enroll", {
-  //         ...values,
-  //         ...course,
-  //         lecturerEmail,
-  //       });
-  //       console.log("Enroll event emitted");
-  //       // Reset formData and close modal after enroll_feedback
-  //     } catch (error) {
-  //       console.error("Error emitting enroll event:", error);
-  //       setEnrollmentIsLoading(false);
-  //       setErrorMessage("Failed to mark attendance. Try again!");
-  //     } finally {
-  //       setTimeout(() => {
-  //         setErrorMessage("");
-  //       }, 7000);
-  //     }
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   // Listen for enrollment feedback from the server
-  //   socket.on("enroll_feedback", (feedback) => {
-  //     console.log("Enrollment feedback received:", feedback);
-  //     formik.resetForm();
-  //     setEnrollmentIsLoading(false); // Set loading to false once feedback is received
-  //     if (feedback.error) {
-  //       setErrorMessage(`${feedback.message}`);
-  //     } else {
-  //       setSuccessMessage(feedback.message);
-  //     }
-  //     setTimeout(() => {
-  //       setErrorMessage("");
-  //       setSuccessMessage("");
-  //     }, 7000);
-  //   });
-
-  //   // Clean up event listener when component unmounts
-  //   return () => {
-  //     socket.off("enroll_feedback");
-  //   };
-  // }, []);
-
-  // /////// Websocket ///////
+  useEffect(() => {
+    initializeWebSocket();
+  }, []);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
@@ -106,7 +51,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
         socket?.send(
           JSON.stringify({
             event: "enroll",
-            data: { ...values, ...course, lecturerEmail },
+            payload: { ...values, ...course, lecturerEmail },
           })
         );
         console.log("Enroll event emitted");
@@ -128,13 +73,17 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
     // Define a separate function to handle enrollment feedback
     const handleEnrollmentFeedback = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
+
+      if (feedback.event !== "enroll_feedback") return;
+
       console.log("Enrollment feedback received:", feedback);
       formik.resetForm();
-      setEnrollmentIsLoading(false); // Set loading to false once feedback is received
-      if (feedback.error) {
-        setErrorMessage(`${feedback.message}`);
+      setEnrollmentIsLoading(false);
+
+      if (feedback.payload.error) {
+        setErrorMessage(feedback.payload.message);
       } else {
-        setSuccessMessage(feedback.message);
+        setSuccessMessage(feedback.payload.message);
       }
       setTimeout(() => {
         setErrorMessage("");

@@ -20,82 +20,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  /////// Socket.IO ///////
-  // const downloadHandler = async () => {
-  //   try {
-  //     setTakingAttendanceIsLoading(true);
-  //     // Emit the enroll event to the server
-  //     socket.emit("attendance", {
-  //       ...course,
-  //     });
-
-  //     console.log("Attendance event emitted");
-  //     // Reset formData and close modal after enroll_feedback
-  //   } catch (error) {
-  //     console.error("Error emitting enroll event:", error);
-  //     setTakingAttendanceIsLoading(false);
-  //     setErrorMessage("Failed to mark attendance. Try again!");
-  //   } finally {
-  //     setTimeout(() => {
-  //       setErrorMessage("");
-  //     }, 7000);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   // Listen for attendance feedback from the server
-  //   socket.on("attendance_feedback", (feedback) => {
-  //     console.log("Attendance feedback received:", feedback);
-  //     setTakingAttendanceIsLoading(false);
-  //     if (feedback.error) {
-  //       setErrorMessage(`${feedback.message}`);
-  //     } else {
-  //       setSuccessMessage(feedback.message);
-  //     }
-  //     setTimeout(() => {
-  //       setErrorMessage("");
-  //       setSuccessMessage("");
-  //     }, 5000);
-  //   });
-
-  //   // Clean up event listener when component unmounts
-  //   return () => {
-  //     socket.off("attendance_feedback");
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   // Listen for attendance feedback from the server
-  //   socket.on("attendance_recorded", (feedback) => {
-  //     toast(feedback.message, {
-  //       position: "top-right",
-  //       autoClose: false,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "dark",
-  //       style: {
-  //         background: "#181a40",
-  //         color: "white",
-  //         fontSize: "1.7rem",
-  //         fontFamily: "Poetsen One",
-  //         letterSpacing: "0.15rem",
-  //         lineHeight: "1.7",
-  //         padding: "1rem",
-  //       },
-  //     });
-  //   });
-
-  //   // Clean up event listener when component unmounts
-  //   return () => {
-  //     socket.off("attendance_record");
-  //   };
-  // }, []);
-
-  // /////// Websocket ///////
-
   useEffect(() => {
     initializeWebSocket();
   }, []);
@@ -106,7 +30,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       // Emit the attendance event to the server
       const socket = getWebSocket();
       socket?.send(
-        JSON.stringify({ event: "attendance", data: { ...course } })
+        JSON.stringify({ event: "attendance", payload: { ...course } })
       );
       console.log("Attendance event emitted");
     } catch (error) {
@@ -125,12 +49,13 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     // Listen for attendance feedback from the server
     const handleAttendanceFeedback = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
+      if (feedback.event !== "attendance_feedback") return;
       console.log("Attendance feedback received:", feedback);
       setTakingAttendanceIsLoading(false);
-      if (feedback.error) {
-        setErrorMessage(`${feedback.message}`);
+      if (feedback.payload.error) {
+        setErrorMessage(feedback.payload.message);
       } else {
-        setSuccessMessage(feedback.message);
+        setSuccessMessage(feedback.payload.message);
       }
       setTimeout(() => {
         setErrorMessage("");
@@ -152,7 +77,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     // Listen for attendance recorded event from the server
     const handleAttendanceRecorded = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
-      toast(feedback.message, {
+      toast(feedback.payload.message, {
         position: "top-right",
         autoClose: false,
         hideProgressBar: false,
@@ -192,9 +117,9 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       </h2>
       {errorMessage && <p className="signup-error">{errorMessage}</p>}
       {successMessage && <p className="signup-success">{successMessage}</p>}
-      {takingAttendanceIsLoading && (
-        <LoadingSpinner height="big" color="blue" />
-      )}
+      <p style={{ marginBottom: "1rem" }}>
+        {takingAttendanceIsLoading && <LoadingSpinner color="blue" />}
+      </p>
 
       <Button
         type="submit"

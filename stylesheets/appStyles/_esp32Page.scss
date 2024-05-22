@@ -1,4 +1,11 @@
 .esp32Page {
+  &-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   flex-basis: 100%;
   &-box {
     margin: 3rem 0 1rem;

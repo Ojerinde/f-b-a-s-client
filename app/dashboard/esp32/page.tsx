@@ -10,7 +10,6 @@ import {
 import { PiFingerprintBold } from "react-icons/pi";
 const Esp32 = () => {
   const { esp32 } = useAppSelector((state) => state.esp32);
-  console.log("Esp32 details", esp32);
 
   return (
     <div className="esp32Page">

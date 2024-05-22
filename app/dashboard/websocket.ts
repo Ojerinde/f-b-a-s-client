@@ -1,7 +1,7 @@
 let ws_socket: WebSocket | null = null;
 
 export const initializeWebSocket = () => {
-  if (!ws_socket) {
+  if (!ws_socket || ws_socket.readyState === WebSocket.CLOSED) {
     // Create WebSocket connection
     ws_socket = new WebSocket(`${process.env.NEXT_PUBLIC_BACKEND_WS}`);
 

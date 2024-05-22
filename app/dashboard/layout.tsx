@@ -2,6 +2,8 @@
 
 import SideBar from "@/components/Dashboard/Sidebar";
 import Navigation from "@/components/Navigation/Navigation";
+import { useEffect } from "react";
+import { initializeWebSocket } from "./websocket";
 
 const sideBarLinks = [
   { name: "My Courses", link: "/dashboard/my_courses", iconUrl: "my_courses" },
@@ -14,6 +16,10 @@ export default function HostLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  useEffect(() => {
+    initializeWebSocket();
+  }, []);
   return (
     <section>
       <Navigation />
