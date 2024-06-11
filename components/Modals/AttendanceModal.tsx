@@ -1,3 +1,5 @@
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { Course } from "@/app/dashboard/my_courses/page";
 import { toast } from "react-toastify";
 import Button from "../UI/Button/Button";
@@ -6,6 +8,7 @@ import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
+import InformationInput from "../UI/Input/InformationInput";
 
 interface AttendanceModalProps {
   course: Course | null;
@@ -24,25 +27,49 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     initializeWebSocket();
   }, []);
 
-  const downloadHandler = async () => {
-    try {
-      setTakingAttendanceIsLoading(true);
-      // Emit the attendance event to the server
-      const socket = getWebSocket();
-      socket?.send(
-        JSON.stringify({ event: "attendance", payload: { ...course } })
-      );
-      console.log("Attendance event emitted");
-    } catch (error) {
-      console.error("Error emitting attendance event:", error);
-      setTakingAttendanceIsLoading(false);
-      setErrorMessage("Failed to mark attendance. Try again!");
-    } finally {
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 7000);
-    }
-  };
+  interface FormValuesType {
+    time: string;
+  }
+
+  const formik = useFormik<FormValuesType>({
+    initialValues: {
+      time: "",
+    },
+    validationSchema: Yup.object().shape({
+      time: Yup.string()
+        .required("Time is required")
+        .matches(
+          /^([0-9]|[1-9][0-9]):[0-5][0-9]$/,
+          "Time must be in the format HH:MM"
+        ),
+    }),
+    validateOnBlur: true,
+    validateOnChange: true,
+
+    onSubmit: async (values, actions) => {
+      try {
+        const socket = getWebSocket();
+
+        setTakingAttendanceIsLoading(true);
+        // Emit the enroll event to the server
+        socket?.send(
+          JSON.stringify({
+            event: "attendance",
+            payload: { ...values, ...course },
+          })
+        );
+        console.log("Attendance event emitted");
+      } catch (error) {
+        console.error("Error emitting attendance event:", error);
+        setTakingAttendanceIsLoading(false);
+        setErrorMessage("Failed to mark attendance. Try again!");
+      } finally {
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 7000);
+      }
+    },
+  });
 
   useEffect(() => {
     const socket = getWebSocket();
@@ -111,27 +138,34 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       <div className="" onClick={closeModal}>
         <MdOutlineClose className="attendanceOverlay-icon" />
       </div>
-      <h2 className="attendanceOverlay-text">
-        Click the button below to download {course?.courseCode} attendance sheet
-        to the device.
+      <h2 className="enrollmentOverlay-text">
+        Take Attendance for {course?.courseCode}
       </h2>
-      {errorMessage && <p className="signup-error">{errorMessage}</p>}
-      {successMessage && <p className="signup-success">{successMessage}</p>}
-      <p style={{ marginBottom: "1rem" }}>
-        {takingAttendanceIsLoading && <LoadingSpinner color="blue" />}
-      </p>
+      <form onSubmit={formik.handleSubmit}>
+        <InformationInput
+          id="time"
+          type="text"
+          name="time"
+          value={formik.values.time}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          invalid={!!formik.errors.time && formik.touched.time}
+          inputErrorMessage={formik.errors.time}
+          placeholder="E.g 1:00"
+        />
 
-      <Button
-        type="submit"
-        disabled={takingAttendanceIsLoading}
-        onClick={() => {
-          downloadHandler();
-        }}
-      >
-        {takingAttendanceIsLoading
-          ? "Downloading Attendance Sheet..."
-          : "Download Attendance Sheet"}
-      </Button>
+        {errorMessage && <p className="signup-error">{errorMessage}</p>}
+        {successMessage && <p className="signup-success">{successMessage}</p>}
+
+        <Button
+          type="submit"
+          disabled={takingAttendanceIsLoading || !formik.isValid}
+        >
+          {takingAttendanceIsLoading
+            ? "Downloading Course Data..."
+            : "Take Attendance"}
+        </Button>
+      </form>
     </div>
   );
 };

@@ -1,3 +1,7 @@
+import {
+  compareTimes,
+  formatTimeFromISOString,
+} from "@/app/dashboard/my_courses/[course_code]/attendance_records/utils";
 import { formatDate } from "@/utils/dateFormatter";
 import { useState } from "react";
 
@@ -16,6 +20,9 @@ const AttendanceItem: React.FC<AttendanceItemProps> = ({
     setSeeAll((prev) => !prev);
   };
 
+  // Create a copy of the studentsPresent array and sort it
+  const sortedStudents = [...studentsPresent].sort(compareTimes);
+
   return (
     <li className="attendanceItem-item">
       <div className="attendanceItem-item__header">
@@ -33,14 +40,16 @@ const AttendanceItem: React.FC<AttendanceItemProps> = ({
                 <th>SN</th>
                 <th>Name</th>
                 <th>Matric No</th>
+                <th>Time</th>
               </tr>
             </thead>
             <tbody>
-              {studentsPresent.map((student, index) => (
+              {sortedStudents.map((record, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{student.name}</td>
-                  <td>{student.matricNo}</td>
+                  <td>{record.student.name}</td>
+                  <td>{record.student.matricNo}</td>
+                  <td>{formatTimeFromISOString(record.time)}</td>
                 </tr>
               ))}
             </tbody>
@@ -54,14 +63,16 @@ const AttendanceItem: React.FC<AttendanceItemProps> = ({
                 <th>SN</th>
                 <th>Name</th>
                 <th>Matric No</th>
+                <th>Time</th>
               </tr>
             </thead>
             <tbody>
-              {studentsPresent.slice(0, 1).map((student, index) => (
+              {sortedStudents.slice(0, 1).map((record, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{student.name}</td>
-                  <td>{student.matricNo}</td>
+                  <td>{record.student.name}</td>
+                  <td>{record.student.matricNo}</td>
+                  <td>{formatTimeFromISOString(record.time)}</td>
                 </tr>
               ))}
             </tbody>

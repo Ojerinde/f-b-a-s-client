@@ -6,7 +6,7 @@ import { useAppSelector } from "@/hooks/reduxHook";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
 import Pagination from "@/components/UI/Pagination/Pagination";
 import { IoSearchCircleSharp } from "react-icons/io5";
-import { dummyData, sortByDate } from "./dummy";
+import { sortByDate } from "./utils";
 import { MdCancel } from "react-icons/md";
 import { RiCreativeCommonsZeroFill } from "react-icons/ri";
 import { useRouter } from "next/navigation";
@@ -55,7 +55,8 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
   const handleFilterByMatricNo = () => {
     const filteredResults = attendanceRecords.filter((obj) => {
       return obj.studentsPresent.some(
-        (student) => student.matricNo === matricNo
+        (record) =>
+          record.student.matricNo.toLowerCase() === matricNo.toLowerCase()
       );
     });
     setfilteredAttendanceRecords(filteredResults);
@@ -103,12 +104,20 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
               </p>
             </div>
             <div className="attendanceItem-search">
-              <input
-                type="text"
-                placeholder="Find a Student by Matriculation Number"
-                value={matricNo}
-                onChange={(e) => setMatricNo(e.target.value)}
-              />
+              <form
+                action=""
+                onSubmit={(e: any) => {
+                  e.preventDefault();
+                  handleFilterByMatricNo();
+                }}
+              >
+                <input
+                  type="text"
+                  placeholder="Find a Student by Matriculation Number"
+                  value={matricNo}
+                  onChange={(e) => setMatricNo(e.target.value)}
+                />
+              </form>
               <IoSearchCircleSharp onClick={handleFilterByMatricNo} />
             </div>
           </div>

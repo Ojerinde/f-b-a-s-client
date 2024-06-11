@@ -4,7 +4,6 @@ import { Course } from "@/app/dashboard/my_courses/page";
 import InformationInput from "../UI/Input/InformationInput";
 import Button from "../UI/Button/Button";
 import { useEffect, useState } from "react";
-// import { socket } from "@/app/dashboard/socket";
 import { MdOutlineClose } from "react-icons/md";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
 
@@ -38,8 +37,18 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
       matricNo: "",
     },
     validationSchema: Yup.object().shape({
-      name: Yup.string().required("Name is required"),
-      matricNo: Yup.string().required("Matric No is required"),
+      name: Yup.string()
+        .required("Name is required")
+        .matches(
+          /^[A-Za-z]+\s[A-Za-z]+$/,
+          "Please enter your full name with a space between first and last name"
+        ),
+      matricNo: Yup.string()
+        .required("Matriculation number is required")
+        .matches(
+          /^\d{2}\/\d{2}[A-Z]{2}\d{3}$/,
+          "Matriculation number must be in the format 18/30GC056"
+        ),
     }),
 
     onSubmit: async (values, actions) => {
@@ -117,6 +126,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           inputErrorMessage={formik.errors.name}
+          invalid={!!formik.errors.name && formik.touched.name}
           placeholder="E.g Ojerinde Joel"
         />
 
@@ -128,12 +138,13 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           inputErrorMessage={formik.errors.matricNo}
+          invalid={!!formik.errors.matricNo && formik.touched.matricNo}
           placeholder="E.g 18/30GC056"
         />
         {errorMessage && <p className="signup-error">{errorMessage}</p>}
         {successMessage && <p className="signup-success">{successMessage}</p>}
 
-        <Button type="submit" disabled={enrollmentIsLoading}>
+        <Button type="submit" disabled={enrollmentIsLoading || !formik.isValid}>
           {enrollmentIsLoading ? "Enrolling..." : "Enroll"}
         </Button>
       </form>

@@ -28,6 +28,10 @@ export default function Layout({
       console.log("Fetch Esp32 Details event emitted");
     } catch (error) {
       console.log("Fetch Esp32 Details failed", error);
+    } finally {
+      setTimeout(() => {
+        setIsFetchingEsp32details(false);
+      }, 10000);
     }
   };
 
@@ -69,7 +73,7 @@ export default function Layout({
       <div className="esp32Page-header">
         <h2 className="courses-header">Esp32 Details</h2>
         <button
-          className="coursePage-back"
+          className="coursePage-back text-[2rem]"
           disabled={isFetchingEsp32details === true}
           onClick={fetchEsp32Details}
         >

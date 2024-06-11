@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 import HttpRequest from "@/store/services/HttpRequest";
 import Link from "next/link";
-import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch } from "@/hooks/reduxHook";
 import { AddAllCourses } from "@/store/courses/CoursesSlice";
 import Navigation from "@/components/Navigation/Navigation";
 import InformationInput from "@/components/UI/Input/InformationInput";
@@ -16,9 +16,11 @@ import Button from "@/components/UI/Button/Button";
 interface Course {
   courseCode: string;
   courseName: string;
+  noOfStudents: number | null;
 }
 
 interface FormValuesType {
+  title: string;
   name: string;
   email: string;
   courses: Course[];
@@ -33,10 +35,12 @@ const UpdateLecturerInformation: React.FC = () => {
     initialValues: {
       name: loggedInLecturer?.name,
       email: loggedInLecturer?.email,
-      courses: [{ courseCode: "", courseName: "" }],
+      title: loggedInLecturer?.title,
+      courses: [{ courseCode: "", courseName: "", noOfStudents: null }],
     },
     validationSchema: Yup.object().shape({
-      name: Yup.string().required("Name is required"),
+      title: Yup.string().required("Name is required"),
+      name: Yup.string().required("Title is required"),
       email: Yup.string()
         .required("Email is required")
         .email("Email is invalid"),
@@ -49,6 +53,9 @@ const UpdateLecturerInformation: React.FC = () => {
               "Course must be in the format 'XXX 000'"
             ),
           courseName: Yup.string().required("Course Name is required"),
+          noOfStudents: Yup.number().required(
+            "Total students number is required"
+          ),
         })
       ),
     }),
@@ -72,14 +79,17 @@ const UpdateLecturerInformation: React.FC = () => {
   const handleAddCourse = () => {
     formik.setValues({
       ...formik.values,
-      courses: [...formik.values.courses, { courseCode: "", courseName: "" }],
+      courses: [
+        ...formik.values.courses,
+        { courseCode: "", courseName: "", noOfStudents: null },
+      ],
     });
   };
 
   const removeCourse = (index: number) => {
     if (
       !confirm(
-        "Are you sure you want to remove this course? This will delete the course related data "
+        "Are you sure you want to remove this course? This will delete the course related data"
       )
     )
       return;
@@ -102,11 +112,16 @@ const UpdateLecturerInformation: React.FC = () => {
         const modifiedCourses = response.data.courses.map((course: Course) => ({
           courseCode: course.courseCode,
           courseName: course.courseName,
+          noOfStudents: course.noOfStudents,
         }));
         formik.setValues({
+          title: loggedInLecturer?.title,
           name: loggedInLecturer?.name,
           email: loggedInLecturer?.email,
-          courses: [...modifiedCourses, { courseCode: "", courseName: "" }],
+          courses: [
+            ...modifiedCourses,
+            { courseCode: "", courseName: "", noOfStudents: null },
+          ],
         });
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -121,41 +136,49 @@ const UpdateLecturerInformation: React.FC = () => {
       <Navigation />
       <div className="update-container">
         <div className="update-container__left">
-          <h2>Welcome!</h2>
-          <h3>{loggedInLecturer?.name.split(" ")[0]}</h3>
-          <p>One more step to go.</p>
-        </div>
-        <div className="update-container__right">
           <Link href="/dashboard" className="continue">
             Continue To Dashboard
           </Link>
-          <h2>Update your information.</h2>
+          <InformationInput
+            id="title"
+            type="text"
+            name="title"
+            value={formik.values.title}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            inputErrorMessage={formik.errors.title}
+            placeholder={formik.values.title}
+            readOnly
+          />
+          <InformationInput
+            id="name"
+            type="text"
+            name="name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            inputErrorMessage={formik.errors.name}
+            placeholder={formik.values.name}
+            readOnly
+          />
+
+          <InformationInput
+            id="email"
+            type="email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            inputErrorMessage={formik.errors.email}
+            placeholder={formik.values.email}
+            readOnly
+          />
+        </div>
+        <div className="update-container__right">
           <form onSubmit={formik.handleSubmit}>
-            <InformationInput
-              id="name"
-              type="text"
-              name="name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              inputErrorMessage={formik.errors.name}
-              placeholder={formik.values.name}
-              readOnly
-            />
-
-            <InformationInput
-              id="email"
-              type="email"
-              name="email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              inputErrorMessage={formik.errors.email}
-              placeholder={formik.values.email}
-              readOnly
-            />
-
             <div>
+              <h2>Update your information.</h2>
+
               <h3 className="update-container__label">Courses:</h3>
               {formik.values.courses.map((course: Course, index: number) => (
                 <div className="update-container__courses" key={index}>
@@ -181,7 +204,7 @@ const UpdateLecturerInformation: React.FC = () => {
                       }
                     />
                   </div>
-                  <div className="right">
+                  <div className="middle">
                     <InformationInput
                       id={`courseName${index}`}
                       label="Course Name"
@@ -200,6 +223,28 @@ const UpdateLecturerInformation: React.FC = () => {
                         (formik.errors.courses as FormikErrors<Course>[])?.[
                           index
                         ]?.courseName
+                      }
+                    />
+                  </div>
+                  <div className="right">
+                    <InformationInput
+                      id={`courseCode${index}`}
+                      label="Students No"
+                      type="number"
+                      name={`courses[${index}].noOfStudents`}
+                      value={String(formik.values.courses[index].noOfStudents)}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      invalid={
+                        (formik.errors.courses as FormikErrors<Course>[])?.[
+                          index
+                        ]?.noOfStudents &&
+                        formik.touched.courses?.[index]?.noOfStudents
+                      }
+                      inputErrorMessage={
+                        (formik.errors.courses as FormikErrors<Course>[])?.[
+                          index
+                        ]?.noOfStudents
                       }
                     />
                   </div>

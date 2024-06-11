@@ -1,14 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface Student {
+interface Student {
   _id: string;
-  name: string;
+  courses: string[];
+  email: string;
+  idOnSensor: number;
   matricNo: string;
+  name: string;
+  __v: number;
 }
+interface StudentAttendance {
+  student: Student;
+  time: string;
+  _id: string;
+}
+
 export interface AttendanceRecord {
   _id: string;
   date: string;
-  studentsPresent: Student[];
+  studentsPresent: StudentAttendance[];
   course: string;
 }
 interface InitialStateTypes {
