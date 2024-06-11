@@ -5,6 +5,10 @@
   align-items: center;
   background-color: rgba($text-color, 0.8);
 
+  @media screen and (max-width: 700px) {
+    padding: 1rem 3rem;
+  }
+
   &-text {
     font-size: 4rem;
     font-weight: bolder;
@@ -21,6 +25,10 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+
+    @media screen and (max-width: 700px) {
+      font-size: 2.5rem;
+    }
   }
 
   &-logout {

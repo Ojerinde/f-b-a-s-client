@@ -12,6 +12,7 @@ import { AddAllCourses } from "@/store/courses/CoursesSlice";
 import Navigation from "@/components/Navigation/Navigation";
 import InformationInput from "@/components/UI/Input/InformationInput";
 import Button from "@/components/UI/Button/Button";
+import { toast } from "react-toastify";
 
 interface Course {
   courseCode: string;
@@ -67,9 +68,27 @@ const UpdateLecturerInformation: React.FC = () => {
         // Reset form after successful submission
         actions.resetForm();
 
-        router.push("/dashboard/my_courses");
-      } catch (error) {
-        console.error("Error creating lecturer:", error);
+        // router.push("/dashboard/my_courses");
+      } catch (error: any) {
+        toast(error?.message, {
+          position: "top-right",
+          autoClose: false,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          style: {
+            background: "#181a40",
+            color: "white",
+            fontSize: "1.7rem",
+            fontFamily: "Poetsen One",
+            letterSpacing: "0.15rem",
+            lineHeight: "1.7",
+            padding: "1rem",
+          },
+        });
       } finally {
         actions.setSubmitting(false);
       }
@@ -114,6 +133,8 @@ const UpdateLecturerInformation: React.FC = () => {
           courseName: course.courseName,
           noOfStudents: course.noOfStudents,
         }));
+        console.log("Modified Courses", modifiedCourses);
+
         formik.setValues({
           title: loggedInLecturer?.title,
           name: loggedInLecturer?.name,

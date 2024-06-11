@@ -14,12 +14,29 @@
 
   &__image {
     flex-basis: 55%;
+
+    @media screen and (max-width: 1000px) {
+      flex-basis: 45%;
+    }
+    @media screen and (max-width: 800px) {
+      display: none;
+    }
   }
 
   &__form {
     flex-basis: 45%;
     padding: 2rem 8rem;
+    @media screen and (max-width: 1000px) {
+      flex-basis: 55%;
+    }
+    @media screen and (max-width: 800px) {
+      flex: 1;
+    }
+    @media screen and (max-width: 400px) {
+      padding: 2rem 4rem;
+    }
   }
+
   &__header {
     width: 100%;
     display: flex;
