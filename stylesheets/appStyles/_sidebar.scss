@@ -1,15 +1,31 @@
 .sidebar {
   padding: 3rem 2rem;
+  @media screen and (max-width: 1200px) {
+    padding: 3rem 1rem;
+  }
+  @media screen and (max-width: 900px) {
+    padding: 0;
+  }
 
   &-list {
     display: flex;
     flex-direction: column;
+
+    @media screen and (max-width: 900px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   &-logout {
     margin-top: 10rem;
     width: 100%;
     box-shadow: 0 0.1rem 0.1rem 0.2rem rgba($text-color, 0.5);
+
+    @media screen and (max-width: 900px) {
+      margin-top: 0 !important;
+    }
   }
 
   &-item {
@@ -26,6 +42,11 @@
     color: $text-color;
     margin: 1rem 0;
 
+    @media screen and (max-width: 1200px) {
+      font-size: 1.4rem;
+      letter-spacing: 0.1rem;
+    }
+
     &__active {
       margin: 1rem 0;
       padding: 1.5rem 1rem;
@@ -37,10 +58,14 @@
       font-weight: bold;
       letter-spacing: 0.2rem;
       text-decoration: none;
-
       text-transform: uppercase;
       color: $color-white;
       background-color: rgba($text-color, 0.9);
+
+      @media screen and (max-width: 1200px) {
+        font-size: 1.4rem;
+        letter-spacing: 0.1rem;
+      }
     }
   }
   &-icon {

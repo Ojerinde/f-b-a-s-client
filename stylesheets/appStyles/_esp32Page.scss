@@ -7,12 +7,17 @@
   }
 
   flex-basis: 100%;
+
   &-box {
     margin: 3rem 0 1rem;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     align-items: center;
+
+    @media screen and (max-width: 700px) {
+      justify-content: space-evenly;
+    }
 
     &__item {
       height: 20rem;
@@ -29,6 +34,10 @@
       transition: all 0.3s;
       &:hover {
         box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+      }
+
+      @media screen and (max-width: 700px) {
+        flex-basis: 45%;
       }
 
       & svg {

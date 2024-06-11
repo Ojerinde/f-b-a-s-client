@@ -68,7 +68,7 @@ const UpdateLecturerInformation: React.FC = () => {
         // Reset form after successful submission
         actions.resetForm();
 
-        // router.push("/dashboard/my_courses");
+        router.push("/dashboard/my_courses");
       } catch (error: any) {
         toast(error?.message, {
           position: "top-right",

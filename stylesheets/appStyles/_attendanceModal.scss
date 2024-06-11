@@ -3,6 +3,18 @@
   background-color: rgba($color-white, 0.8);
   padding: 5rem;
   position: relative;
+  @media screen and (max-width: 1400px) {
+    width: 50vw;
+  }
+  @media screen and (max-width: 1200px) {
+    width: 60vw;
+  }
+  @media screen and (max-width: 700px) {
+    width: 70vw;
+  }
+  @media screen and (max-width: 500px) {
+    width: 85vw;
+  }
 
   &-icon {
     position: absolute;
