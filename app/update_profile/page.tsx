@@ -191,7 +191,7 @@ const UpdateLecturerInformation: React.FC = () => {
               <h2>Update your information.</h2>
 
               <h3 className="update-container__label">Courses:</h3>
-              {formik.values.courses.map((course: Course, index: number) => (
+              {formik?.values.courses?.map((course: Course, index: number) => (
                 <div className="update-container__courses" key={index}>
                   <div className="left">
                     <InformationInput
