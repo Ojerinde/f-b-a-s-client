@@ -32,9 +32,6 @@ const AllCoursesModal: React.FC<AllCoursesModalProps> = ({
               <p>
                 Lecturer Name: <span>{course?.lecturer.name}</span>
               </p>
-              <p>
-                Total Enrolled Students: <span>{course?.noOfStudents}</span>
-              </p>
             </div>
           </li>
         ))}

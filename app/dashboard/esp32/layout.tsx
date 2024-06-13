@@ -1,11 +1,12 @@
 "use client";
 
-import { useAppDispatch } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { AddEsp32Details } from "@/store/esp32/Esp32Slice";
 
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
-import { initializeWebSocket } from "../websocket";
+import { getWebSocket, initializeWebSocket } from "../websocket";
+import { toast } from "react-toastify";
 
 export default function Layout({
   children,
@@ -16,18 +17,41 @@ export default function Layout({
     useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
+
+  const { esp32 } = useAppSelector((state) => state.esp32);
+
   // Initialize WebSocket connection
-  const socket = initializeWebSocket();
+  initializeWebSocket();
 
   const dispatch = useAppDispatch();
 
   const fetchEsp32Details = () => {
     try {
+      const socket = getWebSocket();
       setIsFetchingEsp32details(true);
-      socket?.send(JSON.stringify({ event: "esp32_data_request" }));
+      socket?.send(JSON.stringify({ event: "esp32_data" }));
       console.log("Fetch Esp32 Details event emitted");
     } catch (error) {
       console.log("Fetch Esp32 Details failed", error);
+      toast("Failed to emit event", {
+        position: "top-right",
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "black",
+        style: {
+          background: "#181a40",
+          color: "white",
+          fontSize: "1.7rem",
+          fontFamily: "Poetsen One",
+          letterSpacing: "0.15rem",
+          lineHeight: "1.7",
+          padding: "1rem",
+        },
+      });
     } finally {
       setTimeout(() => {
         setIsFetchingEsp32details(false);
@@ -36,6 +60,14 @@ export default function Layout({
   };
 
   useEffect(() => {
+    if (!esp32.batteryCapacity) {
+      fetchEsp32Details();
+    }
+  }, []);
+
+  useEffect(() => {
+    const socket = getWebSocket();
+
     const handleEsp32Feedback = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
       console.log("data", data);
@@ -45,11 +77,47 @@ export default function Layout({
       console.log("Esp32 Details feedback received:", data);
 
       setIsFetchingEsp32details(false);
-      if (data.error) {
-        setErrorMessage("Failed to fetch Esp32 Details");
+      if (data.payload.error) {
+        toast("Failed to fetch Esp32 data", {
+          position: "top-right",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "black",
+          style: {
+            background: "orangered",
+            color: "white",
+            fontSize: "1.7rem",
+            fontFamily: "Poetsen One",
+            letterSpacing: "0.15rem",
+            lineHeight: "1.7",
+            padding: "1rem",
+          },
+        });
       } else {
-        setSuccessMessage(data.payload);
-        dispatch(AddEsp32Details(data.payload));
+        toast("Esp32 data fetched successfully", {
+          position: "top-right",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          style: {
+            background: "#181a40",
+            color: "white",
+            fontSize: "1.7rem",
+            fontFamily: "Poetsen One",
+            letterSpacing: "0.15rem",
+            lineHeight: "1.7",
+            padding: "1rem",
+          },
+        });
+        dispatch(AddEsp32Details(data.payload.data));
       }
       setTimeout(() => {
         setErrorMessage("");
@@ -60,13 +128,14 @@ export default function Layout({
     if (socket) {
       socket.addEventListener("message", handleEsp32Feedback);
     }
+
     // Clean up event listener when component unmounts
     return () => {
       if (socket) {
         socket.removeEventListener("message", handleEsp32Feedback);
       }
     };
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
@@ -77,7 +146,7 @@ export default function Layout({
           disabled={isFetchingEsp32details === true}
           onClick={fetchEsp32Details}
         >
-          Refresh
+          Refetch Details
         </button>
       </div>
 

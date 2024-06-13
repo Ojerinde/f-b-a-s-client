@@ -159,9 +159,11 @@ const SignUpForm = () => {
           showPassword={showPassword}
           updatePasswordVisibility={updatePasswordVisibility}
         />
-        <Link href="/reactivate_account" className="login-link">
-          Reactivate Account?
-        </Link>
+        <div className="login-box">
+          <Link href="/reactivate_account" className="login-link">
+            Reactivate Account?
+          </Link>
+        </div>
 
         {showError.hasError && (
           <p className="signup-error">{showError.message}</p>

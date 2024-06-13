@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Typewriter from "typewriter-effect";
 import OverlayModal from "../Modals/OverlayModal";
 import LogoutModal from "../Modals/LogoutModal";
@@ -14,6 +14,22 @@ const Navigation = () => {
   const [showLogoutText, setShowLogoutText] = useState(false);
   const loggedInLecturer = GetItemFromLocalStorage("user");
 
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 700);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  const [first, last] = loggedInLecturer?.name.split(" ");
   return (
     <nav className="navigation">
       <figure
@@ -27,25 +43,15 @@ const Navigation = () => {
         <Image
           src="/images/logo.png"
           alt="Logo"
-          width={100}
-          height={80}
+          width={isSmallScreen ? 50 : 100}
+          height={isSmallScreen ? 40 : 80}
           style={{ objectFit: "cover" }}
         />
       </figure>
 
       <div className="navigation-text">
-        {`Greetings, ${loggedInLecturer?.title} ${loggedInLecturer?.name} `}
-        {/* <Typewriter
-          options={{
-            strings: [`Hello! ${loggedInLecturer?.name} `],
-            autoStart: true,
-            loop: true,
-            delay: 130,
-            deleteSpeed: 70,
-          }}
-        /> */}
+        {`Greetings, ${loggedInLecturer?.title} ${first} ${last[0]}.`}
       </div>
-
       <div>
         <button
           type="button"

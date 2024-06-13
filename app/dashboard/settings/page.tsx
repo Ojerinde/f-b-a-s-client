@@ -1,4 +1,5 @@
 "use client";
+import ClearFingerprintOnSensor from "@/components/Modals/ClearFingerprintsOnSensorModal";
 import DeactivateUserModal from "@/components/Modals/DeactivateUserModal";
 import OverlayModal from "@/components/Modals/OverlayModal";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
@@ -7,6 +8,7 @@ import { useState } from "react";
 
 const Settings = () => {
   const [deactivateUser, setDeactivateUser] = useState<boolean>(false);
+  const [clearAllFingerprints, setClearFingerprints] = useState<boolean>(false);
   const user = GetItemFromLocalStorage("user");
   return (
     <div>
@@ -17,18 +19,36 @@ const Settings = () => {
       <Link className="settings_url" href="/dashboard/settings/change_password">
         Change Password
       </Link>
-      <button
-        onClick={() => setDeactivateUser(true)}
-        className="coursePage-button"
-      >
-        Deactivate Account
-      </button>
+      <div>
+        <button
+          onClick={() => setClearFingerprints(true)}
+          className="coursePage-button"
+        >
+          Clear All Fingerprints
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() => setDeactivateUser(true)}
+          className="coursePage-button"
+        >
+          Deactivate Account
+        </button>
+      </div>
+
       {/* Reset Modal */}
       {deactivateUser && (
         <OverlayModal onClose={() => setDeactivateUser(false)}>
           <DeactivateUserModal
             email={user?.email}
             closeModal={() => setDeactivateUser(false)}
+          />
+        </OverlayModal>
+      )}
+      {clearAllFingerprints && (
+        <OverlayModal onClose={() => setClearFingerprints(false)}>
+          <ClearFingerprintOnSensor
+            closeModal={() => setClearFingerprints(false)}
           />
         </OverlayModal>
       )}

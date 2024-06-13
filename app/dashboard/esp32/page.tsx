@@ -8,6 +8,7 @@ import {
   MdSignalWifiStatusbarNotConnected,
 } from "react-icons/md";
 import { PiFingerprintBold } from "react-icons/pi";
+
 const Esp32 = () => {
   const { esp32 } = useAppSelector((state) => state.esp32);
 

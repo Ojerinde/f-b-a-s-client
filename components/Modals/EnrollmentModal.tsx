@@ -53,6 +53,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
 
     onSubmit: async (values, actions) => {
       try {
+        initializeWebSocket();
         const socket = getWebSocket();
 
         setEnrollmentIsLoading(true);

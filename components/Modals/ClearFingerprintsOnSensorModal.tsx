@@ -1,85 +1,81 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Course } from "@/app/dashboard/my_courses/page";
-import { toast } from "react-toastify";
-import Button from "../UI/Button/Button";
-import { useEffect, useState } from "react";
-// import { socket } from "@/app/dashboard/socket";
-import { MdOutlineClose } from "react-icons/md";
-import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
-import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
 import InformationInput from "../UI/Input/InformationInput";
+import { useEffect, useState } from "react";
+import { MdOutlineClose } from "react-icons/md";
+import HttpRequest from "@/store/services/HttpRequest";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/reduxHook";
+import { AddEnrolledStudents } from "@/store/studentss/StudentsSlice";
+import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
+import { toast } from "react-toastify";
 
-interface AttendanceModalProps {
-  course: Course | null;
+interface ClearFingerprintOnSensorProps {
   closeModal: () => void;
 }
-const AttendanceModal: React.FC<AttendanceModalProps> = ({
-  course,
+
+interface FormValuesType {
+  clearPhrase: string;
+}
+
+const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
   closeModal,
 }) => {
-  const [takingAttendanceIsLoading, setTakingAttendanceIsLoading] =
-    useState(false);
+  const [isClearingFingerprints, setIsClearingFingerprints] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const router = useRouter();
 
   useEffect(() => {
     initializeWebSocket();
   }, []);
 
-  interface FormValuesType {
-    time: string;
-  }
-
   const formik = useFormik<FormValuesType>({
     initialValues: {
-      time: "",
+      clearPhrase: "",
     },
     validationSchema: Yup.object().shape({
-      time: Yup.string()
-        .required("Time is required")
-        .matches(
-          /^([0-9]|[1-9][0-9]):[0-5][0-9]$/,
-          "Time must be in the format HH:MM"
-        ),
+      clearPhrase: Yup.string().required("Clear Phrase is required"),
     }),
-    validateOnBlur: true,
     validateOnChange: true,
-
+    validateOnBlur: true,
+    validateOnMount: true,
     onSubmit: async (values, actions) => {
       try {
         initializeWebSocket();
         const socket = getWebSocket();
 
-        setTakingAttendanceIsLoading(true);
-        // Emit the enroll event to the server
+        setIsClearingFingerprints(true);
         socket?.send(
           JSON.stringify({
-            event: "attendance",
-            payload: { ...values, ...course },
+            event: "clear_fingerprints",
+            payload: { clearPhrase: values.clearPhrase },
           })
         );
-        console.log("Attendance event emitted");
+        console.log("Clear fingerprints event emitted");
       } catch (error) {
-        console.error("Error emitting attendance event:", error);
-        setTakingAttendanceIsLoading(false);
-        setErrorMessage("Failed to mark attendance. Try again!");
+        console.error("Error emitting clear_fingerprints event:", error);
+        setIsClearingFingerprints(false);
+        setErrorMessage("Failed to mark clear_fingerprints. Try again!");
       } finally {
+        setIsClearingFingerprints(false);
         setTimeout(() => {
           setErrorMessage("");
-        }, 7000);
+          setSuccessMessage("");
+        }, 10000);
       }
     },
   });
 
   useEffect(() => {
     const socket = getWebSocket();
-    // Listen for attendance feedback from the server
+
     const handleAttendanceFeedback = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
-      if (feedback.event !== "attendance_feedback") return;
-      console.log("Attendance feedback received:", feedback);
-      setTakingAttendanceIsLoading(false);
+      if (feedback.event !== "clear_fingerprints_feedback") return;
+      console.log("Clear Fingerprints feedback received:", feedback);
+      setIsClearingFingerprints(false);
       if (feedback.payload.error) {
         setErrorMessage(feedback.payload.message);
       } else {
@@ -88,7 +84,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       setTimeout(() => {
         setErrorMessage("");
         setSuccessMessage("");
-      }, 5000);
+      }, 7000);
     };
 
     // Add event listener for attendance feedback
@@ -102,7 +98,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
 
   useEffect(() => {
     const socket = getWebSocket();
-    // Listen for attendance recorded event from the server
+
     const handleAttendanceRecorded = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
       toast(feedback.payload.message, {
@@ -136,39 +132,40 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   }, []);
 
   return (
-    <div className="attendanceOverlay">
+    <div className="resetOverlay">
       <div className="" onClick={closeModal}>
-        <MdOutlineClose className="attendanceOverlay-icon" />
+        <MdOutlineClose className="resetOverlay-icon" />
       </div>
-      <h2 className="enrollmentOverlay-text">
-        Take Attendance for {course?.courseCode}
+      <h2 className="resetOverlay-text">
+        This action will clear all the fingerprint on the sensor
       </h2>
+      <h3 className="resetOverlay-text_2">
+        If you wish to continue, enter the "Clear-Phrase" known by the Level
+        adviser (LA) alone in the field below.
+      </h3>
       <form onSubmit={formik.handleSubmit}>
         <InformationInput
-          id="time"
+          id="clearPhrase"
           type="text"
-          name="time"
-          value={formik.values.time}
+          name="clearPhrase"
+          value={formik.values.clearPhrase}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          invalid={!!formik.errors.time && formik.touched.time}
-          inputErrorMessage={formik.errors.time}
-          placeholder="E.g 1:00"
+          inputErrorMessage={formik.errors.clearPhrase}
+          placeholder=""
         />
-
         {errorMessage && <p className="signup-error">{errorMessage}</p>}
         {successMessage && <p className="signup-success">{successMessage}</p>}
 
-        <Button
+        <button
+          className="resetOverlay-button"
           type="submit"
-          disabled={takingAttendanceIsLoading || !formik.isValid}
+          disabled={isClearingFingerprints || !formik.isValid}
         >
-          {takingAttendanceIsLoading
-            ? "Downloading Course Data..."
-            : "Take Attendance"}
-        </Button>
+          {isClearingFingerprints ? "Clearing..." : "Clear"}
+        </button>
       </form>
     </div>
   );
 };
-export default AttendanceModal;
+export default ClearFingerprintOnSensor;

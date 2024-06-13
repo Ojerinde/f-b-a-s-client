@@ -119,9 +119,11 @@ const LoginForm = () => {
               showPassword={showPassword}
               updatePasswordVisibility={updatePasswordVisibility}
             />
-            <Link href="/forgot_password" className="login-link">
-              Forgot Password?
-            </Link>
+            <div className="login-box">
+              <Link href="/forgot_password" className="login-link">
+                Forgot Password?
+              </Link>
+            </div>
             {showError.hasError && (
               <InlineFeedback status="error" message={showError.message} />
             )}

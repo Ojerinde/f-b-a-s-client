@@ -8,6 +8,7 @@
     font-family: "Poetsen One", sans-serif;
     color: rgba($text-color, 1);
     transition: all 0.3s;
+    width: fit-content;
 
     &:hover {
       color: rgba($text-color, 0.5);

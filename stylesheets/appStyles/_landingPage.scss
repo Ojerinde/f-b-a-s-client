@@ -3,6 +3,9 @@
   place-items: center;
   min-height: 100vh;
   margin: 1rem 0;
+  @media screen and (max-width: 800px) {
+    min-height: 90vh;
+  }
 
   &__container {
     width: 85%;
@@ -31,6 +34,7 @@
     }
     @media screen and (max-width: 800px) {
       flex: 1;
+      padding: 6rem 8rem 10rem;
     }
     @media screen and (max-width: 400px) {
       padding: 2rem 4rem;

@@ -17,7 +17,6 @@ import { toast } from "react-toastify";
 interface Course {
   courseCode: string;
   courseName: string;
-  noOfStudents: number | null;
 }
 
 interface FormValuesType {
@@ -37,7 +36,7 @@ const UpdateLecturerInformation: React.FC = () => {
       name: loggedInLecturer?.name,
       email: loggedInLecturer?.email,
       title: loggedInLecturer?.title,
-      courses: [{ courseCode: "", courseName: "", noOfStudents: null }],
+      courses: [{ courseCode: "", courseName: "" }],
     },
     validationSchema: Yup.object().shape({
       title: Yup.string().required("Name is required"),
@@ -54,9 +53,6 @@ const UpdateLecturerInformation: React.FC = () => {
               "Course must be in the format 'XXX 000'"
             ),
           courseName: Yup.string().required("Course Name is required"),
-          noOfStudents: Yup.number().required(
-            "Total students number is required"
-          ),
         })
       ),
     }),
@@ -70,7 +66,9 @@ const UpdateLecturerInformation: React.FC = () => {
 
         router.push("/dashboard/my_courses");
       } catch (error: any) {
-        toast(error?.message, {
+        console.log("message", error.response.data.message);
+
+        toast(error?.response.data.message, {
           position: "top-right",
           autoClose: false,
           hideProgressBar: false,
@@ -98,10 +96,7 @@ const UpdateLecturerInformation: React.FC = () => {
   const handleAddCourse = () => {
     formik.setValues({
       ...formik.values,
-      courses: [
-        ...formik.values.courses,
-        { courseCode: "", courseName: "", noOfStudents: null },
-      ],
+      courses: [...formik.values.courses, { courseCode: "", courseName: "" }],
     });
   };
 
@@ -131,18 +126,13 @@ const UpdateLecturerInformation: React.FC = () => {
         const modifiedCourses = response.data.courses.map((course: Course) => ({
           courseCode: course.courseCode,
           courseName: course.courseName,
-          noOfStudents: course.noOfStudents,
         }));
-        console.log("Modified Courses", modifiedCourses);
 
         formik.setValues({
           title: loggedInLecturer?.title,
           name: loggedInLecturer?.name,
           email: loggedInLecturer?.email,
-          courses: [
-            ...modifiedCourses,
-            { courseCode: "", courseName: "", noOfStudents: null },
-          ],
+          courses: [...modifiedCourses, { courseCode: "", courseName: "" }],
         });
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -225,7 +215,7 @@ const UpdateLecturerInformation: React.FC = () => {
                       }
                     />
                   </div>
-                  <div className="middle">
+                  <div className="right">
                     <InformationInput
                       id={`courseName${index}`}
                       label="Course Name"
@@ -247,28 +237,7 @@ const UpdateLecturerInformation: React.FC = () => {
                       }
                     />
                   </div>
-                  <div className="right">
-                    <InformationInput
-                      id={`courseCode${index}`}
-                      label="Students No"
-                      type="number"
-                      name={`courses[${index}].noOfStudents`}
-                      value={String(formik.values.courses[index].noOfStudents)}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      invalid={
-                        (formik.errors.courses as FormikErrors<Course>[])?.[
-                          index
-                        ]?.noOfStudents &&
-                        formik.touched.courses?.[index]?.noOfStudents
-                      }
-                      inputErrorMessage={
-                        (formik.errors.courses as FormikErrors<Course>[])?.[
-                          index
-                        ]?.noOfStudents
-                      }
-                    />
-                  </div>
+
                   <IoIosRemoveCircle
                     className="icon"
                     onClick={() => removeCourse(index)}
