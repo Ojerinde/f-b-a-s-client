@@ -28,19 +28,21 @@ interface FormValuesType {
 
 const UpdateLecturerInformation: React.FC = () => {
   const router = useRouter();
-  const loggedInLecturer = GetItemFromLocalStorage("user");
+  const loggedInLecturer = GetItemFromLocalStorage("user") || {};
   const dispatch = useAppDispatch();
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
-      name: loggedInLecturer?.name,
-      email: loggedInLecturer?.email,
-      title: loggedInLecturer?.title,
-      courses: [{ courseCode: "", courseName: "" }],
+      name: loggedInLecturer?.name || "",
+      email: loggedInLecturer?.email || "",
+      title: loggedInLecturer?.title || "",
+      courses: loggedInLecturer?.courses || [
+        { courseCode: "", courseName: "" },
+      ],
     },
     validationSchema: Yup.object().shape({
-      title: Yup.string().required("Name is required"),
-      name: Yup.string().required("Title is required"),
+      title: Yup.string().required("Title is required"),
+      name: Yup.string().required("Name is required"),
       email: Yup.string()
         .required("Email is required")
         .email("Email is invalid"),
@@ -70,7 +72,7 @@ const UpdateLecturerInformation: React.FC = () => {
 
         toast(error?.response.data.message, {
           position: "top-right",
-          autoClose: false,
+          autoClose: 10000, // Set autoClose to 10 seconds
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -129,9 +131,9 @@ const UpdateLecturerInformation: React.FC = () => {
         }));
 
         formik.setValues({
-          title: loggedInLecturer?.title,
-          name: loggedInLecturer?.name,
-          email: loggedInLecturer?.email,
+          title: loggedInLecturer?.title || "",
+          name: loggedInLecturer?.name || "",
+          email: loggedInLecturer?.email || "",
           courses: [...modifiedCourses, { courseCode: "", courseName: "" }],
         });
       } catch (error) {
@@ -140,7 +142,7 @@ const UpdateLecturerInformation: React.FC = () => {
     };
 
     fetchCourses();
-  }, []);
+  }, [loggedInLecturer?.email]);
 
   return (
     <section className="update">

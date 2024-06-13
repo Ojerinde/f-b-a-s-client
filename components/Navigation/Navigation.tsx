@@ -29,7 +29,14 @@ const Navigation = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const [first, last] = loggedInLecturer?.name.split(" ");
+
+  let first;
+  let last;
+
+  if (loggedInLecturer) {
+    [first, last] = loggedInLecturer?.name.split(" ");
+  }
+
   return (
     <nav className="navigation">
       <figure
@@ -50,7 +57,7 @@ const Navigation = () => {
       </figure>
 
       <div className="navigation-text">
-        {`Greetings, ${loggedInLecturer?.title} ${first} ${last[0]}.`}
+        {`Greetings, ${loggedInLecturer?.title} ${first} ${last?.[0]}.`}
       </div>
       <div>
         <button
