@@ -132,7 +132,9 @@
       @media screen and (max-width: 450px) {
         flex-basis: 50%;
       }
-
+      @media screen and (max-width: 420px) {
+        flex-basis: 55%;
+      }
       & button {
         @include flex-center;
         flex-direction: column;
@@ -142,6 +144,9 @@
         box-shadow: 0 0.1rem 0.1rem 0.1rem rgba($text-color, 0.5);
         transition: all 0.3s;
         cursor: pointer;
+        @media screen and (max-width: 420px) {
+          padding: 1rem 1.7rem;
+        }
 
         &:hover {
           transform: translateY(2px);

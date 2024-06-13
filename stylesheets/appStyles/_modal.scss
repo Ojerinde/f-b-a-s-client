@@ -26,6 +26,9 @@
   @media screen and (max-width: 700px) {
     left: 10%;
   }
+  @media screen and (max-width: 500px) {
+    left: 8%;
+  }
 }
 
 .details-backdrop {
@@ -51,5 +54,8 @@
   }
   @media screen and (max-width: 700px) {
     left: 5%;
+  }
+  @media screen and (max-width: 500px) {
+    left: 2.5%;
   }
 }
