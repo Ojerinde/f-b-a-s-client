@@ -19,6 +19,9 @@ const Settings = () => {
       <Link className="settings_url" href="/dashboard/settings/change_password">
         Change Password
       </Link>
+      <Link className="settings_url" href="/dashboard/archived_records">
+        See Archived Records
+      </Link>
       <div>
         <button
           onClick={() => setClearFingerprints(true)}

@@ -31,11 +31,13 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
     const modifiedMatricNo = matricNo.replace("/", "_");
     return modifiedMatricNo;
   };
-  const studentsPerpage = 7;
-  const end = start + studentsPerpage;
-  const handlePageChange = (num: number) => {
-    const newStartNum = num + studentsPerpage;
-    setStart(newStartNum - 1);
+  /// Pagination logic
+  const studentsPerPage = 7;
+  const end = start + studentsPerPage;
+
+  const handlePageChange = (page: number) => {
+    const newStart = (page - 1) * studentsPerPage;
+    setStart(newStart);
   };
 
   return (
@@ -78,7 +80,7 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
       {enrolledStudents.length > 0 && (
         <Pagination
           length={enrolledStudents.length}
-          itemsPerPage={studentsPerpage}
+          itemsPerPage={studentsPerPage}
           onPageChange={handlePageChange}
         />
       )}

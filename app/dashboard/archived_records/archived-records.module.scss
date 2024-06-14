@@ -1,0 +1,40 @@
+.container {
+  margin-bottom: 4rem;
+}
+
+.selectContainer {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+
+  &_select {
+    flex-basis: 33%;
+    font-size: 1.5rem;
+  }
+
+  & button {
+    flex-basis: 20%;
+    font-size: 1.3rem;
+    margin-top: 1rem;
+
+    &:hover {
+      background: #232222;
+      color: white;
+    }
+  }
+}
+
+.records {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  gap: 2rem;
+
+  .recordSection {
+    background: #f4f4f4;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
+}

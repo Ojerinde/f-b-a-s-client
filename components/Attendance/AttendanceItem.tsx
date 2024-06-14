@@ -6,7 +6,7 @@ import { formatDate } from "@/utils/dateFormatter";
 import { useState } from "react";
 
 interface AttendanceItemProps {
-  date: string;
+  date: string | any;
   studentsPresent: any[];
 }
 

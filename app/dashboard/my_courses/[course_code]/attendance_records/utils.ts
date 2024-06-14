@@ -1,8 +1,12 @@
+import { Student } from "@/store/archived/ArchivedSlice";
+
 interface MyObject {
   _id: string;
   date: string;
-  studentsPresent: any[];
-  course: string;
+  studentsPresent: Array<{
+    student: Student;
+    time: string;
+  }>;
 }
 
 export function sortByDate(objects: MyObject[]): MyObject[] {

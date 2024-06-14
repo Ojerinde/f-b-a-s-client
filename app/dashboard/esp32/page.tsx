@@ -1,12 +1,7 @@
 "use client";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { AiOutlinePercentage } from "react-icons/ai";
-import {
-  FaBatteryFull,
-  FaChargingStation,
-  FaChartPie,
-  FaWifi,
-} from "react-icons/fa";
+import { FaBatteryFull, FaChargingStation, FaWifi } from "react-icons/fa";
 import { GrCapacity } from "react-icons/gr";
 import { IoMdBatteryCharging } from "react-icons/io";
 import {

@@ -11,21 +11,17 @@ const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
   itemsPerPage,
 }) => {
-  // Calculate the total number of pages
   const totalPages = Math.ceil(length / itemsPerPage);
 
-  // State to keep track of the current page
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumber, setPageNumber] = useState<number | string>("");
 
-  // Function to handle page changes
   const goToPage = (page: number) => {
-    if (page < 1 || page > totalPages) return; // Guard clause for invalid page numbers
+    if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
     onPageChange(page);
   };
 
-  // Handle next and previous page buttons
   const handleNext = () => {
     goToPage(currentPage + 1);
   };
@@ -34,14 +30,19 @@ const Pagination: React.FC<PaginationProps> = ({
     goToPage(currentPage - 1);
   };
 
-  // Function to handle input page change
   const handlePageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = parseInt(e.target.value);
-    if (inputValue > totalPages || inputValue < 1) return;
+    if (isNaN(inputValue) || inputValue < 1 || inputValue > totalPages) {
+      setPageNumber("");
+      return;
+    }
     setPageNumber(inputValue);
   };
+
   const handleGoToSubmission = () => {
-    goToPage(+pageNumber);
+    if (typeof pageNumber === "number") {
+      goToPage(pageNumber);
+    }
   };
 
   return (
