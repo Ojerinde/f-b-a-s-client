@@ -88,7 +88,7 @@ const LoginForm = () => {
         validationSchema={validationSchema}
         validateOnChange={true}
         validateOnBlur={true}
-        validateOnMount={false}
+        validateOnMount={true}
       >
         {(formik: any) => (
           <form onSubmit={formik.handleSubmit}>
@@ -127,7 +127,7 @@ const LoginForm = () => {
             {showError.hasError && (
               <InlineFeedback status="error" message={showError.message} />
             )}
-            <Button type="submit" onClick={() => {}}>
+            <Button type="submit" disabled={!formik.isValid}>
               {formik.isSubmitting ? <LoadingSpinner /> : "Login"}
             </Button>
           </form>

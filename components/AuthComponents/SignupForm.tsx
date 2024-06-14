@@ -27,13 +27,28 @@ const SignUpForm = () => {
 
   // Yup schema configurations
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
+    name: Yup.string()
+      .required("Name is required")
+      .test(
+        "full-name",
+        "Name must include both first name and last name",
+        (value) => {
+          if (!value) {
+            return false;
+          }
+          return value.trim().split(" ").length === 2;
+        }
+      ),
     title: Yup.string().required("Title is required"),
     email: Yup.string().required("Email is required").email("Email is invalid"),
     password: Yup.string()
       .required("Password is required")
       .min(6, "Password must be at least 6 characters")
-      .max(40, "Password must not exceed 40 characters"),
+      .max(40, "Password must not exceed 40 characters")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      ),
     confirmPassword: Yup.string()
       .required("Confirm Password is required")
       .oneOf([Yup.ref("password"), ""], "Confirm Password does not match"),
@@ -51,11 +66,10 @@ const SignUpForm = () => {
     validationSchema,
     validateOnChange: true,
     validateOnBlur: true,
-    validateOnMount: false,
+    validateOnMount: true,
     async onSubmit(values, actions) {
       const { confirmPassword, password, email, name, title } = values;
       try {
-        // Seding a request to my backend
         const response = await HttpRequest.post("/auth/signup", {
           name,
           title,

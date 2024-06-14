@@ -10,13 +10,14 @@
   &__container {
     width: 85%;
     display: flex;
+    justify-content: space-between;
     -webkit-box-shadow: 3px 5.5px 17.5px 27.5px #dddddd;
     -moz-box-shadow: 3px 5.5px 17.5px 27.5px #dddddd;
     box-shadow: 3px 5.5px 17.5px 27.5px #dddddd;
   }
 
   &__image {
-    flex-basis: 55%;
+    flex-basis: 50%;
 
     @media screen and (max-width: 1000px) {
       flex-basis: 45%;
@@ -27,8 +28,9 @@
   }
 
   &__form {
-    flex-basis: 45%;
-    padding: 2rem 8rem;
+    flex-basis: 48%;
+    padding: 2rem 4rem;
+
     @media screen and (max-width: 1000px) {
       flex-basis: 55%;
     }

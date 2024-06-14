@@ -19,19 +19,19 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
-@media only screen and (max-width: $bp--large) {
+@media only screen and (max-width: 1400px) {
   html {
-    font-size: 55%;
+    font-size: 50%;
   }
 }
 
-@media only screen and (max-width: $bp--medium) {
+@media only screen and (max-width: 900px) {
   html {
-    font-size: 48%;
+    font-size: 47%;
   }
 }
 
-@media only screen and (max-width: $bp--small) {
+@media only screen and (max-width: 500px) {
   html {
     font-size: 42%;
   }
