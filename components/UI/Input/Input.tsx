@@ -17,8 +17,9 @@ interface Props {
   passwordIcon?: boolean;
   onChange?: (e: any) => void;
   onBlur?: (e: any) => void;
+  onFocus?: (e: any) => void;
   multiple?: boolean | undefined;
-  readOnly?: boolean; 
+  readOnly?: boolean;
 }
 
 const InputField: React.FC<Props> = ({

@@ -7,6 +7,7 @@ import Button from "../UI/Button/Button";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
 import HttpRequest from "@/store/services/HttpRequest";
 import Link from "next/link";
+import PasswordModal from "../Modals/PasswordModal";
 
 export interface UserData {
   email: string;
@@ -24,6 +25,40 @@ const SignUpForm = () => {
     hasError: boolean;
     message: string;
   }>({ hasError: false, message: "" });
+
+  // Password Modal requirements
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [requirements, setRequirements] = useState([
+    { text: "At least 6 characters", isValid: false },
+    { text: "At least one uppercase letter", isValid: false },
+    { text: "At least one lowercase letter", isValid: false },
+    { text: "At least one number", isValid: false },
+    { text: "At least one special character", isValid: false },
+  ]);
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    formik.handleChange(e);
+
+    const newRequirements = requirements.map((req) => {
+      switch (req.text) {
+        case "At least 6 characters":
+          return { ...req, isValid: value.length >= 6 };
+        case "At least one uppercase letter":
+          return { ...req, isValid: /[A-Z]/.test(value) };
+        case "At least one lowercase letter":
+          return { ...req, isValid: /[a-z]/.test(value) };
+        case "At least one number":
+          return { ...req, isValid: /[0-9]/.test(value) };
+        case "At least one special character":
+          return { ...req, isValid: /[!@#$%^&*]/.test(value) };
+        default:
+          return req;
+      }
+    });
+
+    setRequirements(newRequirements);
+  };
 
   // Yup schema configurations
   const validationSchema = Yup.object().shape({
@@ -81,9 +116,10 @@ const SignUpForm = () => {
           "You have signup successfully, kindly check your mail for verification link"
         );
       } catch (error: any) {
+        console.log("Signup error", error);
         setShowError(() => ({
           hasError: true,
-          message: `${error?.response?.data.message} Try logging in.`,
+          message: `${error?.response?.data.message}.`,
         }));
       } finally {
         actions.setSubmitting(false);
@@ -139,22 +175,31 @@ const SignUpForm = () => {
           value={formik.values.email}
           inputErrorMessage={formik.errors.email}
         />
-
-        <InputField
-          id="password"
-          label="Password"
-          name="password"
-          type={showPassword ? "text" : "password"}
-          invalid={formik.errors.password && formik.touched.password}
-          inputErrorMessage={formik.errors.password}
-          placeholder=""
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.password}
-          passwordIcon={true}
-          showPassword={showPassword}
-          updatePasswordVisibility={updatePasswordVisibility}
-        />
+        <div>
+          <InputField
+            id="password"
+            label="Password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            invalid={formik.errors.password && formik.touched.password}
+            inputErrorMessage={formik.errors.password}
+            placeholder=""
+            onChange={(e: any) => {
+              formik.handleChange(e);
+              handlePasswordChange(e);
+            }}
+            onBlur={(e: any) => {
+              formik.handleBlur(e);
+              setShowPasswordModal(false);
+            }}
+            value={formik.values.password}
+            passwordIcon={true}
+            showPassword={showPassword}
+            updatePasswordVisibility={updatePasswordVisibility}
+            onFocus={() => setShowPasswordModal(true)}
+          />
+          <PasswordModal requirements={requirements} show={showPasswordModal} />
+        </div>
 
         <InputField
           id="confirmPassword"

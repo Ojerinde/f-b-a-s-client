@@ -68,7 +68,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
       } catch (error) {
         console.error("Error emitting enroll event:", error);
         setEnrollmentIsLoading(false);
-        setErrorMessage("Failed to mark attendance. Try again!");
+        setErrorMessage("Unable to enroll student. Try again!");
       } finally {
         setTimeout(() => {
           setErrorMessage("");

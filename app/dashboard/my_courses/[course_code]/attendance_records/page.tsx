@@ -30,15 +30,16 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
   const [start, setStart] = useState(0);
   const attendanceRecordsPerPage = 5;
   const end = start + attendanceRecordsPerPage;
-  const handlePageChange = (num: number) => {
-    setStart(num - 1);
-  };
 
+  const handlePageChange = (page: number) => {
+    const newStart = (page - 1) * attendanceRecordsPerPage;
+    setStart(newStart);
+  };
   // Filter Logic
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [matricNo, setMatricNo] = useState("");
-  const [filteredAttendanceRecords, setfilteredAttendanceRecords] = useState<
+  const [filteredAttendanceRecords, setFilteredAttendanceRecords] = useState<
     any[]
   >([]);
 
@@ -49,17 +50,40 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
       const toTimestamp = new Date(toDate).getTime();
       return objDate >= fromTimestamp && objDate <= toTimestamp;
     });
-    setfilteredAttendanceRecords(filteredResults);
+    setFilteredAttendanceRecords(filteredResults);
   };
 
+  // Show all students on the date the matric number was present
+  // const handleFilterByMatricNo = () => {
+  //   const filteredResults = attendanceRecords.filter((obj) => {
+  //     return obj.studentsPresent.some(
+  //       (record) =>
+  //         record.student.matricNo.toLowerCase() === matricNo.toLowerCase()
+  //     );
+  //   });
+  //   setFilteredAttendanceRecords(filteredResults);
+  // };
+
+  // Show only the studnets with the matric number
   const handleFilterByMatricNo = () => {
-    const filteredResults = attendanceRecords.filter((obj) => {
-      return obj.studentsPresent.some(
-        (record) =>
-          record.student.matricNo.toLowerCase() === matricNo.toLowerCase()
-      );
-    });
-    setfilteredAttendanceRecords(filteredResults);
+    const filteredResults = attendanceRecords
+      .filter((record) =>
+        record.studentsPresent.some(
+          (studentRecord) =>
+            studentRecord.student.matricNo.toLowerCase() ===
+            matricNo.toLowerCase()
+        )
+      )
+      .map((record) => ({
+        ...record,
+        studentsPresent: record.studentsPresent.filter(
+          (studentRecord) =>
+            studentRecord.student.matricNo.toLowerCase() ===
+            matricNo.toLowerCase()
+        ),
+      }));
+
+    setFilteredAttendanceRecords(filteredResults);
   };
 
   return (
@@ -100,8 +124,8 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
                 />
-                <button onClick={handleFilterByDate}>Filter</button>
               </p>
+              <button onClick={handleFilterByDate}>Filter</button>
             </div>
             <div className="attendanceItem-search">
               <form
@@ -124,8 +148,8 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
           {filteredAttendanceRecords.length !== 0 ? (
             <div>
               <h3 className="attendanceItem-filter__header">
-                <span>Filtered results</span>
-                <MdCancel onClick={() => setfilteredAttendanceRecords([])} />
+                <span>Filtered results </span>
+                <MdCancel onClick={() => setFilteredAttendanceRecords([])} />
               </h3>
               <ul className="attendanceItem-list">
                 {sortByDate(filteredAttendanceRecords)

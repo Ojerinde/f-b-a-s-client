@@ -117,7 +117,7 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
         formik.resetForm();
         setSuccessMessage(feedback.payload.message);
         closeModal();
-        dispatch(AddEnrolledStudents(feedback.data.students));
+        dispatch(AddEnrolledStudents(feedback.payload.students));
         router.back();
       }
       setTimeout(() => {

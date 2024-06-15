@@ -1,0 +1,167 @@
+export const attendanceRecords = [
+  {
+    _id: "1",
+    date: "2024-06-15",
+    studentsPresent: [
+      {
+        _id: "101",
+        student: {
+          _id: "s1",
+          name: "John Doe",
+          email: "john.doe@example.com",
+          matricNo: "A12345",
+          idOnSensor: 1,
+          courses: ["c1", "c2"],
+        },
+        time: "2024-06-15T09:00:00",
+      },
+      {
+        _id: "102",
+        student: {
+          _id: "s2",
+          name: "Jane Smith",
+          email: "jane.smith@example.com",
+          matricNo: "B67890",
+          idOnSensor: 2,
+          courses: ["c1"],
+        },
+        time: "2024-06-15T09:05:00",
+      },
+      {
+        _id: "103",
+        student: {
+          _id: "s3",
+          name: "Alice Johnson",
+          email: "alice.johnson@example.com",
+          matricNo: "C54321",
+          idOnSensor: 3,
+          courses: ["c1", "c2"],
+        },
+        time: "2024-06-15T09:10:00",
+      },
+      {
+        _id: "104",
+        student: {
+          _id: "s4",
+          name: "Bob Brown",
+          email: "bob.brown@example.com",
+          matricNo: "D98765",
+          idOnSensor: 4,
+          courses: ["c1"],
+        },
+        time: "2024-06-15T09:15:00",
+      },
+    ],
+    course: "c1",
+  },
+  {
+    _id: "2",
+    date: "2024-06-14",
+    studentsPresent: [
+      {
+        _id: "201",
+        student: {
+          _id: "s1",
+          name: "John Doe",
+          email: "john.doe@example.com",
+          matricNo: "A12345",
+          idOnSensor: 1,
+          courses: ["c1", "c2"],
+        },
+        time: "2024-06-14T10:00:00",
+      },
+      {
+        _id: "202",
+        student: {
+          _id: "s2",
+          name: "Jane Smith",
+          email: "jane.smith@example.com",
+          matricNo: "B67890",
+          idOnSensor: 2,
+          courses: ["c1"],
+        },
+        time: "2024-06-14T10:05:00",
+      },
+      {
+        _id: "203",
+        student: {
+          _id: "s3",
+          name: "Alice Johnson",
+          email: "alice.johnson@example.com",
+          matricNo: "C54321",
+          idOnSensor: 3,
+          courses: ["c2"],
+        },
+        time: "2024-06-14T10:10:00",
+      },
+      {
+        _id: "204",
+        student: {
+          _id: "s4",
+          name: "Bob Brown",
+          email: "bob.brown@example.com",
+          matricNo: "D98765",
+          idOnSensor: 4,
+          courses: ["c1"],
+        },
+        time: "2024-06-14T10:15:00",
+      },
+    ],
+    course: "c2",
+  },
+  {
+    _id: "3",
+    date: "2024-06-13",
+    studentsPresent: [
+      {
+        _id: "301",
+        student: {
+          _id: "s1",
+          name: "John Doe",
+          email: "john.doe@example.com",
+          matricNo: "A12345",
+          idOnSensor: 1,
+          courses: ["c1", "c2"],
+        },
+        time: "2024-06-13T09:00:00",
+      },
+      {
+        _id: "302",
+        student: {
+          _id: "s2",
+          name: "Jane Smith",
+          email: "jane.smith@example.com",
+          matricNo: "B67890",
+          idOnSensor: 2,
+          courses: ["c1"],
+        },
+        time: "2024-06-13T09:05:00",
+      },
+      {
+        _id: "303",
+        student: {
+          _id: "s3",
+          name: "Alice Johnson",
+          email: "alice.johnson@example.com",
+          matricNo: "C54321",
+          idOnSensor: 3,
+          courses: ["c1", "c2"],
+        },
+        time: "2024-06-13T09:10:00",
+      },
+      {
+        _id: "304",
+        student: {
+          _id: "s4",
+          name: "Bob Brown",
+          email: "bob.brown@example.com",
+          matricNo: "D98765",
+          idOnSensor: 4,
+          courses: ["c1"],
+        },
+        time: "2024-06-13T09:15:00",
+      },
+    ],
+    course: "c1",
+  },
+];
