@@ -173,7 +173,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       <form onSubmit={formik.handleSubmit}>
         <InformationInput
           id="startTime"
-          label="Start Time"
           type="time"
           name="startTime"
           value={formik.values.startTime}
@@ -184,7 +183,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         />
         <InformationInput
           id="endTime"
-          label="End Time"
           type="time"
           name="endTime"
           value={formik.values.endTime}
