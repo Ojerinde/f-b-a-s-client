@@ -159,6 +159,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
                       key={index}
                       date={record.date}
                       studentsPresent={record.studentsPresent}
+                      filtered={true}
                     />
                   ))}
               </ul>

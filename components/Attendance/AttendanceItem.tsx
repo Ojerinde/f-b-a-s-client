@@ -8,11 +8,13 @@ import { useState } from "react";
 interface AttendanceItemProps {
   date: string | any;
   studentsPresent: any[];
+  filtered?: boolean;
 }
 
 const AttendanceItem: React.FC<AttendanceItemProps> = ({
   date,
   studentsPresent,
+  filtered,
 }) => {
   const [seeAll, setSeeAll] = useState<boolean>(false);
 
@@ -27,9 +29,11 @@ const AttendanceItem: React.FC<AttendanceItemProps> = ({
     <li className="attendanceItem-item">
       <div className="attendanceItem-item__header">
         <p className="attendanceItem-item__date">Date: {formatDate(date)}</p>
-        <button onClick={toggleSeeAll}>
-          {seeAll ? "Collaspe Students" : "See All Students"}
-        </button>
+        {filtered && (
+          <button onClick={toggleSeeAll}>
+            {seeAll ? "Collaspe Students" : "See All Students"}
+          </button>
+        )}
       </div>
 
       {seeAll ? (
