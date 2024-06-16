@@ -10,9 +10,20 @@ export const initializeWebSocket = () => {
       console.log("WebSocket connection established");
     };
 
+    ws_socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Trigger onMessage event", data);
+
+      if (data.event === "custom_ping") {
+        console.log("Received custom ping, sending custom pong");
+        ws_socket?.send(JSON.stringify({ event: "custom_pong" }));
+      }
+    };
+
     ws_socket.onclose = () => {
       console.log("WebSocket connection closed");
-      ws_socket = null; // Reset the socket to allow reinitialization
+      // Reset the socket to allow reinitialization
+      ws_socket = null;
     };
 
     ws_socket.onerror = (error) => {
