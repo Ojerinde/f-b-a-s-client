@@ -11,32 +11,17 @@ export function formatDate(dateString: string): string {
     "Friday",
     "Saturday",
   ];
-  const dayOfWeek = daysOfWeek[date.getDay()];
+  const dayOfWeek = daysOfWeek[date.getUTCDay()]; // Use getUTCDay for UTC day
 
   // Get day, month, and year
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
+  const day = date.getUTCDate().toString().padStart(2, "0");
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+  const year = date.getUTCFullYear();
 
-  const hours = String(date.getUTCHours()).padStart(2, "0");
-  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  // Get hours and minutes (in UTC)
+  const hours = String(date.getUTCHours() - 1).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes() - 1).padStart(2, "0");
+  const sec = String(date.getUTCSeconds() - 1).padStart(2, "0");
 
-  return `${dayOfWeek} - ${month}/${day}/${year} - ${hours}:${minutes}`;
-}
-
-export function convertTimestampToTime(timestamp: string): string {
-  // Convert the timestamp string to a Date object
-  const date = new Date(timestamp);
-
-  // Extract hours and minutes from the Date object
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-
-  // Format the time string in AM/PM format
-  const timeString = date.toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-
-  return timeString;
+  return `${dayOfWeek} - ${month}/${day}/${year} - ${hours}:${minutes}:${sec}`;
 }
