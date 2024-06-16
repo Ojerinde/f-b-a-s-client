@@ -8,6 +8,7 @@ import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
+import { toast } from "react-toastify";
 
 export default function Layout({
   children,
@@ -31,7 +32,25 @@ export default function Layout({
         dispatch(AddAllCourses(response.data.courses));
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        toast("Error fetching courses", {
+          position: "top-right",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "black",
+          style: {
+            background: "orangered",
+            color: "white",
+            fontSize: "1.7rem",
+            fontFamily: "Poetsen One",
+            letterSpacing: "0.15rem",
+            lineHeight: "1.7",
+            padding: "1rem",
+          },
+        });
         setLoading(false);
       }
     };

@@ -41,13 +41,9 @@ const ReactivateAccount: React.FC<ReactivateAccountProps> = () => {
         const response = await HttpRequest.patch(`/auth/reactivateAccount/`, {
           email,
         });
-        console.log(
-          "Account Reactivated Successfully, Proceed to Login",
-          response
-        );
+
         router.push("/");
       } catch (error: any) {
-        console.log("Failed to reactivate account", error);
         setShowError(() => ({
           hasError: true,
           message: `${error?.response?.data.message} Try again.`,

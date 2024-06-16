@@ -8,7 +8,7 @@ import MobileSideBar from "@/components/Dashboard/MobileSidebar";
 
 const sideBarLinks = [
   { name: "My Courses", link: "/dashboard/my_courses", iconUrl: "my_courses" },
-  { name: "ESP 32", link: "/dashboard/esp32", iconUrl: "esp32" },
+  { name: "Device", link: "/dashboard/esp32", iconUrl: "esp32" },
   { name: "Settings", link: "/dashboard/settings", iconUrl: "settings" },
 ];
 

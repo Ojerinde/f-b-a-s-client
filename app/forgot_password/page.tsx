@@ -38,7 +38,6 @@ const ForgotPassword = () => {
     // Form submission
     async onSubmit(values, actions) {
       const { email } = values;
-      console.log(email);
       try {
         await HttpRequest.post("/auth/forgotPassword", {
           email,

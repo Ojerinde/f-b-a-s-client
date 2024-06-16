@@ -3,10 +3,7 @@ import * as Yup from "yup";
 import InformationInput from "../UI/Input/InformationInput";
 import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
-import HttpRequest from "@/store/services/HttpRequest";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/hooks/reduxHook";
-import { AddEnrolledStudents } from "@/store/studentss/StudentsSlice";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
 import { toast } from "react-toastify";
 
@@ -53,9 +50,7 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
             payload: { clearPhrase: values.clearPhrase },
           })
         );
-        console.log("Clear fingerprints event emitted");
       } catch (error) {
-        console.error("Error emitting clear_fingerprints event:", error);
         setIsClearingFingerprints(false);
         setErrorMessage("Failed to mark clear_fingerprints. Try again!");
       } finally {
@@ -74,7 +69,6 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
     const handleAttendanceFeedback = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
       if (feedback.event !== "clear_fingerprints_feedback") return;
-      console.log("Clear Fingerprints feedback received:", feedback);
       setIsClearingFingerprints(false);
       if (feedback.payload.error) {
         setErrorMessage(feedback.payload.message);

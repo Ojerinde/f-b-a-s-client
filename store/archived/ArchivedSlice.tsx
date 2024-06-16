@@ -64,8 +64,6 @@ export const fetchCourseAttendance = createAsyncThunk(
   "archived/fetchCourseAttendance",
   async (courseId: string) => {
     const response = await HttpRequest.get(`/archived_attendance/${courseId}`);
-    console.log("response.data", response.data);
-
     return response.data;
   }
 );

@@ -22,9 +22,6 @@ const ArchivedRecords: React.FC = () => {
   const { lecturers, students, attendance, loading } = useAppSelector(
     (state) => state.archived
   );
-
-  console.log("attendance", attendance);
-
   useEffect(() => {
     dispatch(fetchArchivedLecturers());
   }, [dispatch]);

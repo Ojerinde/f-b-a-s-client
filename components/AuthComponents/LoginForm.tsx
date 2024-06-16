@@ -53,7 +53,6 @@ const LoginForm = () => {
         data: { user },
         token,
       } = response.data;
-      console.log("response", response);
 
       // Setting item to local strorage and cookies
       setItemToCookie("token", token);
@@ -62,7 +61,6 @@ const LoginForm = () => {
       router.push("/update_profile");
     } catch (error: any) {
       const errorMessage = error?.response?.data.message || "An error occured";
-      console.log("Login error", error);
 
       setShowError(() => ({
         hasError: true,

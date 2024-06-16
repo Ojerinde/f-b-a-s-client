@@ -116,7 +116,6 @@ const SignUpForm = () => {
           "You have signup successfully, kindly check your mail for verification link"
         );
       } catch (error: any) {
-        console.log("Signup error", error);
         setShowError(() => ({
           hasError: true,
           message: `${error?.response?.data.message}.`,

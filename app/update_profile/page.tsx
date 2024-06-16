@@ -68,8 +68,6 @@ const UpdateLecturerInformation: React.FC = () => {
 
         router.push("/dashboard/my_courses");
       } catch (error: any) {
-        console.log("message", error.response.data.message);
-
         toast(error?.response.data.message, {
           position: "top-right",
           autoClose: 10000, // Set autoClose to 10 seconds
@@ -137,7 +135,25 @@ const UpdateLecturerInformation: React.FC = () => {
           courses: [...modifiedCourses, { courseCode: "", courseName: "" }],
         });
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        toast("Error fetching courses", {
+          position: "top-right",
+          autoClose: 10000, // Set autoClose to 10 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          style: {
+            background: "#181a40",
+            color: "white",
+            fontSize: "1.7rem",
+            fontFamily: "Poetsen One",
+            letterSpacing: "0.15rem",
+            lineHeight: "1.7",
+            padding: "1rem",
+          },
+        });
       }
     };
 

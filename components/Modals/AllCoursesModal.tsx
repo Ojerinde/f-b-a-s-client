@@ -12,7 +12,6 @@ const AllCoursesModal: React.FC<AllCoursesModalProps> = ({
   student,
 }) => {
   const { studentAllCourses } = useAppSelector((state) => state.students);
-  console.log("All Course", studentAllCourses);
 
   return (
     <div className="allCoursesModal">

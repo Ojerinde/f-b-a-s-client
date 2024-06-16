@@ -76,10 +76,7 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
             })
           );
         }
-        console.log(
-          "Student has been disenrolled for this course",
-          response.data
-        );
+
         setSuccessMessage(response.data.message);
         formik.resetForm();
         closeModal();
@@ -91,7 +88,6 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
         }, 7000);
         router.back();
       } catch (error) {
-        console.error("Failed to disenrolled:", error);
         setErrorMessage("Failed to disenrolled. Try again!");
         setIsDeleteStudentting(false);
         setTimeout(() => {
@@ -107,7 +103,6 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
     const handleAttendanceFeedback = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
       if (feedback.event !== "delete_fingerprint_feedback") return;
-      console.log("Delete Fingerprint feedback received:", feedback);
       setIsDeleteStudentting(false);
 
       if (feedback.payload.error) {

@@ -1,4 +1,7 @@
 .esp32Page {
+  @media screen and (max-width: 1200px) {
+    margin-bottom: 6rem;
+  }
   &-header {
     width: 100%;
     display: flex;

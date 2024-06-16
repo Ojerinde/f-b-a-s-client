@@ -4,7 +4,6 @@ import { Course } from "@/app/dashboard/my_courses/page";
 import { toast } from "react-toastify";
 import Button from "../UI/Button/Button";
 import { useEffect, useState } from "react";
-// import { socket } from "@/app/dashboard/socket";
 import { MdOutlineClose } from "react-icons/md";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
@@ -14,6 +13,7 @@ interface AttendanceModalProps {
   course: Course | null;
   closeModal: () => void;
 }
+
 const AttendanceModal: React.FC<AttendanceModalProps> = ({
   course,
   closeModal,
@@ -28,19 +28,31 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   }, []);
 
   interface FormValuesType {
-    time: string;
+    startTime: string;
+    endTime: string;
   }
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
-      time: "",
+      startTime: "",
+      endTime: "",
     },
     validationSchema: Yup.object().shape({
-      time: Yup.string()
-        .required("Time is required")
-        .matches(
-          /^([0-9]|[1-9][0-9]):[0-5][0-9]$/,
-          "Time must be in the format HH:MM"
+      startTime: Yup.string().required("Start time is required"),
+      endTime: Yup.string()
+        .required("End time is required")
+        .test(
+          "is-greater",
+          "End time must be later than start time",
+          function (value) {
+            const { startTime } = this.parent;
+            if (!startTime || !value) return true;
+            const [startHours, startMinutes] = startTime.split(":").map(Number);
+            const [endHours, endMinutes] = value.split(":").map(Number);
+            const startTotalMinutes = startHours * 60 + startMinutes;
+            const endTotalMinutes = endHours * 60 + endMinutes;
+            return endTotalMinutes > startTotalMinutes;
+          }
         ),
     }),
     validateOnBlur: true,
@@ -51,17 +63,33 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         initializeWebSocket();
         const socket = getWebSocket();
 
+        const getLagosTime = (time: any) => {
+          const now = new Date();
+          const [hours, minutes] = time.split(":").map(Number);
+          const lagosOffset = 60; // Lagos is UTC+1
+          const utcTime = new Date(
+            now.setUTCHours(hours - lagosOffset, minutes)
+          );
+          return utcTime.toISOString();
+        };
+
+        const lagosStartTime = getLagosTime(values.startTime);
+        const lagosEndTime = getLagosTime(values.endTime);
+
         setTakingAttendanceIsLoading(true);
+
         // Emit the enroll event to the server
         socket?.send(
           JSON.stringify({
             event: "attendance",
-            payload: { ...values, ...course },
+            payload: {
+              startTime: lagosStartTime,
+              endTime: lagosEndTime,
+              ...course,
+            },
           })
         );
-        console.log("Attendance event emitted");
       } catch (error) {
-        console.error("Error emitting attendance event:", error);
         setTakingAttendanceIsLoading(false);
         setErrorMessage("Failed to mark attendance. Try again!");
       } finally {
@@ -78,7 +106,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     const handleAttendanceFeedback = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
       if (feedback.event !== "attendance_feedback") return;
-      console.log("Attendance feedback received:", feedback);
       setTakingAttendanceIsLoading(false);
       if (feedback.payload.error) {
         setErrorMessage(feedback.payload.message);
@@ -141,19 +168,30 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         <MdOutlineClose className="attendanceOverlay-icon" />
       </div>
       <h2 className="enrollmentOverlay-text">
-        Take Attendance for {course?.courseCode}
+        Schedule Attendance for {course?.courseCode}
       </h2>
       <form onSubmit={formik.handleSubmit}>
         <InformationInput
-          id="time"
-          type="text"
-          name="time"
-          value={formik.values.time}
+          id="startTime"
+          label="Start Time"
+          type="time"
+          name="startTime"
+          value={formik.values.startTime}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          invalid={!!formik.errors.time && formik.touched.time}
-          inputErrorMessage={formik.errors.time}
-          placeholder="E.g 1:00"
+          invalid={!!formik.errors.startTime && formik.touched.startTime}
+          inputErrorMessage={formik.errors.startTime}
+        />
+        <InformationInput
+          id="endTime"
+          label="End Time"
+          type="time"
+          name="endTime"
+          value={formik.values.endTime}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          invalid={!!formik.errors.endTime && formik.touched.endTime}
+          inputErrorMessage={formik.errors.endTime}
         />
 
         {errorMessage && <p className="signup-error">{errorMessage}</p>}
@@ -165,10 +203,11 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         >
           {takingAttendanceIsLoading
             ? "Downloading Course Data..."
-            : "Take Attendance"}
+            : "Schedule Attendance"}
         </Button>
       </form>
     </div>
   );
 };
+
 export default AttendanceModal;

@@ -12,10 +12,8 @@ export const initializeWebSocket = () => {
 
     ws_socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("Trigger onMessage event", data);
 
       if (data.event === "custom_ping") {
-        console.log("Received custom ping, sending custom pong");
         ws_socket?.send(JSON.stringify({ event: "custom_pong" }));
       }
     };

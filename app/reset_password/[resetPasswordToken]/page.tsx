@@ -58,11 +58,9 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ params }) => {
             confirmPassword,
           }
         );
-        console.log("Reset Password Response", response);
         // Login
         router.push("/");
       } catch (error: any) {
-        console.log("Reset Password Error", error);
         setShowError(() => ({
           hasError: true,
           message: `${error?.response?.data.message} Try again.`,

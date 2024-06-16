@@ -27,7 +27,6 @@ export default function Layout({
         const response = await HttpRequest.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses/${modifiedCourseCode}/attendance`
         );
-        console.log("Attendance Records", response.data.attendanceRecords);
 
         dispatch(AddAttendanceRecords(response.data.attendanceRecords));
       } catch (error) {

@@ -32,7 +32,6 @@ const AttendancePerformanceModal: React.FC<AttendancePerformanceModalProps> = ({
   const { studentCoursesAttendances } = useAppSelector(
     (state) => state.students
   );
-  console.log("Attendance Perfomance", studentCoursesAttendances);
 
   const data = {
     labels: studentCoursesAttendances.map((course) => course.courseCode),

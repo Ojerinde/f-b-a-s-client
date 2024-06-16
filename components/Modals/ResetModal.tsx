@@ -38,12 +38,10 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
         const response = await HttpRequest.delete(
           `/courses/${values?.courseCode}/reset`
         );
-        console.log("Course has be resetted to default", response.data);
         setSuccessMessage(response.data.message);
         // Reset formData and close modal after enroll_feedback
         formik.resetForm();
       } catch (error) {
-        console.error("Failed to reset course:", error);
         setErrorMessage("Failed to reset course. Try again!");
       } finally {
         setIsResetting(false);

@@ -30,10 +30,8 @@ export default function Layout({
       const socket = getWebSocket();
       setIsFetchingEsp32details(true);
       socket?.send(JSON.stringify({ event: "esp32_data" }));
-      console.log("Fetch Esp32 Details event emitted");
     } catch (error) {
-      console.log("Fetch Esp32 Details failed", error);
-      toast("Failed to emit event", {
+      toast("Failed to emit event to fetch ESP32 data", {
         position: "top-right",
         autoClose: 10000,
         hideProgressBar: false,
@@ -70,11 +68,8 @@ export default function Layout({
 
     const handleEsp32Feedback = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
-      console.log("data", data);
 
       if (data.event !== "esp32_data_feedback") return;
-
-      console.log("Esp32 Details feedback received:", data);
 
       setIsFetchingEsp32details(false);
       if (data.payload.error) {

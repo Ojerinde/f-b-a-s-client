@@ -16,7 +16,7 @@ const OverallProgressModal: React.FC<OverallProgressModalProps> = ({
   const { studentsOverallAttendance } = useAppSelector(
     (state) => state.students
   );
-  console.log("Overall", studentsOverallAttendance);
+  .log("Overall", studentsOverallAttendance);
 
   //   Chart Logic
   const data = {

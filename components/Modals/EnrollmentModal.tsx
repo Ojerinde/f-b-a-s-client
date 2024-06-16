@@ -64,9 +64,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
             payload: { ...values, ...course, lecturerEmail },
           })
         );
-        console.log("Enroll event emitted");
       } catch (error) {
-        console.error("Error emitting enroll event:", error);
         setEnrollmentIsLoading(false);
         setErrorMessage("Unable to enroll student. Try again!");
       } finally {
@@ -86,7 +84,6 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
 
       if (feedback.event !== "enroll_feedback") return;
 
-      console.log("Enrollment feedback received:", feedback);
       formik.resetForm();
       setEnrollmentIsLoading(false);
 
