@@ -154,6 +154,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
 
     const interval = setInterval(() => {
       const currentTime = new Date();
+      console.log("S and C", scheduledStartTime, currentTime);
       if (scheduledStartTime && currentTime >= scheduledStartTime) {
         socket?.send(
           JSON.stringify({
