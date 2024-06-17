@@ -38,7 +38,24 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       endTime: "",
     },
     validationSchema: Yup.object().shape({
-      startTime: Yup.string().required("Start time is required"),
+      startTime: Yup.string()
+        .required("Start time is required")
+        .test(
+          "is-later-than-current-time",
+          "Start time must be later than the current time",
+          function (value) {
+            const currentTime = new Date();
+            const [hours, minutes] = value.split(":").map(Number);
+            const inputTime = new Date(
+              currentTime.getFullYear(),
+              currentTime.getMonth(),
+              currentTime.getDate(),
+              hours,
+              minutes
+            );
+            return inputTime.getTime() > currentTime.getTime();
+          }
+        ),
       endTime: Yup.string()
         .required("End time is required")
         .test(
@@ -63,13 +80,27 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         initializeWebSocket();
         const socket = getWebSocket();
 
-        const getLagosTime = (time: any) => {
-          const now = new Date();
+        const getLagosTime = (time: string) => {
           const [hours, minutes] = time.split(":").map(Number);
-          const lagosOffset = 60; // Lagos is UTC+1
+          let lagosHours = hours;
+
+          // Handle 12-hour format conversion
+          if (time.includes("PM") && hours !== 12) {
+            lagosHours += 12;
+          } else if (time.includes("AM") && hours === 12) {
+            lagosHours = 0;
+          }
+
           const utcTime = new Date(
-            now.setUTCHours(hours - lagosOffset, minutes)
+            Date.UTC(
+              new Date().getUTCFullYear(),
+              new Date().getUTCMonth(),
+              new Date().getUTCDate(),
+              lagosHours,
+              minutes
+            )
           );
+
           return utcTime.toISOString();
         };
 
