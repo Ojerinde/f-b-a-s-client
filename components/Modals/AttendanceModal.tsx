@@ -8,6 +8,7 @@ import { MdOutlineClose } from "react-icons/md";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
 import InformationInput from "../UI/Input/InformationInput";
+import { start } from "repl";
 
 interface AttendanceModalProps {
   course: Course | null;
@@ -164,7 +165,11 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
             },
           })
         );
-        console.log("Attendance marked");
+        console.log(
+          "Attendance marked",
+          scheduledEndTime?.toISOString(),
+          scheduledStartTime?.toISOString()
+        );
         clearInterval(interval);
       }
     }, 60000);
