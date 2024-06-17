@@ -22,6 +22,10 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [scheduledStartTime, setScheduledStartTime] = useState<Date | null>(
+    null
+  );
+  const [scheduledEndTime, setScheduledEndTime] = useState<Date | null>(null);
 
   useEffect(() => {
     initializeWebSocket();
@@ -77,8 +81,8 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
 
     onSubmit: async (values, actions) => {
       try {
-        initializeWebSocket();
-        const socket = getWebSocket();
+        // initializeWebSocket();
+        // const socket = getWebSocket();
 
         const getLagosTime = (time: string) => {
           const [hours, minutes] = time.split(":").map(Number);
@@ -107,29 +111,66 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         const lagosStartTime = getLagosTime(values.startTime);
         const lagosEndTime = getLagosTime(values.endTime);
 
-        setTakingAttendanceIsLoading(true);
+        // Convert lagosStartTime to a Date object and store it in state
+        setScheduledStartTime(new Date(lagosStartTime));
+        setScheduledEndTime(new Date(lagosEndTime));
 
-        // Emit the enroll event to the server
-        socket?.send(
-          JSON.stringify({
-            event: "attendance",
-            payload: {
-              startTime: lagosStartTime,
-              endTime: lagosEndTime,
-              ...course,
-            },
-          })
+        setTakingAttendanceIsLoading(true);
+        setSuccessMessage(
+          "Attendance has been scheduled successfully! between " +
+            values.startTime +
+            " and " +
+            values.endTime
         );
+        setTakingAttendanceIsLoading(false);
+
+        // // Emit the enroll event to the server
+        // socket?.send(
+        //   JSON.stringify({
+        //     event: "attendance",
+        //     payload: {
+        //       startTime: lagosStartTime,
+        //       endTime: lagosEndTime,
+        //       ...course,
+        //     },
+        //   })
+        // );
       } catch (error) {
         setTakingAttendanceIsLoading(false);
         setErrorMessage("Failed to mark attendance. Try again!");
       } finally {
         setTimeout(() => {
           setErrorMessage("");
+          setSuccessMessage("");
         }, 7000);
       }
     },
   });
+
+  useEffect(() => {
+    initializeWebSocket();
+    const socket = getWebSocket();
+
+    const interval = setInterval(() => {
+      const currentTime = new Date();
+      if (scheduledStartTime && currentTime >= scheduledStartTime) {
+        socket?.send(
+          JSON.stringify({
+            event: "attendance",
+            payload: {
+              startTime: scheduledStartTime.toISOString(),
+              endTime: scheduledEndTime?.toISOString(),
+              ...course,
+            },
+          })
+        );
+        console.log("Attendance marked");
+        clearInterval(interval);
+      }
+    }, 60000);
+
+    return () => clearInterval(interval); // Clean up the interval on component unmount
+  }, [scheduledStartTime, scheduledEndTime, course]);
 
   useEffect(() => {
     const socket = getWebSocket();
