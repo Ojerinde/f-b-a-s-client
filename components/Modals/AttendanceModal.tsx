@@ -176,7 +176,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     }, 60000);
 
     return () => clearInterval(interval); // Clean up the interval on component unmount
-  }, [scheduledStartTime, scheduledEndTime, course]);
+  });
 
   useEffect(() => {
     const socket = getWebSocket();
