@@ -5,6 +5,7 @@ import InformationInput from "../UI/Input/InformationInput";
 import { useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import HttpRequest from "@/store/services/HttpRequest";
+import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
 
 interface ResetModalProps {
   course: Course | null;
@@ -38,6 +39,31 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
         const response = await HttpRequest.delete(
           `/courses/${values?.courseCode}/reset`
         );
+
+        initializeWebSocket();
+        const socket = getWebSocket();
+
+        // Function to emit delete_fingerprint event
+        const emitDeleteFingerprintEvent = (matricNo: string) => {
+          socket?.send(
+            JSON.stringify({
+              event: "delete_fingerprint",
+              payload: {
+                matricNo,
+                courseCode: response.data.courseCode,
+              },
+            })
+          );
+        };
+
+        // Emit delete_fingerprint event for each student with a 20-second interval
+        const students = response.data.students;
+        students.forEach((student: any, index: number) => {
+          setTimeout(() => {
+            emitDeleteFingerprintEvent(student.matricNo);
+          }, index * 20000);
+        });
+
         setSuccessMessage(response.data.message);
         // Reset formData and close modal after enroll_feedback
         formik.resetForm();

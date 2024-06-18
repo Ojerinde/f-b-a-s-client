@@ -156,7 +156,7 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
           type="submit"
           disabled={isClearingFingerprints || !formik.isValid}
         >
-          {isClearingFingerprints ? "Clearing..." : "Clear"}
+          {formik.isSubmitting ? "Clearing..." : "Clear"}
         </button>
       </form>
     </div>

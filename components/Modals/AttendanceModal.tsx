@@ -137,8 +137,12 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       setTakingAttendanceIsLoading(false);
 
       if (feedback.payload.error) {
+        setSuccessMessage("");
+
         setErrorMessage(feedback.payload.message);
       } else {
+        setErrorMessage("");
+
         setSuccessMessage(feedback.payload.message);
       }
       setTimeout(() => {
