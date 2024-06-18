@@ -21,7 +21,7 @@ export function formatDate(dateString: string): string {
   // Get hours and minutes (in UTC)
   const hours = String(date.getUTCHours() - 1).padStart(2, "0");
   const minutes = String(date.getUTCMinutes() - 1).padStart(2, "0");
-  const sec = String(date.getUTCSeconds() - 1).padStart(2, "0");
+  const sec = String(date.getUTCSeconds()).padStart(2, "0");
 
   return `${dayOfWeek} - ${month}/${day}/${year} - ${hours}:${minutes}:${sec}`;
 }

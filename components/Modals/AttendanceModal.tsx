@@ -115,6 +115,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         setTimeout(() => {
           setErrorMessage("");
           setSuccessMessage("");
+          // closeModal();
         }, 7000);
       }
     },
