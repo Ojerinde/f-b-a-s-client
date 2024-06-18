@@ -21,10 +21,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [scheduledStartTime, setScheduledStartTime] = useState<Date | null>(
-    null
-  );
-  const [scheduledEndTime, setScheduledEndTime] = useState<Date | null>(null);
 
   useEffect(() => {
     initializeWebSocket();
@@ -80,6 +76,9 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
 
     onSubmit: async (values, actions) => {
       try {
+        initializeWebSocket();
+        const socket = getWebSocket();
+
         const convertToLagosTime = (time: string) => {
           const [hours, minutes] = time.split(":").map(Number);
           const currentTime = new Date();
@@ -97,21 +96,22 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         const lagosStartTime = convertToLagosTime(values.startTime);
         const lagosEndTime = convertToLagosTime(values.endTime);
 
-        setScheduledStartTime(lagosStartTime);
-        setScheduledEndTime(lagosEndTime);
-
-        setTakingAttendanceIsLoading(true);
-        setSuccessMessage(
-          "Attendance has been scheduled successfully! between " +
-            values.startTime +
-            " and " +
-            values.endTime
+        socket?.send(
+          JSON.stringify({
+            event: "attendance",
+            payload: {
+              ...course,
+              startTime: lagosStartTime,
+              endTime: lagosEndTime,
+            },
+          })
         );
-        setTakingAttendanceIsLoading(false);
+
+        setSuccessMessage("Attendance has been scheduled successfully!");
       } catch (error) {
-        setTakingAttendanceIsLoading(false);
-        setErrorMessage("Failed to mark attendance. Try again!");
+        setErrorMessage("Failed to schedule attendance. Try again!");
       } finally {
+        setTakingAttendanceIsLoading(false);
         setTimeout(() => {
           setErrorMessage("");
           setSuccessMessage("");
@@ -119,106 +119,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       }
     },
   });
-
-  useEffect(() => {
-    const socket = getWebSocket();
-
-    if (scheduledStartTime) {
-      const lagosCurrentTime = new Date(new Date().getTime() + 3600000); // GMT+1 offset
-      const timeUntilStart =
-        scheduledStartTime.getTime() - lagosCurrentTime.getTime();
-
-      console.log("Scheduled Start Time:", scheduledStartTime.toISOString());
-      console.log("Current Time:", lagosCurrentTime.toISOString());
-      console.log("Time Until Start (s):", timeUntilStart / 1000);
-
-      if (timeUntilStart > 0) {
-        const timerId = setTimeout(() => {
-          socket?.send(
-            JSON.stringify({
-              event: "attendance",
-              payload: {
-                startTime: scheduledStartTime.toISOString(),
-                endTime: scheduledEndTime?.toISOString(),
-                ...course,
-              },
-            })
-          );
-          console.log(
-            "Attendance Event Sent!",
-            scheduledEndTime?.toISOString(),
-            scheduledStartTime?.toISOString()
-          );
-        }, timeUntilStart);
-
-        return () => clearTimeout(timerId);
-      } else {
-        console.error("Scheduled start time is in the past.");
-      }
-    }
-  }, [scheduledStartTime, scheduledEndTime, course]);
-
-  useEffect(() => {
-    const socket = getWebSocket();
-    // Listen for attendance feedback from the server
-    const handleAttendanceFeedback = (event: MessageEvent) => {
-      const feedback = JSON.parse(event.data);
-      if (feedback.event !== "attendance_feedback") return;
-      setTakingAttendanceIsLoading(false);
-      if (feedback.payload.error) {
-        setErrorMessage(feedback.payload.message);
-      } else {
-        setSuccessMessage(feedback.payload.message);
-      }
-      setTimeout(() => {
-        setErrorMessage("");
-        setSuccessMessage("");
-      }, 5000);
-    };
-
-    // Add event listener for attendance feedback
-    socket?.addEventListener("message", handleAttendanceFeedback);
-
-    // Clean up event listener when component unmounts
-    return () => {
-      socket?.removeEventListener("message", handleAttendanceFeedback);
-    };
-  }, []);
-
-  useEffect(() => {
-    const socket = getWebSocket();
-    // Listen for attendance recorded event from the server
-    const handleAttendanceRecorded = (event: MessageEvent) => {
-      const feedback = JSON.parse(event.data);
-      toast(feedback.payload.message, {
-        position: "top-right",
-        autoClose: false,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        style: {
-          background: "#181a40",
-          color: "white",
-          fontSize: "1.7rem",
-          fontFamily: "Poetsen One",
-          letterSpacing: "0.15rem",
-          lineHeight: "1.7",
-          padding: "1rem",
-        },
-      });
-    };
-
-    // Add event listener for attendance recorded event
-    socket?.addEventListener("message", handleAttendanceRecorded);
-
-    // Clean up event listener when component unmounts
-    return () => {
-      socket?.removeEventListener("message", handleAttendanceRecorded);
-    };
-  }, []);
 
   return (
     <div className="attendanceOverlay">
@@ -258,7 +158,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
           disabled={takingAttendanceIsLoading || !formik.isValid}
         >
           {takingAttendanceIsLoading
-            ? "Downloading Course Data..."
+            ? "Scheduling Attendance..."
             : "Schedule Attendance"}
         </Button>
       </form>
