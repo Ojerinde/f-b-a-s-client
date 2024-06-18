@@ -121,6 +121,28 @@ const UpdateLecturerInformation: React.FC = () => {
         const response = await HttpRequest.get(
           `/courses/${loggedInLecturer.email}`
         );
+        if (response.data.courses.length === 0) {
+          toast("No Courses Added Yet", {
+            position: "top-right",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            style: {
+              background: "#181a40",
+              color: "white",
+              fontSize: "1.7rem",
+              fontFamily: "Poetsen One",
+              letterSpacing: "0.15rem",
+              lineHeight: "1.7",
+              padding: "1rem",
+            },
+          });
+          return;
+        }
         dispatch(AddAllCourses(response.data.courses));
         // Remove _id
         const modifiedCourses = response.data.courses.map((course: Course) => ({
@@ -132,7 +154,7 @@ const UpdateLecturerInformation: React.FC = () => {
           title: loggedInLecturer?.title || "",
           name: loggedInLecturer?.name || "",
           email: loggedInLecturer?.email || "",
-          courses: [...modifiedCourses, { courseCode: "", courseName: "" }],
+          courses: [...modifiedCourses],
         });
       } catch (error) {
         toast("Error fetching courses", {

@@ -29,6 +29,29 @@ export default function Layout({
         const response = await HttpRequest.get(
           `/courses/${loggedInLecturer?.email}`
         );
+        if (response.data.courses.length === 0) {
+          toast("No Courses Added Yet", {
+            position: "top-right",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            style: {
+              background: "#181a40",
+              color: "white",
+              fontSize: "1.7rem",
+              fontFamily: "Poetsen One",
+              letterSpacing: "0.15rem",
+              lineHeight: "1.7",
+              padding: "1rem",
+            },
+          });
+          setLoading(false);
+          return;
+        }
         dispatch(AddAllCourses(response.data.courses));
         setLoading(false);
       } catch (error) {
@@ -40,9 +63,9 @@ export default function Layout({
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "black",
+          theme: "dark",
           style: {
-            background: "orangered",
+            background: "#181a40",
             color: "white",
             fontSize: "1.7rem",
             fontFamily: "Poetsen One",

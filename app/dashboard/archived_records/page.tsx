@@ -126,7 +126,7 @@ const ArchivedRecords: React.FC = () => {
           )}
         {loading && <LoadingSpinner color="blue" height="big" />}
 
-        {students.length > 0 && recordToShow === "students" && (
+        {!loading && students.length > 0 && recordToShow === "students" && (
           <div className={styles.recordSection}>
             <ul className="enrollmentPage-list">
               {students.slice(start, end).map((student: any) => (
@@ -138,14 +138,15 @@ const ArchivedRecords: React.FC = () => {
                       <h4> {student.matricNo}</h4>
                     </div>
                   </div>
-                  <div>
-                    Attendance Percentage: {student.attendancePercentage}%
+                  <div className="enrollmentPage-left__attendance">
+                    Attendance Percentage:{" "}
+                    <span>{student.attendancePercentage}%</span>
                   </div>
                 </li>
               ))}
             </ul>
 
-            {students.length > 0 && (
+            {!loading && students.length > 0 && (
               <Pagination
                 length={students.length}
                 itemsPerPage={studentsPerPage}
@@ -165,7 +166,7 @@ const ArchivedRecords: React.FC = () => {
               <p>No attendance records found.</p>
             </div>
           )}
-        {attendance.length > 0 && recordToShow === "attendance" && (
+        {!loading && attendance.length > 0 && recordToShow === "attendance" && (
           <div className={styles.recordSection}>
             <ul className="attendanceItem-list">
               {attendance.slice(start, end).map((record, index) => (

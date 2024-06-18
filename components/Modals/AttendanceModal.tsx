@@ -108,6 +108,9 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         );
 
         setSuccessMessage("Attendance has been scheduled successfully!");
+        setTimeout(() => {
+          closeModal();
+        }, 7000);
       } catch (error) {
         setErrorMessage("Failed to schedule attendance. Try again!");
       } finally {
@@ -120,6 +123,38 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
       }
     },
   });
+
+  useEffect(() => {
+    const socket = getWebSocket();
+
+    // Define a separate function to handle enrollment feedback
+    const handleAttendanceFeedback = (event: MessageEvent) => {
+      const feedback = JSON.parse(event.data);
+
+      if (feedback.event !== "attendance_feedback") return;
+
+      formik.resetForm();
+      setTakingAttendanceIsLoading(false);
+
+      if (feedback.payload.error) {
+        setErrorMessage(feedback.payload.message);
+      } else {
+        setSuccessMessage(feedback.payload.message);
+      }
+      setTimeout(() => {
+        setErrorMessage("");
+        setSuccessMessage("");
+      }, 7000);
+    };
+
+    // Add event listener for enrollment feedback
+    socket?.addEventListener("message", handleAttendanceFeedback);
+
+    // Clean up event listener when component unmounts
+    return () => {
+      socket?.removeEventListener("message", handleAttendanceFeedback);
+    };
+  }, []);
 
   return (
     <div className="attendanceOverlay">
