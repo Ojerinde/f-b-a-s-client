@@ -23,5 +23,5 @@ export function formatDate(dateString: string): string {
   const minutes = String(date.getUTCMinutes() - 1).padStart(2, "0");
   const sec = String(date.getUTCSeconds()).padStart(2, "0");
 
-  return `${dayOfWeek} - ${month}/${day}/${year} - ${hours}:${minutes}:${sec}`;
+  return `${dayOfWeek} - ${month}/${day}/${year} - ${hours}:${minutes}`;
 }
