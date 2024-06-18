@@ -10,14 +10,6 @@ export const initializeWebSocket = () => {
       console.log("WebSocket connection established");
     };
 
-    ws_socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-
-      if (data.event === "custom_ping") {
-        ws_socket?.send(JSON.stringify({ event: "custom_pong" }));
-      }
-    };
-
     ws_socket.onclose = () => {
       console.log("WebSocket connection closed");
       // Reset the socket to allow reinitialization

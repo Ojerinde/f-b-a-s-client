@@ -5,10 +5,8 @@ import { toast } from "react-toastify";
 import Button from "../UI/Button/Button";
 import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
-import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
 import InformationInput from "../UI/Input/InformationInput";
-import { start } from "repl";
 
 interface AttendanceModalProps {
   course: Course | null;
@@ -82,39 +80,25 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
 
     onSubmit: async (values, actions) => {
       try {
-        // initializeWebSocket();
-        // const socket = getWebSocket();
-
-        const getLagosTime = (time: string) => {
+        const convertToLagosTime = (time: string) => {
           const [hours, minutes] = time.split(":").map(Number);
-          let lagosHours = hours;
-
-          // Handle 12-hour format conversion
-          if (time.includes("PM") && hours !== 12) {
-            lagosHours += 12;
-          } else if (time.includes("AM") && hours === 12) {
-            lagosHours = 0;
-          }
-
-          const utcTime = new Date(
-            Date.UTC(
-              new Date().getUTCFullYear(),
-              new Date().getUTCMonth(),
-              new Date().getUTCDate(),
-              lagosHours,
-              minutes
-            )
+          const currentTime = new Date();
+          const lagosTime = new Date(
+            currentTime.getFullYear(),
+            currentTime.getMonth(),
+            currentTime.getDate(),
+            hours,
+            minutes
           );
-
-          return utcTime.toISOString();
+          lagosTime.setTime(lagosTime.getTime() + 3600000); // GMT+1 offset
+          return lagosTime;
         };
 
-        const lagosStartTime = getLagosTime(values.startTime);
-        const lagosEndTime = getLagosTime(values.endTime);
+        const lagosStartTime = convertToLagosTime(values.startTime);
+        const lagosEndTime = convertToLagosTime(values.endTime);
 
-        // Convert lagosStartTime to a Date object and store it in state
-        setScheduledStartTime(new Date(lagosStartTime));
-        setScheduledEndTime(new Date(lagosEndTime));
+        setScheduledStartTime(lagosStartTime);
+        setScheduledEndTime(lagosEndTime);
 
         setTakingAttendanceIsLoading(true);
         setSuccessMessage(
@@ -124,18 +108,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
             values.endTime
         );
         setTakingAttendanceIsLoading(false);
-
-        // // Emit the enroll event to the server
-        // socket?.send(
-        //   JSON.stringify({
-        //     event: "attendance",
-        //     payload: {
-        //       startTime: lagosStartTime,
-        //       endTime: lagosEndTime,
-        //       ...course,
-        //     },
-        //   })
-        // );
       } catch (error) {
         setTakingAttendanceIsLoading(false);
         setErrorMessage("Failed to mark attendance. Try again!");
@@ -149,34 +121,42 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   });
 
   useEffect(() => {
-    initializeWebSocket();
     const socket = getWebSocket();
 
-    const interval = setInterval(() => {
-      const currentTime = new Date();
-      console.log("S and C", scheduledStartTime, currentTime);
-      if (scheduledStartTime && currentTime >= scheduledStartTime) {
-        socket?.send(
-          JSON.stringify({
-            event: "attendance",
-            payload: {
-              startTime: scheduledStartTime.toISOString(),
-              endTime: scheduledEndTime?.toISOString(),
-              ...course,
-            },
-          })
-        );
-        console.log(
-          "Attendance marked",
-          scheduledEndTime?.toISOString(),
-          scheduledStartTime?.toISOString()
-        );
-        clearInterval(interval);
-      }
-    }, 60000);
+    if (scheduledStartTime) {
+      const lagosCurrentTime = new Date(new Date().getTime() + 3600000); // GMT+1 offset
+      const timeUntilStart =
+        scheduledStartTime.getTime() - lagosCurrentTime.getTime();
 
-    return () => clearInterval(interval); // Clean up the interval on component unmount
-  });
+      console.log("Scheduled Start Time:", scheduledStartTime.toISOString());
+      console.log("Current Time:", lagosCurrentTime.toISOString());
+      console.log("Time Until Start (s):", timeUntilStart / 1000);
+
+      if (timeUntilStart > 0) {
+        const timerId = setTimeout(() => {
+          socket?.send(
+            JSON.stringify({
+              event: "attendance",
+              payload: {
+                startTime: scheduledStartTime.toISOString(),
+                endTime: scheduledEndTime?.toISOString(),
+                ...course,
+              },
+            })
+          );
+          console.log(
+            "Attendance Event Sent!",
+            scheduledEndTime?.toISOString(),
+            scheduledStartTime?.toISOString()
+          );
+        }, timeUntilStart);
+
+        return () => clearTimeout(timerId);
+      } else {
+        console.error("Scheduled start time is in the past.");
+      }
+    }
+  }, [scheduledStartTime, scheduledEndTime, course]);
 
   useEffect(() => {
     const socket = getWebSocket();
