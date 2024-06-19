@@ -61,7 +61,7 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
         students.forEach((student: any, index: number) => {
           setTimeout(() => {
             emitDeleteFingerprintEvent(student.matricNo);
-          }, index * 20000);
+          }, index * 5000);
         });
 
         setSuccessMessage(response.data.message);

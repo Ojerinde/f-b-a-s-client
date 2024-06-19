@@ -18,6 +18,8 @@ import AttendanceItem from "@/components/Attendance/AttendanceItem";
 
 const ArchivedRecords: React.FC = () => {
   const [recordToShow, setRecordToShow] = useState<string>("students");
+  const [buttonHasBeenClicked, setButtonHasBeenClickedClicked] =
+    useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { lecturers, students, attendance, loading } = useAppSelector(
     (state) => state.archived
@@ -37,6 +39,7 @@ const ArchivedRecords: React.FC = () => {
 
   const handleFetchStudents = () => {
     setRecordToShow("students");
+    setButtonHasBeenClickedClicked(true);
     if (selectedCourse) {
       dispatch(fetchCourseStudents(selectedCourse.value));
     }
@@ -44,6 +47,7 @@ const ArchivedRecords: React.FC = () => {
 
   const handleFetchAttendance = () => {
     setRecordToShow("attendance");
+    setButtonHasBeenClickedClicked(true);
     if (selectedCourse) {
       dispatch(fetchCourseAttendance(selectedCourse.value));
     }
@@ -67,13 +71,19 @@ const ArchivedRecords: React.FC = () => {
 
   /// Pagination logic
   const [start, setStart] = useState(0);
-  const studentsPerPage = 8;
-  const attendanceRecordsPerPage = 5;
+  const studentsPerPage = 15;
   const end = start + studentsPerPage;
-
   const handlePageChange = (page: number) => {
     const newStart = (page - 1) * studentsPerPage;
     setStart(newStart);
+  };
+
+  const [attendanceStart, setAttendanceStart] = useState(0);
+  const attendanceRecordsPerPage = 1;
+  const attendanceEnd = attendanceStart + attendanceRecordsPerPage;
+  const handleAttendancePageChange = (page: number) => {
+    const newStart = (page - 1) * attendanceRecordsPerPage;
+    setAttendanceStart(newStart);
   };
 
   return (
@@ -118,6 +128,7 @@ const ArchivedRecords: React.FC = () => {
         {selectedCourse?.value &&
           recordToShow === "students" &&
           !loading &&
+          buttonHasBeenClicked &&
           students.length === 0 && (
             <div className="courses-nocourse">
               <RiCreativeCommonsZeroFill />
@@ -146,7 +157,7 @@ const ArchivedRecords: React.FC = () => {
               ))}
             </ul>
 
-            {!loading && students.length > 0 && (
+            {!loading && students.length > 0 && recordToShow === "students" && (
               <Pagination
                 length={students.length}
                 itemsPerPage={studentsPerPage}
@@ -169,19 +180,25 @@ const ArchivedRecords: React.FC = () => {
         {!loading && attendance.length > 0 && recordToShow === "attendance" && (
           <div className={styles.recordSection}>
             <ul className="attendanceItem-list">
-              {attendance.slice(start, end).map((record, index) => (
-                <AttendanceItem
-                  key={index}
-                  date={record.date}
-                  studentsPresent={record.studentsPresent}
-                />
-              ))}
+              {attendance
+                .slice(attendanceStart, attendanceEnd)
+                .map((record, index) => (
+                  <AttendanceItem
+                    key={index}
+                    date={record.date}
+                    studentsPresent={record.studentsPresent}
+                  />
+                ))}
             </ul>
-            <Pagination
-              length={attendance.length}
-              itemsPerPage={attendanceRecordsPerPage}
-              onPageChange={handlePageChange}
-            />
+            {!loading &&
+              attendance.length > 0 &&
+              recordToShow === "attendance" && (
+                <Pagination
+                  length={attendance.length}
+                  itemsPerPage={attendanceRecordsPerPage}
+                  onPageChange={handleAttendancePageChange}
+                />
+              )}
           </div>
         )}
       </div>
