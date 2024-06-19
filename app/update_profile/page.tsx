@@ -122,7 +122,7 @@ const UpdateLecturerInformation: React.FC = () => {
           `/courses/${loggedInLecturer.email}`
         );
         if (response.data.courses.length === 0) {
-          toast("No Courses Added Yet", {
+          toast("You have not added any course yet", {
             position: "top-right",
             autoClose: 10000,
             hideProgressBar: false,

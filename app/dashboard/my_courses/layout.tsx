@@ -30,7 +30,7 @@ export default function Layout({
           `/courses/${loggedInLecturer?.email}`
         );
         if (response.data.courses.length === 0) {
-          toast("No Courses Added Yet", {
+          toast("No Course Added Yet", {
             position: "top-right",
             autoClose: 10000,
             hideProgressBar: false,
