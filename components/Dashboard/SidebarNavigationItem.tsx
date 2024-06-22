@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { BiSolidMicrochip } from "react-icons/bi";
 import { MdLibraryBooks, MdOutlineSettingsInputHdmi } from "react-icons/md";
-
+import { CgProfile } from "react-icons/cg";
 interface SideBarNavigationItemProps {
   href: string;
   iconUrl: string;
@@ -27,6 +27,11 @@ const SideBarNavigationItem: React.FC<SideBarNavigationItemProps> = ({
     >
       {iconUrl === "my_courses" && (
         <MdLibraryBooks
+          className={`${isActive ? "sidebar-icon__active" : "sidebar-icon"}`}
+        />
+      )}
+      {iconUrl === "profile" && (
+        <CgProfile
           className={`${isActive ? "sidebar-icon__active" : "sidebar-icon"}`}
         />
       )}

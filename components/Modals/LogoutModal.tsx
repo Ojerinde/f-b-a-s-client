@@ -1,4 +1,5 @@
 import { useLogoutFunc } from "@/hooks/useLogout";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 type LogoutModalProps = {
@@ -6,6 +7,12 @@ type LogoutModalProps = {
 };
 
 const LogoutModal: React.FC<LogoutModalProps> = ({ onClose }) => {
+  const url = usePathname();
+
+  const pathToNavigateTo = url.includes("/level_adviser")
+    ? "/level_adviser"
+    : "/";
+
   const logout = useLogoutFunc();
 
   return (
@@ -13,7 +20,10 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ onClose }) => {
       <p className="logout-text">Are you sure you want to logout?</p>
 
       <div className="logout-buttons">
-        <button onClick={() => logout("/")} className="logout-buttons__button1">
+        <button
+          onClick={() => logout(pathToNavigateTo)}
+          className="logout-buttons__button1"
+        >
           Yes
         </button>
         <button onClick={onClose} className="logout-buttons__button2">

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Typewriter from "typewriter-effect";
 import OverlayModal from "../Modals/OverlayModal";
@@ -8,6 +8,12 @@ import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 import { GiExitDoor } from "react-icons/gi";
 
 const Navigation = () => {
+  const url = usePathname();
+
+  const pathToNavigateTo = url.includes("/level_adviser")
+    ? "/level_adviser/dashboard/profile"
+    : "/update_profile";
+
   const router = useRouter();
   const [showLogoutVerificationModal, setShowLogoutVerificationModal] =
     useState<boolean>(false);
@@ -45,7 +51,7 @@ const Navigation = () => {
           cursor: "pointer",
           boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.6)",
         }}
-        onClick={() => router.push("/update_profile")}
+        onClick={() => router.push(pathToNavigateTo)}
       >
         <Image
           src="/images/logo.png"

@@ -4,7 +4,7 @@ import InformationInput from "../UI/Input/InformationInput";
 import { useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import HttpRequest from "@/store/services/HttpRequest";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface DeactivateUserModalProps {
   email: string;
@@ -19,6 +19,12 @@ const DeactivateUserModal: React.FC<DeactivateUserModalProps> = ({
   email,
   closeModal,
 }) => {
+  const url = usePathname();
+
+  const pathToNavigateTo = url.includes("/level_adviser")
+    ? "/level_adviser/"
+    : "/";
+
   const [isDeactivatingUser, setIsDeactivateUserting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -47,13 +53,16 @@ const DeactivateUserModal: React.FC<DeactivateUserModalProps> = ({
       }
       try {
         setIsDeactivateUserting(true);
-        const response = await HttpRequest.patch(`/auth/deactivateAccount`, {
-          email,
-        });
+        const response = await HttpRequest.patch(
+          `/auth${pathToNavigateTo}deactivateAccount`,
+          {
+            email,
+          }
+        );
         setSuccessMessage(response.data.message);
         formik.resetForm();
         closeModal();
-        router.push("/");
+        router.push(pathToNavigateTo);
       } catch (error) {
         setErrorMessage("Failed to deactivate. Try again!");
       } finally {

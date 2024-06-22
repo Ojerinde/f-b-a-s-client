@@ -5,25 +5,25 @@ import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import HttpRequest from "@/store/services/HttpRequest";
-import bg from "@/public/images/f.jpeg";
-import InformationInput from "@/components/UI/Input/InformationInput";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
 import Button from "@/components/UI/Button/Button";
+import bg from "@/public/images/f.jpeg";
+import InformationInput from "@/components/UI/Input/InformationInput";
 
-const ForgotPassword = () => {
+interface ReactivateAccountProps {}
+
+const ReactivateAccount: React.FC<ReactivateAccountProps> = () => {
   const router = useRouter();
 
+  // State managements
   const [showError, setShowError] = useState<{
     hasError: boolean;
     message: string;
   }>({ hasError: false, message: "" });
-  const [successMessage, setSuccessMessage] = useState<string>("");
 
   // Yup schema configurations
   const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email address is required"),
+    email: Yup.string().required("Email is required").email(),
   });
 
   // Formik validation configurations
@@ -35,14 +35,17 @@ const ForgotPassword = () => {
     validateOnChange: true,
     validateOnBlur: true,
     validateOnMount: false,
-    // Form submission
     async onSubmit(values, actions) {
       const { email } = values;
       try {
-        const response = await HttpRequest.post("/auth/forgotPassword", {
-          email,
-        });
-        setSuccessMessage(response.data.message);
+        const response = await HttpRequest.patch(
+          `/auth/level_adviser/reactivateAccount/`,
+          {
+            email,
+          }
+        );
+
+        router.push("/level_adviser");
       } catch (error: any) {
         setShowError(() => ({
           hasError: true,
@@ -53,7 +56,6 @@ const ForgotPassword = () => {
         actions.setSubmitting(false);
         setTimeout(() => {
           setShowError(() => ({ hasError: false, message: "" }));
-          setSuccessMessage("");
         }, 7000);
       }
     },
@@ -67,37 +69,37 @@ const ForgotPassword = () => {
       }}
     >
       <div className="forgot-card">
-        <h3 className="forgot-card__heading">Forgot Your Password?</h3>
+        <h3 className="forgot-card__heading">Reactivate Account</h3>
         <p className="forgot-card__para">
-          No worries, we’ll send you reset instructions.
+          Enter your email to reactivate your account
         </p>
-        <form onSubmit={formik.handleSubmit} className="">
+        <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
           <InformationInput
             id="email"
             label="Email"
-            type="email"
             name="email"
+            type="email"
             invalid={formik.errors.email && formik.touched.email}
+            inputErrorMessage={formik.errors.email}
             placeholder=""
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.email}
-            inputErrorMessage={formik.errors.email}
           />
+
           {showError.hasError && (
             <p className="signup-error">{showError.message}</p>
           )}
-          {successMessage && <p className="signup-success">{successMessage}</p>}
 
           <Button type="submit">
-            {formik.isSubmitting ? <LoadingSpinner /> : "Click To Reset"}
+            {formik.isSubmitting ? <LoadingSpinner /> : "Reactivate"}
           </Button>
 
           <button
-            type="button"
             className="forgot-card__button update-container__button"
+            type="button"
             onClick={() => {
-              router.push("/");
+              router.push("/level_adviser");
             }}
           >
             Back to login
@@ -108,4 +110,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ReactivateAccount;

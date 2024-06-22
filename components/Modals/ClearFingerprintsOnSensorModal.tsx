@@ -47,7 +47,7 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
         socket?.send(
           JSON.stringify({
             event: "clear_fingerprints",
-            payload: { clearPhrase: values.clearPhrase },
+            payload: { clearPhrase: values.clearPhrase, level: "500" },
           })
         );
       } catch (error) {

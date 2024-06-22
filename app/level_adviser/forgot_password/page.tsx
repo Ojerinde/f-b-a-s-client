@@ -39,9 +39,12 @@ const ForgotPassword = () => {
     async onSubmit(values, actions) {
       const { email } = values;
       try {
-        const response = await HttpRequest.post("/auth/forgotPassword", {
-          email,
-        });
+        const response = await HttpRequest.post(
+          "/auth/level_adviser/forgotPassword",
+          {
+            email,
+          }
+        );
         setSuccessMessage(response.data.message);
       } catch (error: any) {
         setShowError(() => ({
@@ -97,7 +100,7 @@ const ForgotPassword = () => {
             type="button"
             className="forgot-card__button update-container__button"
             onClick={() => {
-              router.push("/");
+              router.push("/level_adviser");
             }}
           >
             Back to login

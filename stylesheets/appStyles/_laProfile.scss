@@ -1,0 +1,67 @@
+.laProfile {
+  @media screen and (max-width: 1200px) {
+    margin-bottom: 6rem;
+  }
+  &-profile {
+    display: flex;
+    justify-content: space-between;
+
+    @media screen and (max-width: 600px) {
+      flex-direction: column;
+    }
+
+    &__left {
+      flex-basis: 50%;
+      background: rgba($color-black, 0.5);
+      padding: 3rem 3rem 0;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 0.2rem solid rgba($text-color, 0.25);
+      border-radius: 1rem;
+      height: fit-content;
+      @media screen and (max-width: 900px) {
+        flex-basis: 55%;
+      }
+      @media screen and (max-width: 600px) {
+        margin-bottom: 3rem;
+      }
+    }
+    &__right {
+      flex-basis: 40%;
+    }
+    &__item {
+      flex-basis: 40%;
+      height: 16rem;
+      margin-bottom: 3.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 2rem;
+      box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+        rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+        rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+      transition: all 0.3s;
+      &:hover {
+        box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+        cursor: pointer;
+      }
+
+      @media screen and (max-width: 700px) {
+        flex-basis: 45%;
+      }
+
+      & svg {
+        font-size: 3rem;
+        color: $text-color;
+      }
+
+      & p {
+        margin: 1rem 0;
+        font-size: 1.7rem;
+        text-align: center;
+        letter-spacing: 0.1rem;
+      }
+    }
+  }
+}
