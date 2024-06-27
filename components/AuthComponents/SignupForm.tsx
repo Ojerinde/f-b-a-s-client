@@ -217,6 +217,9 @@ const SignUpForm = () => {
           showPassword={showPassword}
           updatePasswordVisibility={updatePasswordVisibility}
         />
+        <Link href="/level_adviser/signup" className="login-link">
+        Level Adviser? Signup here
+        </Link>
         <div className="login-box">
           <Link href="/reactivate_account" className="login-link">
             Reactivate Account?

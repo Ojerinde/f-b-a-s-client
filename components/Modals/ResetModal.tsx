@@ -44,25 +44,21 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
         const socket = getWebSocket();
 
         // Function to emit delete_fingerprint event
-        const emitDeleteFingerprintEvent = (matricNo: string) => {
+        const emitDeleteFingerprintEvent = (matricNos: string[]) => {
           socket?.send(
             JSON.stringify({
               event: "delete_fingerprint",
               payload: {
-                matricNo,
+                students: matricNos,
                 courseCode: response.data.courseCode,
               },
             })
           );
         };
 
-        // Emit delete_fingerprint event for each student with a 20-second interval
         const students = response.data.students;
-        students.forEach((student: any, index: number) => {
-          setTimeout(() => {
-            emitDeleteFingerprintEvent(student.matricNo);
-          }, index * 5000);
-        });
+        const studentsMatricNos = students.map((stud: any) => stud.matricNo);
+        emitDeleteFingerprintEvent(studentsMatricNos);
 
         setSuccessMessage(response.data.message);
         // Reset formData and close modal after enroll_feedback

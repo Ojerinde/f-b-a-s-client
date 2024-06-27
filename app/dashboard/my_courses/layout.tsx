@@ -55,7 +55,7 @@ export default function Layout({
         dispatch(AddAllCourses(response.data.courses));
         setLoading(false);
       } catch (error) {
-        toast("Error fetching courses", {
+        toast("Could not fetch course", {
           position: "top-right",
           autoClose: 10000,
           hideProgressBar: false,

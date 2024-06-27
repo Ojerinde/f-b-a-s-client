@@ -241,6 +241,9 @@ const LASignUpForm = () => {
           showPassword={showPassword}
           updatePasswordVisibility={updatePasswordVisibility}
         />
+        <Link href="/" className="login-link">
+          Lecturer? Signup here
+        </Link>
         <div className="login-box">
           <Link href="/level_adviser/reactivate_account" className="login-link">
             Reactivate Account?

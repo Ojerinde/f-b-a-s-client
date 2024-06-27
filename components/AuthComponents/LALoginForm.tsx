@@ -120,6 +120,9 @@ const LALoginForm = () => {
               showPassword={showPassword}
               updatePasswordVisibility={updatePasswordVisibility}
             />
+            <Link href="/" className="login-link">
+              Lecturer? Login here
+            </Link>
             <div className="login-box">
               <Link
                 href="/level_adviser/forgot_password"

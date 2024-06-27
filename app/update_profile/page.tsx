@@ -144,7 +144,7 @@ const UpdateLecturerInformation: React.FC = () => {
           return;
         }
         dispatch(AddAllCourses(response.data.courses));
-        // Remove _id
+
         const modifiedCourses = response.data.courses.map((course: Course) => ({
           courseCode: course.courseCode,
           courseName: course.courseName,

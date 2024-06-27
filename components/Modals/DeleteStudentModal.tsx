@@ -72,7 +72,7 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
           return socket?.send(
             JSON.stringify({
               event: "delete_fingerprint",
-              payload: { matricNo: response.data.matricNo, courseCode },
+              payload: { students: [response.data.matricNo], courseCode },
             })
           );
         }
