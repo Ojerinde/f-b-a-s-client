@@ -128,7 +128,7 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
     return excelBuffer;
   };
 
-  const handleDownload = (fetchedData: any[], modifiedCourseCode: string) => {
+  const handleDownload = () => {
     const excelBuffer = createExcelFile(fetchedData, modifiedCourseCode);
     const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(blob, `Report for ${modifiedCourseCode}.xlsx`);
