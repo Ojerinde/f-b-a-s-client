@@ -9,12 +9,14 @@ interface AttendanceItemProps {
   date: string | any;
   studentsPresent: any[];
   filtered?: boolean;
+  attendancePercentage?: number;
 }
 
 const AttendanceItem: React.FC<AttendanceItemProps> = ({
   date,
   studentsPresent,
   filtered,
+  attendancePercentage,
 }) => {
   const [seeAll, setSeeAll] = useState<boolean>(false);
 
@@ -34,6 +36,9 @@ const AttendanceItem: React.FC<AttendanceItemProps> = ({
             {seeAll ? "Collaspe Students" : "See All Students"}
           </button>
         )}
+        <p className="attendanceItem-item__percent">
+          Attendance Percentage: <span>{attendancePercentage}%</span>
+        </p>
       </div>
 
       {seeAll ? (

@@ -1,4 +1,7 @@
 .attendanceItem {
+  @media screen and (max-width: 900px) {
+    margin-bottom: 8rem;
+  }
   &-header {
     font-size: 2.5rem;
     color: $text-color;
@@ -8,6 +11,7 @@
     padding-bottom: 0.2rem;
     margin-bottom: 1.5rem;
   }
+
   &-filter {
     display: flex;
     justify-content: space-between;
@@ -131,6 +135,7 @@
   }
   &-item {
     padding: 1rem 0;
+
     &:last-child {
       border-bottom: none;
     }
@@ -160,13 +165,21 @@
       font-size: 1.7rem;
       font-weight: bold;
     }
+    &__percent {
+      margin-left: auto;
+      font-size: 1.5rem;
+
+      & span {
+        font-family: Pacifico, cursive;
+      }
+    }
   }
   &-table {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid rgba(grey, 0.5);
-
     text-align: center;
+    margin-top: 2rem;
 
     & tr {
       &:hover {
@@ -181,6 +194,12 @@
       vertical-align: center;
       font-size: 1.5rem;
       color: rgba($text-color, 1);
+    }
+    &__header {
+      font-weight: bold;
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 1.7rem;
     }
   }
 }

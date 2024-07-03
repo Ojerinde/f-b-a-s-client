@@ -53,17 +53,6 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
     setFilteredAttendanceRecords(filteredResults);
   };
 
-  // Show all students on the date the matric number was present
-  // const handleFilterByMatricNo = () => {
-  //   const filteredResults = attendanceRecords.filter((obj) => {
-  //     return obj.studentsPresent.some(
-  //       (record) =>
-  //         record.student.matricNo.toLowerCase() === matricNo.toLowerCase()
-  //     );
-  //   });
-  //   setFilteredAttendanceRecords(filteredResults);
-  // };
-
   // Show only the studnets with the matric number
   const handleFilterByMatricNo = () => {
     const filteredResults = attendanceRecords
@@ -87,7 +76,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
   };
 
   return (
-    <div>
+    <div className="attendanceItem">
       <h2 className="attendanceItem-header">
         Attendance Records for {modifiedCourseCode}
       </h2>
@@ -159,6 +148,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
                       key={index}
                       date={record.date}
                       studentsPresent={record.studentsPresent}
+                      attendancePercentage={record.attendancePercentage}
                       filtered={true}
                     />
                   ))}
@@ -179,6 +169,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
                       key={index}
                       date={record.date}
                       studentsPresent={record.studentsPresent}
+                      attendancePercentage={record.attendancePercentage}
                     />
                   ))}
               </ul>

@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Course } from "@/app/dashboard/my_courses/page";
 import InformationInput from "../UI/Input/InformationInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import HttpRequest from "@/store/services/HttpRequest";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
@@ -60,7 +60,6 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
         const studentsMatricNos = students.map((stud: any) => stud.matricNo);
         emitDeleteFingerprintEvent(studentsMatricNos);
 
-        setSuccessMessage(response.data.message);
         // Reset formData and close modal after enroll_feedback
         formik.resetForm();
       } catch (error) {
@@ -74,6 +73,32 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
       }
     },
   });
+  useEffect(() => {
+    const socket = getWebSocket();
+
+    const handleAttendanceFeedback = (event: MessageEvent) => {
+      const feedback = JSON.parse(event.data);
+      if (feedback.event !== "delete_fingerprint_feedback") return;
+
+      if (feedback.payload.error) {
+        setSuccessMessage("");
+        setErrorMessage(feedback.payload.message);
+      } else {
+        formik.resetForm();
+        setSuccessMessage(feedback.payload.message);
+      }
+      setTimeout(() => {
+        setErrorMessage("");
+        setSuccessMessage("");
+      }, 7000);
+    };
+
+    socket?.addEventListener("message", handleAttendanceFeedback);
+
+    return () => {
+      socket?.removeEventListener("message", handleAttendanceFeedback);
+    };
+  }, []);
 
   return (
     <div className="resetOverlay">

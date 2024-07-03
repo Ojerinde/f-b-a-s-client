@@ -4,10 +4,11 @@ import AttendanceModal from "@/components/Modals/AttendanceModal";
 import EnrollmentModal from "@/components/Modals/EnrollmentModal";
 import OverlayModal from "@/components/Modals/OverlayModal";
 import ResetModal from "@/components/Modals/ResetModal";
+import Button from "@/components/UI/Button/Button";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { BsRecordCircleFill } from "react-icons/bs";
 import { IoPersonAddSharp } from "react-icons/io5";
@@ -18,6 +19,7 @@ interface CourseDetailsPageprops {
 }
 
 const CourseDetailsPage: React.FC<CourseDetailsPageprops> = ({ params }) => {
+  const router = useRouter();
   const [enrollModalOpen, setEnrollModalOpen] = useState<boolean>(false);
   const [attendanceModalOpen, setAttendanceModalOpen] =
     useState<boolean>(false);
@@ -39,6 +41,14 @@ const CourseDetailsPage: React.FC<CourseDetailsPageprops> = ({ params }) => {
         <div>
           <h2>{course?.courseName}</h2>
           <h3>{course?.courseCode}</h3>
+        </div>
+        <div className="coursePage-details__button">
+          <Button
+            type="button"
+            onClick={() => router.push(`${pathname}/reports`)}
+          >
+            View Report
+          </Button>
         </div>
       </div>
       <div className="coursePage-actions">

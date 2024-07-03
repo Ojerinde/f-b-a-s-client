@@ -32,8 +32,7 @@
     display: flex;
     align-items: center;
     column-gap: 3rem;
-    width: fit-content;
-
+    justify-content: flex-start;
     & svg {
       font-size: 10rem;
       color: rgba($text-color, 0.8);
@@ -49,13 +48,28 @@
       letter-spacing: 0.1rem;
       font-weight: 300;
     }
+    &__button {
+      margin-left: auto;
+      flex-basis: 25%;
+
+      & button {
+        transition: all 0.3s;
+        &:hover {
+          background-color: rgba($text-color, 0.8);
+          color: $color-white;
+        }
+      }
+    }
   }
+
   &-actions {
     margin: 4rem 0;
     display: flex;
     column-gap: 3rem;
 
     & button {
+      cursor: pointer;
+
       padding: 2rem 4rem;
       display: flex;
       align-items: center;

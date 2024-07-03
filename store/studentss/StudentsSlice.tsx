@@ -19,6 +19,7 @@ export interface AttendanceRecord {
   _id: string;
   date: string;
   studentsPresent: StudentAttendance[];
+  attendancePercentage: number;
   course: string;
 }
 interface InitialStateTypes {

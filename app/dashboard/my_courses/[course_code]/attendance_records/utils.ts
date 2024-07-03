@@ -3,6 +3,7 @@ import { Student } from "@/store/archived/ArchivedSlice";
 interface MyObject {
   _id: string;
   date: string;
+  attendancePercentage: number;
   studentsPresent: Array<{
     student: Student;
     time: string;
