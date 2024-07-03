@@ -25,10 +25,14 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
     aboveFiftyPercent: [];
     belowOrEqualFiftyPercent: [];
     totalEnrolledStudents: null | number;
+    lecturer: any;
+    la: any;
   }>({
     aboveFiftyPercent: [],
     belowOrEqualFiftyPercent: [],
     totalEnrolledStudents: null,
+    lecturer: {},
+    la: {},
   });
 
   const { course_code } = params;
@@ -49,7 +53,6 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
   const createExcelFile = (fetchedData: any, modifiedCourseCode: string) => {
     const data = [];
 
-    // Add header for students below or equal to 50%
     data.push({
       SN: "",
       Name: "STUDENTS WITH LESS 50% ATTENDANCE",
@@ -57,7 +60,6 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
       AttendancePercentage: "",
     });
 
-    // Add sub-headers for below or equal to 50% students
     data.push({
       SN: "SN",
       Name: "Name",
@@ -65,7 +67,6 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
       AttendancePercentage: "Attendance Percentage",
     });
 
-    // Add data for students below or equal to 50%
     fetchedData.belowOrEqualFiftyPercent.forEach(
       (student: any, index: number) => {
         data.push({
@@ -77,7 +78,6 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
       }
     );
 
-    // Add a blank row for spacing
     data.push({
       SN: "",
       Name: "",
@@ -112,7 +112,7 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
     });
 
     // Create the worksheet and workbook
-    const worksheet = XLSX.utils.json_to_sheet(data.slice(0));
+    const worksheet = XLSX.utils.json_to_sheet(data.slice(1));
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(
       workbook,
