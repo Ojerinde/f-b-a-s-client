@@ -25,9 +25,9 @@ const Settings = () => {
       >
         Edit Clear Fingerprint Phrase
       </Link>
-      <Link className="settings_url" href="/dashboard/archived_records">
+      {/* <Link className="settings_url" href="/dashboard/archived_records">
         See Archived Records
-      </Link>
+      </Link> */}
       <div>
         <button
           onClick={() => setClearFingerprints(true)}
