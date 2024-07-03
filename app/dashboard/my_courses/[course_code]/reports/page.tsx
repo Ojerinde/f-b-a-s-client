@@ -129,6 +129,12 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
   };
 
   const handleDownload = () => {
+    if (
+      fetchedData.aboveFiftyPercent.length === 0 &&
+      fetchedData.belowOrEqualFiftyPercent.length === 0
+    ) {
+      return;
+    }
     const excelBuffer = createExcelFile(fetchedData, modifiedCourseCode);
     const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(blob, `Report for ${modifiedCourseCode}.xlsx`);
@@ -198,7 +204,7 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
           <thead>
             <tr>
               <th colSpan={4} className="attendanceItem-table__header">
-                {`Students with less 50% attendance`.toUpperCase()}
+                {`Students with less than 50% attendance`.toUpperCase()}
               </th>
             </tr>
             <tr>
@@ -249,8 +255,22 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
       </ul>
 
       <div className="reportsPage-actions">
-        <button onClick={handleDownload}>Download</button>
-        <button onClick={handleShareClick}>
+        <button
+          onClick={handleDownload}
+          disabled={
+            fetchedData.aboveFiftyPercent.length === 0 &&
+            fetchedData.belowOrEqualFiftyPercent.length === 0
+          }
+        >
+          Download
+        </button>
+        <button
+          onClick={handleShareClick}
+          disabled={
+            fetchedData.aboveFiftyPercent.length === 0 &&
+            fetchedData.belowOrEqualFiftyPercent.length === 0
+          }
+        >
           {!share ? "Share" : "Share With"}
         </button>
       </div>
