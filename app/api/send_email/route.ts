@@ -30,12 +30,11 @@ export async function POST(request: Request) {
     );
   }
   if (email) {
-    const emailName = email?.split("@")[0];
-    console.log("emailName: ", emailName);
+    const emailName = email.slice(0, 4);
 
     await new Email({
       email: email,
-      name: [emailName, ""],
+      name: `${emailName}... ...`,
     }).sendCourseReportFile(
       courseCode,
       belowOrEqualFiftyPercent,
