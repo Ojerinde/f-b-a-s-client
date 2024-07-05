@@ -60,7 +60,12 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
       {!isFetchingEnrolledStudents && enrolledStudents.length > 0 && (
         <ul className="enrollmentPage-list">
           {enrolledStudents.slice(start, end).map((student: any) => (
-            <li key={student._id}>
+            <li
+              key={student._id}
+              onClick={() =>
+                router.push(`${pathname}/${matricNoHandler(student.matricNo)}`)
+              }
+            >
               <div className="enrollmentPage-left">
                 <MdPersonPin />
                 <div>

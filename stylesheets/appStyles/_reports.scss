@@ -79,7 +79,10 @@
 
     & button {
       cursor: pointer;
-      padding: 1rem 3rem;
+      width: 13rem;
+      height: 4.5rem;
+      display: flex;
+      justify-content: center;
       border-radius: 1rem;
       letter-spacing: 0.1rem;
       display: flex;
