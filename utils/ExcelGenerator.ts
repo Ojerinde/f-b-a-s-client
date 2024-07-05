@@ -1,5 +1,7 @@
 import * as XLSX from "xlsx";
 export const createExcelFile = (students: any, modifiedCourseCode: string) => {
+  console.log("Re");
+
   const data = [];
 
   data.push({
@@ -65,7 +67,7 @@ export const createExcelFile = (students: any, modifiedCourseCode: string) => {
   }
 
   // Create the worksheet and workbook
-  const worksheet = XLSX.utils.json_to_sheet(data.slice(1));
+  const worksheet = XLSX.utils.json_to_sheet(data);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(
     workbook,

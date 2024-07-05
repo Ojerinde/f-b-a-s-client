@@ -220,10 +220,10 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
             </button>
             <button
               onClick={handleShareClick}
-              // disabled={
-              //   fetchedData.aboveFiftyPercent.length === 0 &&
-              //   fetchedData.belowOrEqualFiftyPercent.length === 0
-              // }
+              disabled={
+                fetchedData.aboveFiftyPercent.length === 0 &&
+                fetchedData.belowOrEqualFiftyPercent.length === 0
+              }
             >
               {!share ? "Share" : "Share With"}
             </button>
