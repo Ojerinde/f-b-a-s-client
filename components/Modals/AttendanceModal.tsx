@@ -107,7 +107,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
           })
         );
 
-        setSuccessMessage("Attendance has been scheduled successfully!");
         setTimeout(() => {
           closeModal();
         }, 7000);

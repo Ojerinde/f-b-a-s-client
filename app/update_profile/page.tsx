@@ -117,6 +117,7 @@ const UpdateLecturerInformation: React.FC = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      if (!loggedInLecturer?.email) return;
       try {
         const response = await HttpRequest.get(
           `/courses/${loggedInLecturer.email}`
@@ -157,9 +158,10 @@ const UpdateLecturerInformation: React.FC = () => {
           courses: [...modifiedCourses],
         });
       } catch (error) {
+        console.log("Error fetching courses", error);
         toast("Error fetching courses", {
           position: "top-right",
-          autoClose: 10000, // Set autoClose to 10 seconds
+          autoClose: 10000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
