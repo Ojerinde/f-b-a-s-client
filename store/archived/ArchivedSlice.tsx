@@ -22,6 +22,7 @@ export interface Student {
 }
 
 export interface Attendance {
+  attendancePercentage: number | undefined;
   _id: string;
   date: Date;
   studentsPresent: { student: Student; time: string }[];

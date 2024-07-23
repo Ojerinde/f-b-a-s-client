@@ -36,9 +36,11 @@ const AttendanceItem: React.FC<AttendanceItemProps> = ({
             {seeAll ? "Collaspe Students" : "See All Students"}
           </button>
         )}
-        <p className="attendanceItem-item__percent">
-          Attendance Percentage: <span>{attendancePercentage}%</span>
-        </p>
+        {attendancePercentage && (
+          <p className="attendanceItem-item__percent">
+            Attendance Percentage: <span>{attendancePercentage}%</span>
+          </p>
+        )}
       </div>
 
       {seeAll ? (

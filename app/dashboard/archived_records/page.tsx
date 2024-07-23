@@ -187,6 +187,7 @@ const ArchivedRecords: React.FC = () => {
                     key={index}
                     date={record.date}
                     studentsPresent={record.studentsPresent}
+                    // attendancePercentage={record.attendancePercentage}
                   />
                 ))}
             </ul>
