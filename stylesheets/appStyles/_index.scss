@@ -20,6 +20,17 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
+@media only screen and (min-width: 3500px) {
+  html {
+    font-size: 100%;
+  }
+}
+@media only screen and (min-width: 1700px) {
+  html {
+    font-size: 70%;
+  }
+}
+
 @media only screen and (max-width: 1200px) {
   html {
     font-size: 50%;

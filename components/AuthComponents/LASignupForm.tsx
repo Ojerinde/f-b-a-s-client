@@ -198,7 +198,7 @@ const LASignUpForm = () => {
           value={formik.values.email}
           inputErrorMessage={formik.errors.email}
         />
-        <div>
+        <div className="password-modal__box">
           <InputField
             id="password"
             label="Password"

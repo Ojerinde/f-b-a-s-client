@@ -116,7 +116,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-
+      @media screen and (min-width: 1400px) {
+        flex-basis: 28%;
+      }
       @media screen and (max-width: 1200px) {
         flex-basis: 40%;
       }

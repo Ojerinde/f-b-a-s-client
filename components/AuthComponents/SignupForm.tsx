@@ -174,7 +174,7 @@ const SignUpForm = () => {
           value={formik.values.email}
           inputErrorMessage={formik.errors.email}
         />
-        <div>
+        <div className="password-modal__box">
           <InputField
             id="password"
             label="Password"
@@ -218,7 +218,7 @@ const SignUpForm = () => {
           updatePasswordVisibility={updatePasswordVisibility}
         />
         <Link href="/level_adviser/signup" className="login-link">
-        Level Adviser? Signup here
+          Level Adviser? Signup here
         </Link>
         <div className="login-box">
           <Link href="/reactivate_account" className="login-link">

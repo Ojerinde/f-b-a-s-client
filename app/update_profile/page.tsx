@@ -61,12 +61,31 @@ const UpdateLecturerInformation: React.FC = () => {
 
     onSubmit: async (values, actions) => {
       try {
-        await HttpRequest.post(`/lecturers`, values);
+        const response = await HttpRequest.post(`/lecturers`, values);
 
         // Reset form after successful submission
         actions.resetForm();
 
         router.push("/dashboard/my_courses");
+        toast(response.data.message, {
+          position: "top-right",
+          autoClose: 10000, // Set autoClose to 10 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          style: {
+            background: "#181a40",
+            color: "white",
+            fontSize: "1.7rem",
+            fontFamily: "Poetsen One",
+            letterSpacing: "0.15rem",
+            lineHeight: "1.7",
+            padding: "1rem",
+          },
+        });
       } catch (error: any) {
         toast(error?.response.data.message, {
           position: "top-right",
@@ -157,9 +176,9 @@ const UpdateLecturerInformation: React.FC = () => {
           email: loggedInLecturer?.email || "",
           courses: [...modifiedCourses],
         });
-      } catch (error) {
+      } catch (error: any) {
         console.log("Error fetching courses", error);
-        toast("Error fetching courses", {
+        toast(error?.response.data.message, {
           position: "top-right",
           autoClose: 10000,
           hideProgressBar: false,
@@ -182,7 +201,7 @@ const UpdateLecturerInformation: React.FC = () => {
     };
 
     fetchCourses();
-  }, [loggedInLecturer?.email]);
+  }, []);
 
   return (
     <section className="update">
