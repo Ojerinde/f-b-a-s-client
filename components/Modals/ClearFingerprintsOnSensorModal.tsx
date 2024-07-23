@@ -51,10 +51,8 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
           })
         );
       } catch (error) {
-        setIsClearingFingerprints(false);
         setErrorMessage("Failed to mark clear_fingerprints. Try again!");
       } finally {
-        setIsClearingFingerprints(false);
         setTimeout(() => {
           setErrorMessage("");
           setSuccessMessage("");
@@ -131,7 +129,7 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
         <MdOutlineClose className="resetOverlay-icon" />
       </div>
       <h2 className="resetOverlay-text">
-        This action will clear all the fingerprint on the sensor
+        This action will clear all the fingerprints on the sensor
       </h2>
       <h3 className="resetOverlay-text_2">
         If you wish to continue, enter the "Clear-Phrase" known by the Level
