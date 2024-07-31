@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { setItemToCookie } from "@/utils/cookiesFunc";
-import { SetItemToLocalStorage } from "@/utils/localStorageFunc";
+import { RemoveItemFromLocalStorage, SetItemToLocalStorage } from "@/utils/localStorageFunc";
 import { useRouter } from "next/navigation";
 import InputField from "../UI/Input/Input";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
@@ -55,15 +55,16 @@ const LALoginForm = () => {
       const {
         data: { user },
         token,
+        tokenExpiresIn
       } = response.data;
-
       // Setting item to local strorage and cookies
-      setItemToCookie("token", token);
+      setItemToCookie("token", token, +tokenExpiresIn);
       SetItemToLocalStorage("user", user);
 
       router.push("/level_adviser/dashboard");
     } catch (error: any) {
-      const errorMessage = error?.response?.data.message || "An error occured";
+      console.log('error', error?.response.data.message);
+      const errorMessage = error?.response?.data.message || "A network error occurred";
 
       setShowError(() => ({
         hasError: true,
@@ -80,6 +81,10 @@ const LALoginForm = () => {
   const updatePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
+
+  useEffect(() => {
+    RemoveItemFromLocalStorage("user");
+  }, []);
 
   return (
     <section className="login">

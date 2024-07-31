@@ -78,13 +78,16 @@ const LASignUpForm = () => {
         }
       ),
     title: Yup.string().required("Title is required"),
-    level: Yup.string()
+    level: Yup.number()
       .required("Level is required")
       .oneOf(
-        ["100", "200", "300", "400", "500", "600", "700"],
+        [100, 200, 300, 400, 500, 600, 700],
         "Level must be one of 100, 200, 300, 400, 500, 600, 700"
       ),
-    email: Yup.string().required("Email is required").email("Email is invalid"),
+    email: Yup.string()
+      .required("Email is required")
+      .email("Email is invalid")
+    .matches(/^[a-zA-Z0-9._%+-]+@unilorin\.edu\.ng$/, "Email must end with @unilorin.edu.ng"),
     password: Yup.string()
       .required("Password is required")
       .min(8, "Password must be at least 8 characters")
@@ -119,7 +122,7 @@ const LASignUpForm = () => {
         const response = await HttpRequest.post("/auth/level_adviser/signup", {
           fullname,
           title,
-          level,
+          level : String(level),
           email,
           confirmPassword,
           password,
@@ -152,7 +155,7 @@ const LASignUpForm = () => {
       <form onSubmit={formik.handleSubmit}>
         <InputField
           id="fullname"
-          label="Fullname"
+          label="Name (Surname and firstname)"
           type="text"
           name="fullname"
           invalid={formik.errors.fullname && formik.touched.fullname}
@@ -164,7 +167,7 @@ const LASignUpForm = () => {
         />
         <InputField
           id="title"
-          label="Title"
+          label="Title (Engr, Dr, Prof, etc)"
           type="text"
           name="title"
           invalid={formik.errors.title && formik.touched.title}
@@ -176,8 +179,8 @@ const LASignUpForm = () => {
         />
         <InputField
           id="level"
-          label="Level"
-          type="text"
+          label="Level (eg, 500, 400, etc)"
+          type="number"
           name="level"
           invalid={formik.errors.level && formik.touched.level}
           placeholder=""
@@ -188,7 +191,7 @@ const LASignUpForm = () => {
         />
         <InputField
           id="email"
-          label="Email"
+          label="Email (School email)"
           type="email"
           name="email"
           invalid={formik.errors.email && formik.touched.email}

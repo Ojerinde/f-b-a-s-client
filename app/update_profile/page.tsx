@@ -62,8 +62,6 @@ const UpdateLecturerInformation: React.FC = () => {
     onSubmit: async (values, actions) => {
       try {
         const response = await HttpRequest.post(`/lecturers`, values);
-
-        // Reset form after successful submission
         actions.resetForm();
 
         router.push("/dashboard/my_courses");

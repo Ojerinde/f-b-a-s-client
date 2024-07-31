@@ -75,7 +75,10 @@ const SignUpForm = () => {
         }
       ),
     title: Yup.string().required("Title is required"),
-    email: Yup.string().required("Email is required").email("Email is invalid"),
+    email: Yup.string()
+      .required("Email is required")
+      .email("Email is invalid")
+    .matches(/^[a-zA-Z0-9._%+-]+@unilorin\.edu\.ng$/, "Email must end with @unilorin.edu.ng"),
     password: Yup.string()
       .required("Password is required")
       .min(6, "Password must be at least 6 characters")
@@ -140,7 +143,7 @@ const SignUpForm = () => {
       <form onSubmit={formik.handleSubmit}>
         <InputField
           id="title"
-          label="Title"
+          label="Title (Engr, Dr, Prof, etc)"
           type="text"
           name="title"
           invalid={formik.errors.title && formik.touched.title}
@@ -152,7 +155,7 @@ const SignUpForm = () => {
         />
         <InputField
           id="name"
-          label="Name"
+          label="Name (Surname and firstname)"
           type="text"
           name="name"
           invalid={formik.errors.name && formik.touched.name}
@@ -164,7 +167,7 @@ const SignUpForm = () => {
         />
         <InputField
           id="email"
-          label="Email"
+          label="Email (School email)"
           type="email"
           name="email"
           invalid={formik.errors.email && formik.touched.email}

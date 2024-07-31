@@ -53,12 +53,6 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
   };
 
   const handleDownload = () => {
-    if (
-      fetchedData.aboveFiftyPercent.length === 0 &&
-      fetchedData.belowOrEqualFiftyPercent.length === 0
-    ) {
-      return;
-    }
     const excelBuffer = createExcelFile(fetchedData, modifiedCourseCode);
     const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(blob, `Report for ${modifiedCourseCode}.xlsx`);
@@ -211,10 +205,10 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
           <div className="reportsPage-actions">
             <button
               onClick={handleDownload}
-              disabled={
-                fetchedData.aboveFiftyPercent.length === 0 &&
-                fetchedData.belowOrEqualFiftyPercent.length === 0
-              }
+              // disabled={
+              //   fetchedData.aboveFiftyPercent.length === 0 &&
+              //   fetchedData.belowOrEqualFiftyPercent.length === 0
+              // }
             >
               Download
             </button>

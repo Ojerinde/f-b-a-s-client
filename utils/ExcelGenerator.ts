@@ -1,73 +1,72 @@
 import * as XLSX from "xlsx";
-export const createExcelFile = (students: any, modifiedCourseCode: string) => {
-  console.log("Re");
 
+export const createExcelFile = (students: any, modifiedCourseCode: string) => {
   const data = [];
 
-  data.push({
-    SN: "",
-    Name: "STUDENTS WITH LESS 50% ATTENDANCE",
-    MatricNo: "",
-    AttendancePercentage: "",
-  });
+  // Add header for students below or equal to 50% attendance
+  data.push([
+    "",
+    "STUDENTS WITH LESS 50% ATTENDANCE",
+    "",
+    ""
+  ]);
 
-  data.push({
-    SN: "SN",
-    Name: "Name",
-    MatricNo: "Matric No",
-    AttendancePercentage: "Attendance Percentage",
-  });
+  // Add sub-headers for below or equal to 50% students
+  data.push([
+    "SN",
+    "Name",
+    "Matric No",
+    "Attendance Percentage"
+  ]);
 
   if (students.belowOrEqualFiftyPercent.length > 0) {
-    students.belowOrEqualFiftyPercent?.forEach(
-      (student: any, index: number) => {
-        data.push({
-          SN: index + 1,
-          Name: student.student.name,
-          MatricNo: student.student.matricNo,
-          AttendancePercentage: student.attendancePercentage + "%",
-        });
-      }
-    );
+    students.belowOrEqualFiftyPercent.forEach((student: any, index: number) => {
+      data.push([
+        index + 1,
+        student.student.name,
+        student.student.matricNo,
+        student.attendancePercentage + "%"
+      ]);
+    });
   }
 
-  data.push({
-    SN: "",
-    Name: "",
-    MatricNo: "",
-    AttendancePercentage: "",
-  });
+  // Add empty row
+  data.push([
+    "",
+    "",
+    "",
+    ""
+  ]);
 
-  // Add header for students above 50%
-  data.push({
-    SN: "",
-    Name: "STUDENTS WITH 50% AND ABOVE ATTENDANCE",
-    MatricNo: "",
-    AttendancePercentage: "",
-  });
+  // Add header for students above 50% attendance
+  data.push([
+    "",
+    "STUDENTS WITH 50% AND ABOVE ATTENDANCE",
+    "",
+    ""
+  ]);
 
   // Add sub-headers for above 50% students
-  data.push({
-    SN: "SN",
-    Name: "Name",
-    MatricNo: "Matric No",
-    AttendancePercentage: "Attendance Percentage",
-  });
+  data.push([
+    "SN",
+    "Name",
+    "Matric No",
+    "Attendance Percentage"
+  ]);
 
   if (students.aboveFiftyPercent.length > 0) {
-    // Add data for students above 50%
-    students.aboveFiftyPercent?.forEach((student: any, index: number) => {
-      data.push({
-        SN: index + 1,
-        Name: student.student.name,
-        MatricNo: student.student.matricNo,
-        AttendancePercentage: student.attendancePercentage + "%",
-      });
+    students.aboveFiftyPercent.forEach((student: any, index: number) => {
+      data.push([
+        index + 1,
+        student.student.name,
+        student.student.matricNo,
+        student.attendancePercentage + "%"
+      ]);
     });
   }
 
   // Create the worksheet and workbook
-  const worksheet = XLSX.utils.json_to_sheet(data);
+  const worksheet = XLSX.utils.aoa_to_sheet(data);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(
     workbook,
@@ -80,5 +79,6 @@ export const createExcelFile = (students: any, modifiedCourseCode: string) => {
     bookType: "xlsx",
     type: "buffer",
   });
+
   return excelBuffer;
 };

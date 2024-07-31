@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
+// import { handleTokenExpiration } from "./utils/cookiesFunc";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
@@ -12,6 +13,7 @@ export function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname.includes("/level_adviser/dashboard") && !token)
     return NextResponse.redirect(new URL("/level_adviser", request.url));
+
 
   return NextResponse.next();
 }

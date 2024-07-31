@@ -45,6 +45,12 @@
         font-size: 1.6rem;
         letter-spacing: 0.2rem;
       }
+
+      &:disabled {
+        background-color: rgba($text-color, 0.2);
+        color: $color-white;
+        cursor: not-allowed;
+      }
     }
   }
   &-inputs {

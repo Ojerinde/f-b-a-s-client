@@ -20,6 +20,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ params }) => {
   const [seconds, setSeconds] = useState<number>(5);
   const [requestFailed, setRequestFailed] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [message, setMessage] = useState<string>("");
 
   // Get the token from the url
   const { emailResetToken } = params;
@@ -27,9 +28,16 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ params }) => {
   useEffect(() => {
     (async () => {
       try {
-        await HttpRequest.patch(`/auth/verifyEmail/${emailResetToken}`, {});
+        const response = await HttpRequest.patch(
+          `/auth/verifyEmail/${emailResetToken}`,
+          {}
+        );
+        console.log("response", response);
+        setMessage(() => response.data.message);
         setRequestFailed(() => false);
-      } catch (error) {
+      } catch (error: any) {
+        console.log('error', error?.response.data.message);
+        setMessage(() => error?.response.data.message);
         setRequestFailed(() => true);
       } finally {
         setIsLoading(() => false);
@@ -62,7 +70,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ params }) => {
         <div className="verify-card">
           <IoShieldCheckmark className="verify-icon__success" />
           <h4 className="verify-card__success">
-            Your email has been successfully verified.
+            {message}
           </h4>
           <p className="verify-card__para">
             Redirecting in {seconds} second{seconds === 0 ? "" : "s"}
@@ -74,7 +82,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ params }) => {
         <div className="verify-card">
           <BiSolidError className="verify-icon__error" />
           <h4 className="verify-card__error">
-            Email verification failed. Try signing up again!
+           {message}
           </h4>
           <Button onClick={() => router.push("/")} type="button">
             Signup Again
