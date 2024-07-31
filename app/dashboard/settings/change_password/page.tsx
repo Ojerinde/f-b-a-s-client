@@ -60,7 +60,7 @@ const ChangePasswordPage = () => {
         formik.resetForm();
 
         SetItemToLocalStorage("user", response?.data.data.user);
-        setItemToCookie("token", response?.data.data.token);
+        setItemToCookie("token", response?.data.token, response?.data.expiresIn);
 
         setSuccessMessage("Password updated successfully");
       } catch (error: any) {
