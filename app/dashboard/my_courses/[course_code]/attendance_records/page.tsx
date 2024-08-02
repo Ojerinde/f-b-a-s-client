@@ -28,7 +28,7 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ params }) => {
 
   // Pagination logic
   const [start, setStart] = useState(0);
-  const attendanceRecordsPerPage = 5;
+  const attendanceRecordsPerPage = 10;
   const end = start + attendanceRecordsPerPage;
 
   const handlePageChange = (page: number) => {

@@ -39,9 +39,15 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
     validationSchema: Yup.object().shape({
       name: Yup.string()
         .required("Name is required")
-        .matches(
-          /^[A-Za-z]+\s[A-Za-z]+$/,
-          "Please enter your full name with a space between first and last name"
+        .test(
+          "full-name",
+          "Name must include both first name and last name",
+          (value) => {
+            if (!value) {
+              return false;
+            }
+            return value.trim().split(" ").length === 2;
+          }
         ),
       matricNo: Yup.string()
         .required("Matriculation number is required")

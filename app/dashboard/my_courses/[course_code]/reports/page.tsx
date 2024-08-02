@@ -205,10 +205,10 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
           <div className="reportsPage-actions">
             <button
               onClick={handleDownload}
-              // disabled={
-              //   fetchedData.aboveFiftyPercent.length === 0 &&
-              //   fetchedData.belowOrEqualFiftyPercent.length === 0
-              // }
+              disabled={
+                fetchedData.aboveFiftyPercent.length === 0 &&
+                fetchedData.belowOrEqualFiftyPercent.length === 0
+              }
             >
               Download
             </button>

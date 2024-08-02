@@ -32,7 +32,7 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
     return modifiedMatricNo;
   };
   /// Pagination logic
-  const studentsPerPage = 7;
+  const studentsPerPage = 10;
   const end = start + studentsPerPage;
 
   const handlePageChange = (page: number) => {

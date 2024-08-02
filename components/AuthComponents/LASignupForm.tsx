@@ -98,7 +98,7 @@ const LASignUpForm = () => {
       ),
     confirmPassword: Yup.string()
       .required("Confirm Password is required")
-      .oneOf([Yup.ref("password"), ""], "Confirm Password does not match"),
+      .oneOf([Yup.ref("password"), ""], "Passwords does not match"),
   });
 
   // Formik validation configurations
