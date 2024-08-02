@@ -6,6 +6,7 @@ import {
   AddAttendanceRecords,
   updateIsFetchingAttendanceRecordsState,
 } from "@/store/studentss/StudentsSlice";
+import { emitToastMessage } from "@/utils/toastFunc";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -30,7 +31,8 @@ export default function Layout({
 
         dispatch(AddAttendanceRecords(response.data.attendanceRecords));
       } catch (error) {
-        console.error("Error fetching enrolled Students:", error);
+        emitToastMessage("Error fetching enrolled Students", 'error')
+       
       } finally {
         dispatch(updateIsFetchingAttendanceRecordsState(false));
       }

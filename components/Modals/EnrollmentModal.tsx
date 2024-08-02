@@ -6,6 +6,7 @@ import Button from "../UI/Button/Button";
 import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
+import { emitToastMessage } from "@/utils/toastFunc";
 
 interface EnrollmentModalProps {
   course: Course | null;
@@ -73,6 +74,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
       } catch (error) {
         setEnrollmentIsLoading(false);
         setErrorMessage("Unable to enroll student. Try again!");
+        emitToastMessage("Unable to enroll student. Try again!", 'error')
       } finally {
         setTimeout(() => {
           setErrorMessage("");
@@ -84,7 +86,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
   useEffect(() => {
     const socket = getWebSocket();
 
-    // Define a separate function to handle enrollment feedback
+    // function to handle enrollment feedback
     const handleEnrollmentFeedback = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
 
@@ -95,8 +97,10 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
 
       if (feedback.payload.error) {
         setErrorMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'error')
       } else {
         setSuccessMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'success')
       }
       setTimeout(() => {
         setErrorMessage("");
@@ -104,7 +108,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
       }, 7000);
     };
 
-    // Add event listener for enrollment feedback
+    // Event listener for enrollment feedback
     socket?.addEventListener("message", handleEnrollmentFeedback);
 
     // Clean up event listener when component unmounts

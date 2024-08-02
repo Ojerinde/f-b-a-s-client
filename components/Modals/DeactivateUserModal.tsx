@@ -5,6 +5,7 @@ import { useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import HttpRequest from "@/store/services/HttpRequest";
 import { usePathname, useRouter } from "next/navigation";
+import { emitToastMessage } from "@/utils/toastFunc";
 
 interface DeactivateUserModalProps {
   email: string;
@@ -60,11 +61,13 @@ const DeactivateUserModal: React.FC<DeactivateUserModalProps> = ({
           }
         );
         setSuccessMessage(response.data.message);
+        emitToastMessage(response.data.message, 'success')
         formik.resetForm();
         closeModal();
         router.push(pathToNavigateTo);
       } catch (error) {
-        setErrorMessage("Failed to deactivate. Try again!");
+        setErrorMessage("Failed to deactivate account.");
+        emitToastMessage("Failed to deactivate account.", 'error')
       } finally {
         setIsDeactivateUserting(false);
         setTimeout(() => {

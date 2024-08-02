@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
-import { toast } from "react-toastify";
+import { emitToastMessage } from "@/utils/toastFunc";
 
 interface ClearFingerprintOnSensorProps {
   closeModal: () => void;
@@ -70,8 +70,10 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
       setIsClearingFingerprints(false);
       if (feedback.payload.error) {
         setErrorMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'error')
       } else {
         setSuccessMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'success')
       }
       setTimeout(() => {
         setErrorMessage("");
@@ -93,25 +95,7 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
 
     const handleAttendanceRecorded = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
-      toast(feedback.payload.message, {
-        position: "top-right",
-        autoClose: false,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        style: {
-          background: "#181a40",
-          color: "white",
-          fontSize: "1.7rem",
-          fontFamily: "Poetsen One",
-          letterSpacing: "0.15rem",
-          lineHeight: "1.7",
-          padding: "1rem",
-        },
-      });
+      emitToastMessage(feedback.payload.message, 'success')
     };
 
     // Add event listener for attendance recorded event

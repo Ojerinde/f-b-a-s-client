@@ -7,7 +7,8 @@ import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
 import Button from "@/components/UI/Button/Button";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 import InputField from "@/components/UI/Input/Input";
-import { toast } from "react-toastify";
+import { emitToastMessage } from "@/utils/toastFunc";
+
 
 const ChangePhrasePage = () => {
   const [showPhrase, setShowPhrase] = useState<boolean>(false);
@@ -40,47 +41,12 @@ const ChangePhrasePage = () => {
           ...formik.values,
           phrase: response?.data.data.la.clearPhrase,
         });
+        emitToastMessage("Clear-phrase changed successfully", 'success')
 
-        toast("Clear phrase changed successfully", {
-          position: "top-right",
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          style: {
-            background: "#181a40",
-            color: "white",
-            fontSize: "1.7rem",
-            fontFamily: "Poetsen One",
-            letterSpacing: "0.15rem",
-            lineHeight: "1.7",
-            padding: "1rem",
-          },
-        });
         formik.resetForm();
       } catch (error: any) {
-        toast(error.response.data.message, {
-          position: "top-right",
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "black",
-          style: {
-            background: "orangered",
-            color: "white",
-            fontSize: "1.7rem",
-            fontFamily: "Poetsen One",
-            letterSpacing: "0.15rem",
-            lineHeight: "1.7",
-            padding: "1rem",
-          },
-        });
+        emitToastMessage(error?.response.data.message, 'error')
+
       } finally {
         actions.setSubmitting(false);
       }
@@ -104,25 +70,7 @@ const ChangePhrasePage = () => {
           phrase: clearPhrase,
         });
       } catch (error: any) {
-        toast(error.response.data.message, {
-          position: "top-right",
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "black",
-          style: {
-            background: "orangered",
-            color: "white",
-            fontSize: "1.7rem",
-            fontFamily: "Poetsen One",
-            letterSpacing: "0.15rem",
-            lineHeight: "1.7",
-            padding: "1rem",
-          },
-        });
+        emitToastMessage(error?.response.data.message, 'error')
       }
     };
 

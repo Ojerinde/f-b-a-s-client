@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import HttpRequest from "@/store/services/HttpRequest";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
+import { emitToastMessage } from "@/utils/toastFunc";
 
 interface ResetModalProps {
   course: Course | null;
@@ -64,6 +65,7 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
         formik.resetForm();
       } catch (error) {
         setErrorMessage("Failed to reset course. Try again!");
+        emitToastMessage("Failed to reset course. Try again!", 'error')
       } finally {
         setIsResetting(false);
         setTimeout(() => {
@@ -83,9 +85,11 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
       if (feedback.payload.error) {
         setSuccessMessage("");
         setErrorMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'error')
       } else {
         formik.resetForm();
         setSuccessMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'success')
       }
       setTimeout(() => {
         setErrorMessage("");

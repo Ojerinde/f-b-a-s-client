@@ -33,7 +33,7 @@ const AttendanceItem: React.FC<AttendanceItemProps> = ({
         <p className="attendanceItem-item__date">Date: {formatDate(date)}</p>
         {!filtered && (
           <button onClick={toggleSeeAll}>
-            {seeAll ? "Collaspe Students" : "See All Students"}
+            {seeAll ? "See Less" : "See All"}
           </button>
         )}
         {attendancePercentage && (

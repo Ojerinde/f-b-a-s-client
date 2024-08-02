@@ -10,10 +10,11 @@ import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import HttpRequest from "@/store/services/HttpRequest";
 import { updateStudentOtherDetails } from "@/store/studentss/StudentsSlice";
+import { emitToastMessage } from "@/utils/toastFunc";
 import { useEffect, useState } from "react";
 import { FaChartPie } from "react-icons/fa";
 import { GrOverview, GrView } from "react-icons/gr";
-import { toast } from "react-toastify";
+
 
 interface StudentDetailsProps {
   params: { matric_no: string; course_code: string };
@@ -49,25 +50,8 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ params }) => {
         );
         dispatch(updateStudentOtherDetails(response.data));
       } catch (error) {
-        toast("Could not fetch student other details", {
-          position: "top-right",
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "black",
-          style: {
-            background: "orangered",
-            color: "white",
-            fontSize: "1.7rem",
-            fontFamily: "Poetsen One",
-            letterSpacing: "0.15rem",
-            lineHeight: "1.7",
-            padding: "1rem",
-          },
-        });
+        emitToastMessage("Could not fetch more details about the student", 'error')
+
         setIsFetchingStudentOtherDetails(false);
       } finally {
         setIsFetchingStudentOtherDetails(false);

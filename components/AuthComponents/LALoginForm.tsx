@@ -63,7 +63,6 @@ const LALoginForm = () => {
 
       router.push("/level_adviser/dashboard");
     } catch (error: any) {
-      console.log('error', error?.response.data.message);
       const errorMessage = error?.response?.data.message || "A network error occurred";
 
       setShowError(() => ({

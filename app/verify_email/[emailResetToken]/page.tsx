@@ -32,11 +32,9 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ params }) => {
           `/auth/verifyEmail/${emailResetToken}`,
           {}
         );
-        console.log("response", response);
         setMessage(() => response.data.message);
         setRequestFailed(() => false);
       } catch (error: any) {
-        console.log('error', error?.response.data.message);
         setMessage(() => error?.response.data.message);
         setRequestFailed(() => true);
       } finally {

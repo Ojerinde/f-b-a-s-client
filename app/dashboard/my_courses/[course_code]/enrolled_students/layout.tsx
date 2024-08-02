@@ -6,9 +6,10 @@ import {
   AddEnrolledStudents,
   updateIsFetchingEnrolledStudentsState,
 } from "@/store/studentss/StudentsSlice";
+import { emitToastMessage } from "@/utils/toastFunc";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
+
 
 export default function Layout({
   children,
@@ -31,25 +32,7 @@ export default function Layout({
 
         dispatch(AddEnrolledStudents(response.data.students));
       } catch (error) {
-        toast("Error fetching enrolled Students", {
-          position: "top-right",
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "black",
-          style: {
-            background: "orangered",
-            color: "white",
-            fontSize: "1.7rem",
-            fontFamily: "Poetsen One",
-            letterSpacing: "0.15rem",
-            lineHeight: "1.7",
-            padding: "1rem",
-          },
-        });
+        emitToastMessage("Could not fetch course enrolled students", 'error')
       } finally {
         dispatch(updateIsFetchingEnrolledStudentsState(false));
       }

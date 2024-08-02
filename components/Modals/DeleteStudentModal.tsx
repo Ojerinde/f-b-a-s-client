@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/hooks/reduxHook";
 import { AddEnrolledStudents } from "@/store/studentss/StudentsSlice";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
-import { toast } from "react-toastify";
+import { emitToastMessage } from "@/utils/toastFunc";
+
 
 interface DeleteStudentModalProps {
   courseCode: string | null;
@@ -108,11 +109,13 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
       if (feedback.payload.error) {
         setSuccessMessage("");
         setErrorMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'error')
       } else {
         formik.resetForm();
         setSuccessMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'success')
         closeModal();
-        console.log(feedback.payload);
+
         dispatch(AddEnrolledStudents(feedback.payload.students));
         router.push("/dashboard/my_courses/");
       }
@@ -134,25 +137,7 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
 
     const handleAttendanceRecorded = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
-      toast(feedback.payload.message, {
-        position: "top-right",
-        autoClose: false,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        style: {
-          background: "#181a40",
-          color: "white",
-          fontSize: "1.7rem",
-          fontFamily: "Poetsen One",
-          letterSpacing: "0.15rem",
-          lineHeight: "1.7",
-          padding: "1rem",
-        },
-      });
+      emitToastMessage(feedback.payload.message, 'success')
     };
 
     // Add event listener for attendance recorded event

@@ -1,12 +1,12 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Course } from "@/app/dashboard/my_courses/page";
-import { toast } from "react-toastify";
 import Button from "../UI/Button/Button";
 import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
 import InformationInput from "../UI/Input/InformationInput";
+import { emitToastMessage } from "@/utils/toastFunc";
 
 interface AttendanceModalProps {
   course: Course | null;
@@ -139,15 +139,16 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         setSuccessMessage("");
 
         setErrorMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'error')
       } else {
         setErrorMessage("");
-
         setSuccessMessage(feedback.payload.message);
+        emitToastMessage(feedback.payload.message, 'success')
       }
       setTimeout(() => {
         setErrorMessage("");
         setSuccessMessage("");
-      }, 7000);
+      }, 10000);
     };
 
     // Add event listener for enrollment feedback

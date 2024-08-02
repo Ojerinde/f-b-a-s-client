@@ -5,9 +5,9 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 
 import HttpRequest from "@/store/services/HttpRequest";
-import { toast } from "react-toastify";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
 import { createExcelFile } from "@/utils/ExcelGenerator";
+import { emitToastMessage } from "@/utils/toastFunc";
 
 interface CourseDetailsReportsProps {
   params: any;
@@ -72,25 +72,8 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
         ...selectedInputs,
         data: { ...fetchedData, courseCode: modifiedCourseCode },
       });
-      toast(response.data.message, {
-        position: "top-right",
-        autoClose: 10000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        style: {
-          background: "#181a40",
-          color: "white",
-          fontSize: "1.7rem",
-          fontFamily: "Poetsen One",
-          letterSpacing: "0.15rem",
-          lineHeight: "1.7",
-          padding: "1rem",
-        },
-      });
+      emitToastMessage(response.data.message, 'success')
+    
       setIsSharingReport(false);
     } catch (error) {
     } finally {
@@ -108,25 +91,7 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
         setFetchedData(response.data.data);
         setIsFetchingReports(false);
       } catch (error) {
-        toast("Could not fetch course report", {
-          position: "top-right",
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          style: {
-            background: "#181a40",
-            color: "white",
-            fontSize: "1.7rem",
-            fontFamily: "Poetsen One",
-            letterSpacing: "0.15rem",
-            lineHeight: "1.7",
-            padding: "1rem",
-          },
-        });
+        emitToastMessage("Failed to fetch course report", 'error')
         setIsFetchingReports(false);
       }
     };

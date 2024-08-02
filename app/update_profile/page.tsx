@@ -12,7 +12,7 @@ import { AddAllCourses } from "@/store/courses/CoursesSlice";
 import Navigation from "@/components/Navigation/Navigation";
 import InformationInput from "@/components/UI/Input/InformationInput";
 import Button from "@/components/UI/Button/Button";
-import { toast } from "react-toastify";
+import { emitToastMessage } from "@/utils/toastFunc";
 
 interface Course {
   courseCode: string;
@@ -65,45 +65,9 @@ const UpdateLecturerInformation: React.FC = () => {
         actions.resetForm();
 
         router.push("/dashboard/my_courses");
-        toast(response.data.message, {
-          position: "top-right",
-          autoClose: 10000, // Set autoClose to 10 seconds
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          style: {
-            background: "#181a40",
-            color: "white",
-            fontSize: "1.7rem",
-            fontFamily: "Poetsen One",
-            letterSpacing: "0.15rem",
-            lineHeight: "1.7",
-            padding: "1rem",
-          },
-        });
+        emitToastMessage(response.data.message, 'success')
       } catch (error: any) {
-        toast(error?.response.data.message, {
-          position: "top-right",
-          autoClose: 10000, // Set autoClose to 10 seconds
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          style: {
-            background: "#181a40",
-            color: "white",
-            fontSize: "1.7rem",
-            fontFamily: "Poetsen One",
-            letterSpacing: "0.15rem",
-            lineHeight: "1.7",
-            padding: "1rem",
-          },
-        });
+        emitToastMessage(error?.response.data.message, 'error')
       } finally {
         actions.setSubmitting(false);
       }
@@ -140,26 +104,7 @@ const UpdateLecturerInformation: React.FC = () => {
           `/courses/${loggedInLecturer.email}`
         );
         if (response.data.courses.length === 0) {
-          toast("You have not added any course yet", {
-            position: "top-right",
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            style: {
-              background: "#181a40",
-              color: "white",
-              fontSize: "1.7rem",
-              fontFamily: "Poetsen One",
-              letterSpacing: "0.15rem",
-              lineHeight: "1.7",
-              padding: "1rem",
-            },
-          });
-          return;
+          return emitToastMessage("You have not added any course yet", 'success')
         }
         dispatch(AddAllCourses(response.data.courses));
 
@@ -175,26 +120,8 @@ const UpdateLecturerInformation: React.FC = () => {
           courses: [...modifiedCourses],
         });
       } catch (error: any) {
-        console.log("Error fetching courses", error);
-        toast(error?.response.data.message, {
-          position: "top-right",
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          style: {
-            background: "#181a40",
-            color: "white",
-            fontSize: "1.7rem",
-            fontFamily: "Poetsen One",
-            letterSpacing: "0.15rem",
-            lineHeight: "1.7",
-            padding: "1rem",
-          },
-        });
+        emitToastMessage(error?.response.data.message, 'error')
+
       }
     };
 

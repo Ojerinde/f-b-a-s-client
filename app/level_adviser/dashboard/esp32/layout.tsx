@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
 import { getWebSocket, initializeWebSocket } from "../websocket";
 import { toast } from "react-toastify";
+import { emitToastMessage } from "@/utils/toastFunc";
 
 export default function Layout({
   children,
@@ -31,25 +32,8 @@ export default function Layout({
       setIsFetchingEsp32details(true);
       socket?.send(JSON.stringify({ event: "esp32_data" }));
     } catch (error) {
-      toast("Failed to emit event to fetch ESP32 data", {
-        position: "top-right",
-        autoClose: 10000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "black",
-        style: {
-          background: "#181a40",
-          color: "white",
-          fontSize: "1.7rem",
-          fontFamily: "Poetsen One",
-          letterSpacing: "0.15rem",
-          lineHeight: "1.7",
-          padding: "1rem",
-        },
-      });
+      emitToastMessage("Failed to emit event to fetch device data", 'error')
+
     } finally {
       setTimeout(() => {
         setIsFetchingEsp32details(false);
