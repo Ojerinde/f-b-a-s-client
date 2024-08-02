@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     },
   } = await request.json();
 
-  if (laChecked) {
+  if (laChecked && levelAdviser) {
     await new Email(levelAdviser).sendCourseReportFile(
       courseCode,
       belowOrEqualFiftyPercent,
