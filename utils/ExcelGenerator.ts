@@ -6,7 +6,7 @@ export const createExcelFile = (students: any, modifiedCourseCode: string) => {
   // Add header for students below or equal to 50% attendance
   data.push([
     "",
-    "STUDENTS WITH LESS 50% ATTENDANCE",
+    "STUDENTS WITH 50% AND LESS ATTENDANCE",
     "",
     ""
   ]);
@@ -41,7 +41,7 @@ export const createExcelFile = (students: any, modifiedCourseCode: string) => {
   // Add header for students above 50% attendance
   data.push([
     "",
-    "STUDENTS WITH 50% AND ABOVE ATTENDANCE",
+    "STUDENTS WITH ABOVE 50% ATTENDANCE",
     "",
     ""
   ]);

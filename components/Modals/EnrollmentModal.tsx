@@ -57,7 +57,9 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
           "Matriculation number must be in the format 18/30GC056"
         ),
     }),
-
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
     onSubmit: async (values, actions) => {
       try {
         initializeWebSocket();

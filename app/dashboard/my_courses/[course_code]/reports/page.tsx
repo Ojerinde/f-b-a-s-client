@@ -115,7 +115,7 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
               <thead>
                 <tr>
                   <th colSpan={4} className="attendanceItem-table__header">
-                    {`Students with less than 50% attendance`.toUpperCase()}
+                    {`Students with 50% and less attendance`.toUpperCase()}
                   </th>
                 </tr>
                 <tr>
@@ -144,7 +144,7 @@ const ReportPage: React.FC<CourseDetailsReportsProps> = ({ params }) => {
               <thead>
                 <tr>
                   <th colSpan={4} className="attendanceItem-table__header">
-                    {`Students with 50% and above attendance`.toUpperCase()}
+                    {`Students with above 50% attendance`.toUpperCase()}
                   </th>
                 </tr>
                 <tr>

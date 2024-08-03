@@ -145,6 +145,10 @@
       align-items: center;
       column-gap: 3rem;
       margin-bottom: 1rem;
+      @media screen and (max-width: 500px) {
+        column-gap: 0;
+        justify-content: space-between;
+      }
 
       & button {
         border: none;
@@ -159,11 +163,19 @@
           background-color: rgba($text-color, 0.6);
           color: white;
         }
+        @media screen and (max-width: 500px) {
+          font-size: 1.4rem;
+          flex-basis: 18%;
+        }
       }
     }
     &__date {
       font-size: 1.7rem;
       font-weight: bold;
+      @media screen and (max-width: 500px) {
+        font-size: 1.4rem;
+        flex-basis: 48%;
+      }
     }
     &__percent {
       margin-left: auto;
@@ -171,6 +183,14 @@
 
       & span {
         font-family: Pacifico, cursive;
+        @media screen and (max-width: 500px) {
+          font-size: 1.4rem;
+          font-weight: bold;
+        }
+      }
+      @media screen and (max-width: 500px) {
+        font-size: 1.4rem;
+        flex-basis: 30%;
       }
     }
   }

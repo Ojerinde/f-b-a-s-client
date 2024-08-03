@@ -71,9 +71,9 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
           }
         ),
     }),
-    validateOnBlur: true,
     validateOnChange: true,
-
+    validateOnBlur: true,
+    validateOnMount: true,
     onSubmit: async (values, actions) => {
       try {
         initializeWebSocket();
