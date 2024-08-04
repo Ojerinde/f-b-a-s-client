@@ -75,13 +75,13 @@ export default function Layout({
   return (
     <>
       <div className="esp32Page-header">
-        <h2 className="courses-header">Esp32 Details</h2>
+        <h2 className="courses-header">Device Details</h2>
         <button
           className="coursePage-back text-[2rem]"
           disabled={isFetchingEsp32details === true}
           onClick={fetchEsp32Details}
         >
-          Refetch Details
+          Refetch
         </button>
       </div>
 
