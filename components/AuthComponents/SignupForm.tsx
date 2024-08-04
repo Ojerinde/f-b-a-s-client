@@ -77,8 +77,8 @@ const SignUpForm = () => {
     title: Yup.string().required("Title is required"),
     email: Yup.string()
       .required("Email is required")
-      .email("Email is invalid")
-    .matches(/^[a-zA-Z0-9._%+-]+@unilorin\.edu\.ng$/, "Email must end with @unilorin.edu.ng"),
+      .email("Email is invalid"),
+    // .matches(/^[a-zA-Z0-9._%+-]+@unilorin\.edu\.ng$/, "Email must end with @unilorin.edu.ng"),
     password: Yup.string()
       .required("Password is required")
       .min(6, "Password must be at least 6 characters")
