@@ -61,6 +61,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
     validateOnBlur: true,
     validateOnMount: true,
     onSubmit: async (values, actions) => {
+      const { name, matricNo } = values
       try {
         initializeWebSocket();
         const socket = getWebSocket();
@@ -70,7 +71,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
         socket?.send(
           JSON.stringify({
             event: "enroll",
-            payload: { ...values, ...course, lecturerEmail },
+            payload: { name: name.trim(), matricNo, ...course, lecturerEmail },
           })
         );
       } catch (error) {

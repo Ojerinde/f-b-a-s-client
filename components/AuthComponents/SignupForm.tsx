@@ -109,7 +109,7 @@ const SignUpForm = () => {
       const { confirmPassword, password, email, name, title } = values;
       try {
         const response = await HttpRequest.post("/auth/signup", {
-          name,
+          name: name.trim(),
           title,
           email,
           confirmPassword,

@@ -120,7 +120,7 @@ const LASignUpForm = () => {
         values;
       try {
         const response = await HttpRequest.post("/auth/level_adviser/signup", {
-          fullname,
+          fullname:fullname.trim(),
           title,
           level : String(level),
           email,

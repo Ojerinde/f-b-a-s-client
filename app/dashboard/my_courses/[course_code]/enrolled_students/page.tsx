@@ -43,7 +43,7 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
   return (
     <div className="enrollmentPage">
       <h2 className="enrollmentPage-title">
-        Enrolled Students for {modifiedCourseCode}
+        Enrolled Students for {modifiedCourseCode}: {enrolledStudents.length}
       </h2>
       {!isFetchingEnrolledStudents && enrolledStudents.length === 0 && (
         <div className="courses-nocourse">
