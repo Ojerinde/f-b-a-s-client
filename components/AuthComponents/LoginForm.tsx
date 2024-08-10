@@ -5,7 +5,10 @@ import Link from "next/link";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { setItemToCookie } from "@/utils/cookiesFunc";
-import { RemoveItemFromLocalStorage, SetItemToLocalStorage } from "@/utils/localStorageFunc";
+import {
+  RemoveItemFromLocalStorage,
+  SetItemToLocalStorage,
+} from "@/utils/localStorageFunc";
 import { useRouter } from "next/navigation";
 import InputField from "../UI/Input/Input";
 import LoadingSpinner from "../UI/LoadingSpinner/LoadingSpinner";
@@ -48,11 +51,12 @@ const LoginForm = () => {
     };
     try {
       const response = await HttpRequest.post("/auth/signin", reqObj);
+      console.log("login response", response);
       // Destructuring the response.data
       const {
         data: { user },
         token,
-        tokenExpiresIn
+        tokenExpiresIn,
       } = response.data;
 
       // Setting item to local strorage and cookies
@@ -61,7 +65,9 @@ const LoginForm = () => {
 
       router.push("/update_profile");
     } catch (error: any) {
-      const errorMessage = error?.response?.data.message || "A network error occurred";
+      console.log("login error", error);
+      const errorMessage =
+        error?.response?.data.message || "A network error occurred";
 
       setShowError(() => ({
         hasError: true,
@@ -82,7 +88,7 @@ const LoginForm = () => {
   useEffect(() => {
     RemoveItemFromLocalStorage("user");
   }, []);
-  
+
   return (
     <section className="login">
       <Formik
