@@ -25,7 +25,6 @@ instance.interceptors.request.use(
 const Request = async (options: any) => {
   try {
     const response = await instance(options);
-
     return response;
   } catch (error) {
     return Promise.reject(error);
