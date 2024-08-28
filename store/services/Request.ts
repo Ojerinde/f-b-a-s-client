@@ -6,7 +6,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const instance = axios.create({
   baseURL: baseUrl,
-  timeout: 1000 * 60,
+  timeout: 1000 * 30,
   responseType: "json",
   headers: {
     Authorization: `Bearer ${token}`,
