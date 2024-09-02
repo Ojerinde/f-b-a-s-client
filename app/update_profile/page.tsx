@@ -13,6 +13,7 @@ import Navigation from "@/components/Navigation/Navigation";
 import InformationInput from "@/components/UI/Input/InformationInput";
 import Button from "@/components/UI/Button/Button";
 import { emitToastMessage } from "@/utils/toastFunc";
+import DeviceSetup from "./DeviceSetup";
 
 interface Course {
   courseCode: string;
@@ -65,9 +66,9 @@ const UpdateLecturerInformation: React.FC = () => {
         actions.resetForm();
 
         router.push("/dashboard/my_courses");
-        emitToastMessage(response.data.message, 'success')
+        emitToastMessage(response.data.message, "success");
       } catch (error: any) {
-        emitToastMessage(error?.response.data.message, 'error')
+        emitToastMessage(error?.response.data.message, "error");
       } finally {
         actions.setSubmitting(false);
       }
@@ -104,7 +105,10 @@ const UpdateLecturerInformation: React.FC = () => {
           `/courses/${loggedInLecturer.email}`
         );
         if (response.data.courses.length === 0) {
-          return emitToastMessage("You have not added any course yet", 'success')
+          return emitToastMessage(
+            "You have not added any course yet",
+            "success"
+          );
         }
         dispatch(AddAllCourses(response.data.courses));
 
@@ -120,8 +124,7 @@ const UpdateLecturerInformation: React.FC = () => {
           courses: [...modifiedCourses],
         });
       } catch (error: any) {
-        emitToastMessage(error?.response.data.message, 'error')
-
+        emitToastMessage(error?.response.data.message, "error");
       }
     };
 
@@ -133,43 +136,48 @@ const UpdateLecturerInformation: React.FC = () => {
       <Navigation />
       <div className="update-container">
         <div className="update-container__left">
-          <Link href="/dashboard" className="continue">
-            Continue To Dashboard
-          </Link>
-          <InformationInput
-            id="title"
-            type="text"
-            name="title"
-            value={formik.values.title}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            inputErrorMessage={formik.errors.title}
-            placeholder={formik.values.title}
-            readOnly
-          />
-          <InformationInput
-            id="name"
-            type="text"
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            inputErrorMessage={formik.errors.name}
-            placeholder={formik.values.name}
-            readOnly
-          />
+          <div className="update-container__left--top">
+            <Link href="/dashboard" className="continue">
+              Continue To Dashboard
+            </Link>
+            <InformationInput
+              id="title"
+              type="text"
+              name="title"
+              value={formik.values.title}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              inputErrorMessage={formik.errors.title}
+              placeholder={formik.values.title}
+              readOnly
+            />
+            <InformationInput
+              id="name"
+              type="text"
+              name="name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              inputErrorMessage={formik.errors.name}
+              placeholder={formik.values.name}
+              readOnly
+            />
 
-          <InformationInput
-            id="email"
-            type="email"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            inputErrorMessage={formik.errors.email}
-            placeholder={formik.values.email}
-            readOnly
-          />
+            <InformationInput
+              id="email"
+              type="email"
+              name="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              inputErrorMessage={formik.errors.email}
+              placeholder={formik.values.email}
+              readOnly
+            />
+          </div>
+          <div className="update-container__left--bottom">
+            <DeviceSetup />
+          </div>
         </div>
         <div className="update-container__right">
           <form onSubmit={formik.handleSubmit}>

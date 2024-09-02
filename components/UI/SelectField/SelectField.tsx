@@ -14,7 +14,7 @@ interface Option {
 interface SelectFieldProps {
   label?: string;
   onChange: (selectedOption: Option | null) => void;
-  value: Option | null;
+  value: Option | undefined | null;
   options: Option[];
   placeholder?: string;
 }
@@ -27,12 +27,16 @@ const SelectField: React.FC<SelectFieldProps> = ({
   placeholder = "",
 }) => {
   const [optionsIsShown, setOptionsIsShown] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<Option | null>(value);
+  const [selectedOption, setSelectedOption] = useState<
+    Option | undefined | null
+  >(value);
 
   const customStyles: StylesConfig<Option, false> = {
     control: (provided, state) => ({
       ...provided,
       fontSize: "1.5rem",
+      padding: "1rem",
+      marginBottom: "1rem",
       borderColor: state.isFocused ? "#181a40" : "#9D9D9D",
       borderWidth: state.isFocused ? "1.5px" : "1px",
       "&:hover": {

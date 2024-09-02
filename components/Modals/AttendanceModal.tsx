@@ -4,9 +4,10 @@ import { Course } from "@/app/dashboard/my_courses/page";
 import Button from "../UI/Button/Button";
 import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
-import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
+import { getWebSocket } from "@/app/dashboard/websocket";
 import InformationInput from "../UI/Input/InformationInput";
 import { emitToastMessage } from "@/utils/toastFunc";
+import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
 interface AttendanceModalProps {
   course: Course | null;
@@ -21,10 +22,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
-  useEffect(() => {
-    initializeWebSocket();
-  }, []);
 
   interface FormValuesType {
     startTime: string;
@@ -76,7 +73,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     validateOnMount: true,
     onSubmit: async (values, actions) => {
       try {
-        initializeWebSocket();
         const socket = getWebSocket();
 
         const convertToLagosTime = (time: string) => {
@@ -96,6 +92,13 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         const lagosStartTime = convertToLagosTime(values.startTime);
         const lagosEndTime = convertToLagosTime(values.endTime);
 
+        // First confirm the device data
+        const deviceData = GetItemFromLocalStorage("deviceData");
+
+        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+          return;
+        }
+
         socket?.send(
           JSON.stringify({
             event: "attendance",
@@ -103,6 +106,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
               ...course,
               startTime: lagosStartTime,
               endTime: lagosEndTime,
+              deviceData,
             },
           })
         );
@@ -139,11 +143,11 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         setSuccessMessage("");
 
         setErrorMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'error')
+        emitToastMessage(feedback.payload.message, "error");
       } else {
         setErrorMessage("");
         setSuccessMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'success')
+        emitToastMessage(feedback.payload.message, "success");
       }
       setTimeout(() => {
         setErrorMessage("");

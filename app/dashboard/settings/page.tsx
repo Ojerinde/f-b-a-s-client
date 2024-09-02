@@ -16,6 +16,9 @@ const Settings = () => {
       <Link className="settings_url" href="/update_profile">
         Update profile
       </Link>
+      <Link className="settings_url" href="/dashboard/settings/device_setup">
+        Setup Device Location
+      </Link>
       <Link className="settings_url" href="/dashboard/settings/change_password">
         Change Password
       </Link>

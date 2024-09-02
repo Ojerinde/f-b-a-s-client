@@ -7,9 +7,9 @@ import HttpRequest from "@/store/services/HttpRequest";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/hooks/reduxHook";
 import { AddEnrolledStudents } from "@/store/studentss/StudentsSlice";
-import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
+import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
-
+import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
 interface DeleteStudentModalProps {
   courseCode: string | null;
@@ -56,8 +56,13 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
         return;
       }
       try {
+        // First confirm the device data
+        const deviceData = GetItemFromLocalStorage("deviceData");
+
+        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+          return;
+        }
         setIsDeleteStudentting(true);
-        initializeWebSocket();
         const response = await HttpRequest.delete(
           `/courses/${courseCode}/disenroll/${studentMatricNo.replace(
             "/",
@@ -68,12 +73,11 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
           setSuccessMessage(
             `Student with ${response.data.matricNo} is not enrolled for any other course. This will cause the deletion of the student fingerprint template on the sensor`
           );
-          initializeWebSocket();
           const socket = getWebSocket();
           return socket?.send(
             JSON.stringify({
               event: "delete_fingerprint",
-              payload: { students: [response.data.matricNo], courseCode },
+              payload: { students: [response.data.matricNo], courseCode,deviceData },
             })
           );
         }
@@ -109,11 +113,11 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
       if (feedback.payload.error) {
         setSuccessMessage("");
         setErrorMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'error')
+        emitToastMessage(feedback.payload.message, "error");
       } else {
         formik.resetForm();
         setSuccessMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'success')
+        emitToastMessage(feedback.payload.message, "success");
         closeModal();
 
         dispatch(AddEnrolledStudents(feedback.payload.students));
@@ -137,13 +141,11 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
 
     const handleAttendanceRecorded = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
-      emitToastMessage(feedback.payload.message, 'success')
+      emitToastMessage(feedback.payload.message, "success");
     };
 
-    // Add event listener for attendance recorded event
     socket?.addEventListener("message", handleAttendanceRecorded);
 
-    // Clean up event listener when component unmounts
     return () => {
       socket?.removeEventListener("message", handleAttendanceRecorded);
     };
