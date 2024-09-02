@@ -129,7 +129,7 @@ const DeviceSetup = () => {
 
         <section>
           <Button id="btn__submit" type="submit" disabled={!formik.isValid}>
-            {formik.isSubmitting ? <LoadingSpinner color="white" /> : "Submit"}
+            {formik.isSubmitting ? <LoadingSpinner color="white" /> : "Save"}
           </Button>
         </section>
       </form>
