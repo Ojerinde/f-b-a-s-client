@@ -31,7 +31,9 @@ export default function Layout({
         return;
       }
       setIsFetchingEsp32details(true);
-      socket?.send(JSON.stringify({ event: "esp32_data", deviceData }));
+      socket?.send(
+        JSON.stringify({ event: "esp32_data", payload: { deviceData } })
+      );
     } catch (error) {
       emitToastMessage("Failed to emit event to fetch device data", "error");
     } finally {
