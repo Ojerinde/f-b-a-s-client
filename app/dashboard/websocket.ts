@@ -1,4 +1,7 @@
-import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
+import {
+  GetItemFromLocalStorage,
+  RemoveItemFromLocalStorage,
+} from "@/utils/localStorageFunc";
 import { emitToastMessage } from "@/utils/toastFunc";
 
 let ws_socket: WebSocket | null = null;
@@ -35,6 +38,7 @@ export const initializeWebSocket = () => {
 
     ws_socket.onclose = () => {
       console.log("WebSocket connection closed");
+      RemoveItemFromLocalStorage("deviceData");
       ws_socket = null;
     };
 

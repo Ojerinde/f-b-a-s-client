@@ -30,6 +30,7 @@ export default function Layout({
       if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
         return;
       }
+
       setIsFetchingEsp32details(true);
       socket?.send(
         JSON.stringify({ event: "esp32_data", payload: { deviceData } })
