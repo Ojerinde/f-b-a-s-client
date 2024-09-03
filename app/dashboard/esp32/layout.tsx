@@ -44,6 +44,8 @@ export default function Layout({
   };
 
   useEffect(() => {
+    const deviceData = GetItemFromLocalStorage("deviceData");
+    if (deviceData) return;
     if (!esp32.batteryCapacity) {
       fetchEsp32Details();
     }
