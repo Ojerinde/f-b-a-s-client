@@ -16,7 +16,6 @@ export default function Layout({
 }>) {
   const [isFetchingEsp32details, setIsFetchingEsp32details] =
     useState<boolean>(false);
-
   const { esp32 } = useAppSelector((state) => state.esp32);
 
   const dispatch = useAppDispatch();
