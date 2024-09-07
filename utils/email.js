@@ -38,6 +38,7 @@ class Email {
 
   // Send the actual email
   async send(html, subject, attachments = []) {
+    console.log("HTML", html, subject);
     const mailOptions = {
       from: this.from,
       to: this.to,
@@ -54,6 +55,7 @@ class Email {
   }
 
   async sendStudentCourseReport(courseCode, attendancePercentage) {
+    console.log("Sending Email to ", this.firstName);
     await this.send(
       generateStudentCourseReportHTML(
         this.firstName,
