@@ -14,7 +14,6 @@ export async function POST(request: Request) {
       belowOrEqualFiftyPercent,
     },
   } = await request.json();
-  console.log("Studens checked", studentsChecked);
 
   if (laChecked && levelAdviser) {
     await new Email(levelAdviser).sendCourseReportFile(
@@ -46,7 +45,7 @@ export async function POST(request: Request) {
     console.log("Student is checked");
     [...aboveFiftyPercent, ...belowOrEqualFiftyPercent].map(
       async (student: any) => {
-        console.log("Student ", student);
+        console.log("Student ", student.student.email);
         await new Email(student.student).sendStudentCourseReport(
           courseCode,
           student.attendancePercentage
