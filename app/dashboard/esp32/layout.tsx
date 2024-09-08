@@ -47,15 +47,16 @@ export default function Layout({
     }
   };
 
+  const deviceData = GetItemFromLocalStorage("deviceData");
   useEffect(() => {
-    const deviceData = GetItemFromLocalStorage("deviceData");
-    if (deviceData) return;
+    if (!deviceData) return;
     if (!esp32.batteryCapacity) {
       fetchEsp32Details();
     }
   }, []);
 
   useEffect(() => {
+    if (!deviceData) return;
     const socket = getWebSocket();
 
     const handleEsp32Feedback = (event: MessageEvent) => {
