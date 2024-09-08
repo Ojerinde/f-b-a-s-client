@@ -93,7 +93,7 @@ export default function Layout({
           disabled={isFetchingEsp32details === true}
           onClick={fetchEsp32Details}
         >
-          Refetch
+          Fetch
         </button>
       </div>
 

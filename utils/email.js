@@ -7,7 +7,6 @@ const {
 
 class Email {
   constructor(user) {
-    console.log("User", user);
     this.to = user.email;
     this.role = user.title ? user.title : "";
     this.firstName = user.name.split(" ")[0];
@@ -39,7 +38,6 @@ class Email {
 
   // Send the actual email
   async send(html, subject, attachments = []) {
-    console.log("HTML", this.to, html, subject);
     const mailOptions = {
       from: this.from,
       to: this.to,
@@ -56,7 +54,6 @@ class Email {
   }
 
   async sendStudentCourseReport(courseCode, attendancePercentage) {
-    console.log("Sending Email to ", this.firstName);
     await this.send(
       generateStudentCourseReportHTML(
         this.firstName,
