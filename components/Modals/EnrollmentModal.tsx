@@ -61,7 +61,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
     validateOnBlur: true,
     validateOnMount: true,
     onSubmit: async (values, actions) => {
-      const { name, matricNo } = values
+      const { name, matricNo } = values;
       try {
         initializeWebSocket();
         const socket = getWebSocket();
@@ -77,7 +77,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
       } catch (error) {
         setEnrollmentIsLoading(false);
         setErrorMessage("Unable to enroll student. Try again!");
-        emitToastMessage("Unable to enroll student. Try again!", 'error')
+        emitToastMessage("Unable to enroll student. Try again!", "error");
       } finally {
         setTimeout(() => {
           setErrorMessage("");
@@ -95,15 +95,15 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
 
       if (feedback.event !== "enroll_feedback") return;
 
-      formik.resetForm();
+      // formik.resetForm();
       setEnrollmentIsLoading(false);
 
       if (feedback.payload.error) {
         setErrorMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'error')
+        emitToastMessage(feedback.payload.message, "error");
       } else {
         setSuccessMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'success')
+        emitToastMessage(feedback.payload.message, "success");
       }
       setTimeout(() => {
         setErrorMessage("");
