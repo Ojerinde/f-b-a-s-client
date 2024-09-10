@@ -76,7 +76,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     validateOnMount: true,
     onSubmit: async (values, actions) => {
       try {
-        initializeWebSocket();
         const socket = getWebSocket();
 
         const convertToLagosTime = (time: string) => {
@@ -139,11 +138,11 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         setSuccessMessage("");
 
         setErrorMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'error')
+        emitToastMessage(feedback.payload.message, "error");
       } else {
         setErrorMessage("");
         setSuccessMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'success')
+        emitToastMessage(feedback.payload.message, "success");
       }
       setTimeout(() => {
         setErrorMessage("");
