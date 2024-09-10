@@ -5,14 +5,12 @@ export const initializeWebSocket = () => {
     // Create WebSocket connection
     ws_socket = new WebSocket(`${process.env.NEXT_PUBLIC_BACKEND_WS}`);
 
-    // Handle WebSocket events
     ws_socket.onopen = () => {
       console.log("WebSocket connection established");
     };
 
     ws_socket.onclose = () => {
       console.log("WebSocket connection closed");
-      // Reset the socket to allow reinitialization
       ws_socket = null;
     };
 
