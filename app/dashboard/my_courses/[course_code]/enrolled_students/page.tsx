@@ -4,11 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector } from "@/hooks/reduxHook";
-import { MdPersonPin } from "react-icons/md";
+import { MdPersonPin, MdOutlineCancel } from "react-icons/md";
 import { LuView } from "react-icons/lu";
 import Pagination from "@/components/UI/Pagination/Pagination";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
 import { RiCreativeCommonsZeroFill } from "react-icons/ri";
+import { IoSearchCircleSharp } from "react-icons/io5";
 
 interface EnrolledStudentsProps {
   params: any;
@@ -20,7 +21,17 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
   const { enrolledStudents, isFetchingEnrolledStudents } = useAppSelector(
     (state) => state.students
   );
+  const [searchedResult, setSearchedResult] = useState<any[]>([]);
+  const [showSearchedResult, setShowSearchedResult] = useState<boolean>(false);
+  const [matricNo, setMatricNo] = useState<string>("");
 
+  const searchStudentByMatricNoHandler = (string: string) => {
+    const filteredResults = enrolledStudents.filter((student) =>
+      student.matricNo.toLowerCase().includes(string.toLowerCase())
+    );
+    setSearchedResult(filteredResults);
+  };
+  const studentsToShow = showSearchedResult ? searchedResult : enrolledStudents;
   const [start, setStart] = useState(0);
 
   const modifiedCourseCode = params?.course_code
@@ -58,8 +69,45 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
         <LoadingSpinner color="blue" height="big" />
       )}
       {!isFetchingEnrolledStudents && enrolledStudents.length > 0 && (
+        <div className="enrollmentPage-search">
+          <form
+            action=""
+            onSubmit={(e: any) => {
+              e.preventDefault();
+              searchStudentByMatricNoHandler(matricNo);
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Find a Student by Matriculation Number"
+              value={matricNo}
+              onChange={(e) => {
+                setMatricNo(e.target.value);
+                searchStudentByMatricNoHandler(e.target.value);
+                setShowSearchedResult(true);
+              }}
+            />
+          </form>
+          {!showSearchedResult ? (
+            <IoSearchCircleSharp
+              onClick={() => {
+                searchStudentByMatricNoHandler(matricNo);
+                setShowSearchedResult(true);
+              }}
+            />
+          ) : (
+            <MdOutlineCancel
+              onClick={() => {
+                searchStudentByMatricNoHandler(matricNo);
+                setShowSearchedResult(false);
+              }}
+            />
+          )}
+        </div>
+      )}
+      {!isFetchingEnrolledStudents && enrolledStudents.length > 0 && (
         <ul className="enrollmentPage-list">
-          {enrolledStudents.slice(start, end).map((student: any) => (
+          {studentsToShow.slice(start, end).map((student: any) => (
             <li
               key={student._id}
               onClick={() =>
@@ -84,7 +132,7 @@ const EnrolledStudents: React.FC<EnrolledStudentsProps> = ({ params }) => {
 
       {enrolledStudents.length > 0 && (
         <Pagination
-          length={enrolledStudents.length}
+          length={studentsToShow.length}
           itemsPerPage={studentsPerPage}
           onPageChange={handlePageChange}
         />
