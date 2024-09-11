@@ -9,6 +9,26 @@
   padding: 1.3rem 0;
   border: none;
   cursor: pointer;
+  background-color: initial;
+  background-image: linear-gradient(
+    rgba($text-color, 0.9),
+    rgba($text-color, 0.6) 50%
+  );
+  border-width: 0;
+  box-shadow: rgba($text-color, 0.6) 0 2px 2px,
+    rgba($text-color, 0.3) 0 8px 12px;
+  text-decoration: none;
+  text-shadow: rgba($color-black, 0.4) 0 0 4px, rgba($color-black, 0.2) 0 0 12px,
+    rgba($text-color, 0.4) 1px 1px 4px, rgba($text-color, 0.6) 4px 4px 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  transition: all 0.3s;
+
+  &:hover {
+    background-image: linear-gradient(#090b36, #181a40 50%);
+  }
   &:disabled {
     opacity: 0.5;
     cursor: no-drop;
