@@ -3,6 +3,7 @@ import courseReducer from "./courses/CoursesSlice";
 import studentReducer from "./studentss/StudentsSlice";
 import Esp32Reducer from "./esp32/Esp32Slice";
 import ArchivedReducer from "./archived/ArchivedSlice";
+import DeviceReducer from "./devices/DeviceSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     students: studentReducer,
     esp32: Esp32Reducer,
     archived: ArchivedReducer,
+    devices: DeviceReducer,
   },
 });
 

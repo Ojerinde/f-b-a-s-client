@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
+import { useAppSelector } from "@/hooks/reduxHook";
+import SelectField from "../UI/SelectField/SelectField";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
 interface ClearFingerprintOnSensorProps {
@@ -13,7 +15,17 @@ interface ClearFingerprintOnSensorProps {
 
 interface FormValuesType {
   clearPhrase: string;
+  level: string;
 }
+const levelOptions = [
+  { value: "700", label: "700" },
+  { value: "600", label: "600" },
+  { value: "500", label: "500" },
+  { value: "400", label: "400" },
+  { value: "300", label: "300" },
+  { value: "200", label: "200" },
+  { value: "100", label: "100" },
+];
 
 const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
   closeModal,
@@ -21,10 +33,12 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
   const [isClearingFingerprints, setIsClearingFingerprints] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
       clearPhrase: "",
+      level: "500",
     },
     validationSchema: Yup.object().shape({
       clearPhrase: Yup.string().required("Clear Phrase is required"),
@@ -34,21 +48,24 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
     validateOnMount: true,
     onSubmit: async (values, actions) => {
       try {
-        const socket = getWebSocket();
-        // First confirm the device data
-        const deviceData = GetItemFromLocalStorage("deviceData");
-
-        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+        if (!lecturerDeviceLocation) {
+          emitToastMessage(
+            "Device location not found. Please go to the settings page to set up the location of the device to communicate with.",
+            "error"
+          );
           return;
         }
+        const socket = getWebSocket();
+
         setIsClearingFingerprints(true);
         socket?.send(
           JSON.stringify({
             event: "clear_fingerprints",
             payload: {
               clearPhrase: values.clearPhrase,
-              level: "500",
-              deviceData,
+              level: values.level,
+              deviceLocation: lecturerDeviceLocation,
+              email: GetItemFromLocalStorage("user").email,
             },
           })
         );
@@ -122,6 +139,16 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
         adviser (LA) alone in the field below.
       </h3>
       <form onSubmit={formik.handleSubmit}>
+        <SelectField
+          options={levelOptions}
+          value={levelOptions.find(
+            (option) => option.value === formik.values.level
+          )}
+          onChange={(option) =>
+            formik.setFieldValue("level", option?.value || "")
+          }
+          placeholder="Select Device Location"
+        />
         <InformationInput
           id="clearPhrase"
           type="text"

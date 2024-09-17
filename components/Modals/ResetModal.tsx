@@ -8,6 +8,7 @@ import HttpRequest from "@/store/services/HttpRequest";
 import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
+import { useAppSelector } from "@/hooks/reduxHook";
 
 interface ResetModalProps {
   course: Course | null;
@@ -22,6 +23,7 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
   const [isResetting, setIsResetting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
@@ -39,9 +41,12 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
       try {
         const socket = getWebSocket();
         // First confirm the device data
-        const deviceData = GetItemFromLocalStorage("deviceData");
 
-        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+        if (!lecturerDeviceLocation) {
+          emitToastMessage(
+            "Device location not found. Please go to the settings page to set up the location of the device to communicate with.",
+            "error"
+          );
           return;
         }
         setIsResetting(true);
@@ -56,7 +61,8 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
               payload: {
                 students: matricNos,
                 courseCode: response.data.courseCode,
-                deviceData
+                email: GetItemFromLocalStorage("user").email,
+                deviceLocation: lecturerDeviceLocation,
               },
             })
           );

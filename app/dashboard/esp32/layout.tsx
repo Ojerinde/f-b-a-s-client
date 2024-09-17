@@ -2,7 +2,6 @@
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { AddEsp32Details } from "@/store/esp32/Esp32Slice";
-
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
 import { getWebSocket } from "../websocket";
@@ -17,16 +16,15 @@ export default function Layout({
   const [isFetchingEsp32details, setIsFetchingEsp32details] =
     useState<boolean>(false);
   const { esp32 } = useAppSelector((state) => state.esp32);
+  const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
 
   const dispatch = useAppDispatch();
 
   const fetchEsp32Details = () => {
     try {
       const socket = getWebSocket();
-      // First confirm the device data
-      const deviceData = GetItemFromLocalStorage("deviceData");
 
-      if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+      if (!lecturerDeviceLocation) {
         emitToastMessage(
           "Device location not found. Please go to the settings page to set up the location of the device to communicate with.",
           "error"
@@ -36,7 +34,10 @@ export default function Layout({
 
       setIsFetchingEsp32details(true);
       socket?.send(
-        JSON.stringify({ event: "esp32_data", payload: { deviceData } })
+        JSON.stringify({
+          event: "esp32_data",
+          payload: { deviceLocation: lecturerDeviceLocation },
+        })
       );
     } catch (error) {
       emitToastMessage("Failed to emit event to fetch device data", "error");

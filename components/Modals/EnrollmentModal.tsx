@@ -8,6 +8,7 @@ import { MdOutlineClose } from "react-icons/md";
 import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
+import { useAppSelector } from "@/hooks/reduxHook";
 
 interface EnrollmentModalProps {
   course: Course | null;
@@ -28,6 +29,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
   const [enrollmentIsLoading, setEnrollmentIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
@@ -63,9 +65,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
         const socket = getWebSocket();
 
         // First confirm the device data
-        const deviceData = GetItemFromLocalStorage("deviceData");
-
-        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+        if (!lecturerDeviceLocation) {
+          emitToastMessage(
+            "Device location not found. Please go to the settings page to set up the location of the device to communicate with.",
+            "error"
+          );
           return;
         }
 
@@ -78,8 +82,8 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
               name: name.trim(),
               matricNo,
               ...course,
-              lecturerEmail,
-              deviceData,
+              email: lecturerEmail,
+              deviceLocation: lecturerDeviceLocation,
             },
           })
         );

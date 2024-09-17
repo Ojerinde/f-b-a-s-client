@@ -5,6 +5,9 @@ import Navigation from "@/components/Navigation/Navigation";
 import { useEffect } from "react";
 import { initializeWebSocket } from "./websocket";
 import MobileSideBar from "@/components/Dashboard/MobileSidebar";
+import { useAppDispatch } from "@/hooks/reduxHook";
+import { getLecturerDeviceLocation } from "@/store/devices/DeviceSlice";
+import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
 const sideBarLinks = [
   { name: "My Courses", link: "/dashboard/my_courses", iconUrl: "my_courses" },
@@ -17,8 +20,10 @@ export default function HostLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const dispatch = useAppDispatch();
   useEffect(() => {
     initializeWebSocket();
+    dispatch(getLecturerDeviceLocation(GetItemFromLocalStorage("user")?.email));
   }, []);
   return (
     <section>

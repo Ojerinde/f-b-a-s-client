@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import HttpRequest from "@/store/services/HttpRequest";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { AddEnrolledStudents } from "@/store/studentss/StudentsSlice";
 import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
@@ -29,6 +29,7 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
   const [isDeleteStudentting, setIsDeleteStudentting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -56,10 +57,11 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
         return;
       }
       try {
-        // First confirm the device data
-        const deviceData = GetItemFromLocalStorage("deviceData");
-
-        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+        if (!lecturerDeviceLocation) {
+          emitToastMessage(
+            "Device location not found. Please go to the settings page to set up the location of the device to communicate with.",
+            "error"
+          );
           return;
         }
         setIsDeleteStudentting(true);
@@ -77,7 +79,12 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
           return socket?.send(
             JSON.stringify({
               event: "delete_fingerprint",
-              payload: { students: [response.data.matricNo], courseCode,deviceData },
+              payload: {
+                students: [response.data.matricNo],
+                courseCode,
+                email: GetItemFromLocalStorage("user").email,
+                deviceLocation: lecturerDeviceLocation,
+              },
             })
           );
         }

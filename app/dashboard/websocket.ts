@@ -2,22 +2,12 @@ import {
   GetItemFromLocalStorage,
   RemoveItemFromLocalStorage,
 } from "@/utils/localStorageFunc";
-import { emitToastMessage } from "@/utils/toastFunc";
 
 let ws_socket: WebSocket | null = null;
 
 export const initializeWebSocket = () => {
-  const deviceData = GetItemFromLocalStorage("deviceData");
+  const email = GetItemFromLocalStorage("user").email;
 
-  if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
-    emitToastMessage(
-      "Device location not found. Please go to the settings page to set up the location of the device to communicate with.",
-      "error"
-    );
-    return null;
-  }
-
-  // Proceed with WebSocket connection if deviceData exists
   if (!ws_socket || ws_socket.readyState === WebSocket.CLOSED) {
     ws_socket = new WebSocket(`${process.env.NEXT_PUBLIC_BACKEND_WS}`);
 
@@ -28,7 +18,7 @@ export const initializeWebSocket = () => {
           JSON.stringify({
             event: "identify",
             source: "web_app",
-            clientType: deviceData.email,
+            clientType: email,
           })
         );
       } else {

@@ -14,6 +14,10 @@ import InformationInput from "@/components/UI/Input/InformationInput";
 import Button from "@/components/UI/Button/Button";
 import { emitToastMessage } from "@/utils/toastFunc";
 import DeviceSetup from "./DeviceSetup";
+import {
+  getDevicesConnected,
+  getLecturerDeviceLocation,
+} from "@/store/devices/DeviceSlice";
 
 interface Course {
   courseCode: string;
@@ -98,6 +102,8 @@ const UpdateLecturerInformation: React.FC = () => {
   };
 
   useEffect(() => {
+    dispatch(getDevicesConnected());
+    dispatch(getLecturerDeviceLocation(loggedInLecturer?.email));
     const fetchCourses = async () => {
       if (!loggedInLecturer?.email) return;
       try {

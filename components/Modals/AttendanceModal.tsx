@@ -8,6 +8,7 @@ import { getWebSocket } from "@/app/dashboard/websocket";
 import InformationInput from "../UI/Input/InformationInput";
 import { emitToastMessage } from "@/utils/toastFunc";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
+import { useAppSelector } from "@/hooks/reduxHook";
 
 interface AttendanceModalProps {
   course: Course | null;
@@ -22,6 +23,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
 
   interface FormValuesType {
     startTime: string;
@@ -93,9 +95,11 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
         const lagosEndTime = convertToLagosTime(values.endTime);
 
         // First confirm the device data
-        const deviceData = GetItemFromLocalStorage("deviceData");
-
-        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+        if (!lecturerDeviceLocation) {
+          emitToastMessage(
+            "Device location not found. Please go to the settings page to set up the location of the device to communicate with.",
+            "error"
+          );
           return;
         }
 
@@ -106,7 +110,8 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
               ...course,
               startTime: lagosStartTime,
               endTime: lagosEndTime,
-              deviceData,
+              email: GetItemFromLocalStorage("user").email,
+              deviceLocation: lecturerDeviceLocation,
             },
           })
         );
