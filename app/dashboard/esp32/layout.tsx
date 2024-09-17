@@ -40,7 +40,11 @@ export default function Layout({
         })
       );
     } catch (error) {
-      emitToastMessage("Failed to emit event to fetch device data", "error");
+      emitToastMessage(
+        "Failed to emit event to fetch device data.Try refreshing the page",
+        "error"
+      );
+      setIsFetchingEsp32details(false);
     } finally {
       setTimeout(() => {
         setIsFetchingEsp32details(false);
@@ -48,16 +52,13 @@ export default function Layout({
     }
   };
 
-  const deviceData = GetItemFromLocalStorage("deviceData");
   useEffect(() => {
-    if (!deviceData) return;
     if (!esp32.batteryCapacity) {
       fetchEsp32Details();
     }
   }, []);
 
   useEffect(() => {
-    if (!deviceData) return;
     const socket = getWebSocket();
 
     const handleEsp32Feedback = (event: MessageEvent) => {
