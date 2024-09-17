@@ -5,8 +5,9 @@ import { AddEsp32Details } from "@/store/esp32/Esp32Slice";
 
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/UI/LoadingSpinner/LoadingSpinner";
-import { getWebSocket, initializeWebSocket } from "../websocket";
+import { getWebSocket } from "../websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
+import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
 export default function Layout({
   children,
@@ -15,21 +16,30 @@ export default function Layout({
 }>) {
   const [isFetchingEsp32details, setIsFetchingEsp32details] =
     useState<boolean>(false);
-
   const { esp32 } = useAppSelector((state) => state.esp32);
-
-  // Initialize WebSocket connection
-  initializeWebSocket();
 
   const dispatch = useAppDispatch();
 
   const fetchEsp32Details = () => {
     try {
       const socket = getWebSocket();
+      // First confirm the device data
+      const deviceData = GetItemFromLocalStorage("deviceData");
+
+      if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+        emitToastMessage(
+          "Device location not found. Please go to the settings page to set up the location of the device to communicate with.",
+          "error"
+        );
+        return;
+      }
+
       setIsFetchingEsp32details(true);
-      socket?.send(JSON.stringify({ event: "esp32_data" }));
+      socket?.send(
+        JSON.stringify({ event: "esp32_data", payload: { deviceData } })
+      );
     } catch (error) {
-      emitToastMessage("Failed to emit event to fetch device data", 'error')
+      emitToastMessage("Failed to emit event to fetch device data", "error");
     } finally {
       setTimeout(() => {
         setIsFetchingEsp32details(false);
@@ -37,13 +47,16 @@ export default function Layout({
     }
   };
 
+  const deviceData = GetItemFromLocalStorage("deviceData");
   useEffect(() => {
+    if (!deviceData) return;
     if (!esp32.batteryCapacity) {
       fetchEsp32Details();
     }
   }, []);
 
   useEffect(() => {
+    if (!deviceData) return;
     const socket = getWebSocket();
 
     const handleEsp32Feedback = (event: MessageEvent) => {
@@ -53,9 +66,9 @@ export default function Layout({
 
       setIsFetchingEsp32details(false);
       if (data.payload.error) {
-        emitToastMessage("Failed to fetch device data", 'error')
+        emitToastMessage("Failed to fetch device data", "error");
       } else {
-        emitToastMessage("Device data fetched successfully", 'success')
+        emitToastMessage("Device data fetched successfully", "success");
         dispatch(AddEsp32Details(data.payload.data));
       }
     };
@@ -81,7 +94,7 @@ export default function Layout({
           disabled={isFetchingEsp32details === true}
           onClick={fetchEsp32Details}
         >
-          Refetch
+          Fetch
         </button>
       </div>
 

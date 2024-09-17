@@ -8,6 +8,7 @@ export const useLogoutFunc = () => {
   const logout = (url: string) => {
     removeItemFromCookie("token");
     RemoveItemFromLocalStorage("user");
+    RemoveItemFromLocalStorage("deviceData");
     router.push(url);
   };
 

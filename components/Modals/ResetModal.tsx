@@ -5,8 +5,9 @@ import InformationInput from "../UI/Input/InformationInput";
 import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import HttpRequest from "@/store/services/HttpRequest";
-import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
+import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
+import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
 interface ResetModalProps {
   course: Course | null;
@@ -36,14 +37,17 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
     validateOnMount: true,
     onSubmit: async (values, actions) => {
       try {
+        const socket = getWebSocket();
+        // First confirm the device data
+        const deviceData = GetItemFromLocalStorage("deviceData");
+
+        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+          return;
+        }
         setIsResetting(true);
         const response = await HttpRequest.delete(
           `/courses/${values?.courseCode}/reset`
         );
-
-        initializeWebSocket();
-        const socket = getWebSocket();
-
         // Function to emit delete_fingerprint event
         const emitDeleteFingerprintEvent = (matricNos: string[]) => {
           socket?.send(
@@ -52,6 +56,7 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
               payload: {
                 students: matricNos,
                 courseCode: response.data.courseCode,
+                deviceData
               },
             })
           );
@@ -65,7 +70,7 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
         formik.resetForm();
       } catch (error) {
         setErrorMessage("Failed to reset course. Try again!");
-        emitToastMessage("Failed to reset course. Try again!", 'error')
+        emitToastMessage("Failed to reset course. Try again!", "error");
       } finally {
         setIsResetting(false);
         setTimeout(() => {
@@ -85,11 +90,11 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
       if (feedback.payload.error) {
         setSuccessMessage("");
         setErrorMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'error')
+        emitToastMessage(feedback.payload.message, "error");
       } else {
         formik.resetForm();
         setSuccessMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'success')
+        emitToastMessage(feedback.payload.message, "success");
       }
       setTimeout(() => {
         setErrorMessage("");

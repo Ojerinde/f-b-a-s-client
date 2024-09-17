@@ -5,8 +5,9 @@ import InformationInput from "../UI/Input/InformationInput";
 import Button from "../UI/Button/Button";
 import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
-import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
+import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
+import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
 interface EnrollmentModalProps {
   course: Course | null;
@@ -27,10 +28,6 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
   const [enrollmentIsLoading, setEnrollmentIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
-  useEffect(() => {
-    initializeWebSocket();
-  }, []);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {
@@ -65,12 +62,25 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
       try {
         const socket = getWebSocket();
 
-        setEnrollmentIsLoading(true);
+        // First confirm the device data
+        const deviceData = GetItemFromLocalStorage("deviceData");
+
+        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+          return;
+        }
+
         // Emit the enroll event to the server
+        setEnrollmentIsLoading(true);
         socket?.send(
           JSON.stringify({
             event: "enroll",
-            payload: { name: name.trim(), matricNo, ...course, lecturerEmail },
+            payload: {
+              name: name.trim(),
+              matricNo,
+              ...course,
+              lecturerEmail,
+              deviceData,
+            },
           })
         );
       } catch (error) {

@@ -3,9 +3,9 @@ import * as Yup from "yup";
 import InformationInput from "../UI/Input/InformationInput";
 import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
-import { useRouter } from "next/navigation";
-import { getWebSocket, initializeWebSocket } from "@/app/dashboard/websocket";
+import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
+import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
 interface ClearFingerprintOnSensorProps {
   closeModal: () => void;
@@ -22,12 +22,6 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const router = useRouter();
-
-  useEffect(() => {
-    initializeWebSocket();
-  }, []);
-
   const formik = useFormik<FormValuesType>({
     initialValues: {
       clearPhrase: "",
@@ -40,14 +34,22 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
     validateOnMount: true,
     onSubmit: async (values, actions) => {
       try {
-        initializeWebSocket();
         const socket = getWebSocket();
+        // First confirm the device data
+        const deviceData = GetItemFromLocalStorage("deviceData");
 
+        if (!deviceData || !deviceData.email || !deviceData.deviceLocation) {
+          return;
+        }
         setIsClearingFingerprints(true);
         socket?.send(
           JSON.stringify({
             event: "clear_fingerprints",
-            payload: { clearPhrase: values.clearPhrase, level: "500" },
+            payload: {
+              clearPhrase: values.clearPhrase,
+              level: "500",
+              deviceData,
+            },
           })
         );
       } catch (error) {
@@ -70,10 +72,10 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
       setIsClearingFingerprints(false);
       if (feedback.payload.error) {
         setErrorMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'error')
+        emitToastMessage(feedback.payload.message, "error");
       } else {
         setSuccessMessage(feedback.payload.message);
-        emitToastMessage(feedback.payload.message, 'success')
+        emitToastMessage(feedback.payload.message, "success");
       }
       setTimeout(() => {
         setErrorMessage("");
@@ -95,7 +97,7 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
 
     const handleAttendanceRecorded = (event: MessageEvent) => {
       const feedback = JSON.parse(event.data);
-      emitToastMessage(feedback.payload.message, 'success')
+      emitToastMessage(feedback.payload.message, "success");
     };
 
     // Add event listener for attendance recorded event
