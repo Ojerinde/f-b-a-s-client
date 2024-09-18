@@ -8,13 +8,17 @@ import { getWebSocket } from "@/app/dashboard/websocket";
 import InformationInput from "../UI/Input/InformationInput";
 import { emitToastMessage } from "@/utils/toastFunc";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
-import { useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import { getLecturerDeviceLocation } from "@/store/devices/DeviceSlice";
 
 interface AttendanceModalProps {
   course: Course | null;
   closeModal: () => void;
 }
-
+interface FormValuesType {
+  startTime: string;
+  endTime: string;
+}
 const AttendanceModal: React.FC<AttendanceModalProps> = ({
   course,
   closeModal,
@@ -24,11 +28,15 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
+  const dispatch = useAppDispatch();
 
-  interface FormValuesType {
-    startTime: string;
-    endTime: string;
-  }
+  useEffect(() => {
+    if (!lecturerDeviceLocation) {
+      dispatch(
+        getLecturerDeviceLocation(GetItemFromLocalStorage("user")?.email)
+      );
+    }
+  }, []);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {

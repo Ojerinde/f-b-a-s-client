@@ -8,7 +8,8 @@ import { MdOutlineClose } from "react-icons/md";
 import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
-import { useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import { getLecturerDeviceLocation } from "@/store/devices/DeviceSlice";
 
 interface EnrollmentModalProps {
   course: Course | null;
@@ -30,6 +31,15 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
+  const dispatch = useAppDispatch();
+  
+  useEffect(() => {
+    if (!lecturerDeviceLocation) {
+      dispatch(
+        getLecturerDeviceLocation(GetItemFromLocalStorage("user")?.email)
+      );
+    }
+  }, []);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {

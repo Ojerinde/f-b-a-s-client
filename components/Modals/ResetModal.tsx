@@ -8,7 +8,8 @@ import HttpRequest from "@/store/services/HttpRequest";
 import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
-import { useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import { getLecturerDeviceLocation } from "@/store/devices/DeviceSlice";
 
 interface ResetModalProps {
   course: Course | null;
@@ -24,6 +25,15 @@ const ResetModal: React.FC<ResetModalProps> = ({ course, closeModal }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!lecturerDeviceLocation) {
+      dispatch(
+        getLecturerDeviceLocation(GetItemFromLocalStorage("user")?.email)
+      );
+    }
+  }, []);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {

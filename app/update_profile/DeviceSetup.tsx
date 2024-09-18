@@ -23,7 +23,9 @@ const DeviceSetup = () => {
     hasError: boolean;
     message: string;
   }>({ hasError: false, message: "" });
-  const { devices } = useAppSelector((state) => state.devices);
+  const { devices, lecturerDeviceLocation } = useAppSelector(
+    (state) => state.devices
+  );
   // Yup schema configurations
   const validationSchema = Yup.object().shape({
     deviceLocation: Yup.string().required("Device Location is required"),
@@ -32,7 +34,7 @@ const DeviceSetup = () => {
   // Formik validation configurations
   const formik = useFormik({
     initialValues: {
-      deviceLocation: "",
+      deviceLocation: lecturerDeviceLocation || "",
     },
     validationSchema,
     validateOnChange: true,

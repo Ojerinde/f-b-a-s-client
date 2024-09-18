@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
-import { useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import SelectField from "../UI/SelectField/SelectField";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
+import { getLecturerDeviceLocation } from "@/store/devices/DeviceSlice";
 
 interface ClearFingerprintOnSensorProps {
   closeModal: () => void;
@@ -34,7 +35,15 @@ const ClearFingerprintOnSensor: React.FC<ClearFingerprintOnSensorProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    if (!lecturerDeviceLocation) {
+      dispatch(
+        getLecturerDeviceLocation(GetItemFromLocalStorage("user")?.email)
+      );
+    }
+  }, []);
   const formik = useFormik<FormValuesType>({
     initialValues: {
       clearPhrase: "",

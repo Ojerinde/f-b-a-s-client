@@ -10,6 +10,7 @@ import { AddEnrolledStudents } from "@/store/studentss/StudentsSlice";
 import { getWebSocket } from "@/app/dashboard/websocket";
 import { emitToastMessage } from "@/utils/toastFunc";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
+import { getLecturerDeviceLocation } from "@/store/devices/DeviceSlice";
 
 interface DeleteStudentModalProps {
   courseCode: string | null;
@@ -30,9 +31,16 @@ const DeleteStudentModal: React.FC<DeleteStudentModalProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
-
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!lecturerDeviceLocation) {
+      dispatch(
+        getLecturerDeviceLocation(GetItemFromLocalStorage("user")?.email)
+      );
+    }
+  }, []);
 
   const formik = useFormik<FormValuesType>({
     initialValues: {

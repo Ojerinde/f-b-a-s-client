@@ -5,7 +5,7 @@ import Navigation from "@/components/Navigation/Navigation";
 import { useEffect } from "react";
 import { initializeWebSocket } from "./websocket";
 import MobileSideBar from "@/components/Dashboard/MobileSidebar";
-import { useAppDispatch } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { getLecturerDeviceLocation } from "@/store/devices/DeviceSlice";
 import { GetItemFromLocalStorage } from "@/utils/localStorageFunc";
 
@@ -21,9 +21,15 @@ export default function HostLayout({
   children: React.ReactNode;
 }) {
   const dispatch = useAppDispatch();
+  const { lecturerDeviceLocation } = useAppSelector((state) => state.devices);
+
   useEffect(() => {
     initializeWebSocket();
-    dispatch(getLecturerDeviceLocation(GetItemFromLocalStorage("user")?.email));
+    if (!lecturerDeviceLocation) {
+      dispatch(
+        getLecturerDeviceLocation(GetItemFromLocalStorage("user")?.email)
+      );
+    }
   }, []);
   return (
     <section>
