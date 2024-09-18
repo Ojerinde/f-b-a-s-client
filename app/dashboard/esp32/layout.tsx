@@ -53,7 +53,7 @@ export default function Layout({
   };
 
   useEffect(() => {
-    if (!esp32.batteryCapacity) {
+    if (!lecturerDeviceLocation || !esp32.batteryCapacity) {
       fetchEsp32Details();
     }
   }, []);

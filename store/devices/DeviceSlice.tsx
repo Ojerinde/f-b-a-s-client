@@ -33,7 +33,8 @@ export const getDevicesConnected = createAsyncThunk(
       }));
       return options;
     } catch (error: any) {
-      emitToastMessage("Could not fetch your devices connected", "error");
+      console.log("Fetch device location error", error);
+      emitToastMessage(error?.response.data.message, "error");
     }
   }
 );
